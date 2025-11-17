@@ -1,0 +1,15 @@
+{
+  "name": "Guerra Fit",
+  "short_name": "Guerra Fit",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "guerra-fit-icon.svg",
+      "sizes": "100x100",
+      "type": "image/svg+xml"
+    }
+  ]
+}

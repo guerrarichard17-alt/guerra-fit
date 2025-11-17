@@ -1,0 +1,410 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Guerra Fit – Comparar Logs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="guerra-fit-icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="guerra-fit-icon-192.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <style>
+    :root {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color-scheme: light dark;
+    }
+    body {
+      margin: 0;
+      background: #020617;
+      color: #e5e7eb;
+    }
+    header {
+      padding: 12px 16px 10px;
+      background: #020617;
+      border-bottom: 1px solid #1f2937;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 18px;
+    }
+    header small {
+      color: #9ca3af;
+      font-size: 12px;
+    }
+    main {
+      padding: 10px;
+      max-width: 1000px;
+      margin: 0 auto 20px;
+    }
+    .card {
+      background: #020617;
+      border-radius: 12px;
+      border: 1px solid #1f2937;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    label {
+      font-size: 12px;
+      display: block;
+      margin-bottom: 2px;
+    }
+    input[type="file"] {
+      background: #020617;
+      border-radius: 8px;
+      border: 1px solid #4b5563;
+      padding: 8px 10px;
+      font-size: 13px;
+      color: #e5e7eb;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      background: #0b1120;
+      color: #e5e7eb;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    button.primary {
+      background: #2563eb;
+      border-color: #2563eb;
+    }
+    .status {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 4px;
+    }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 8px;
+    }
+    @media (max-width: 640px) {
+      .kpi-grid {
+        grid-template-columns: repeat(1, minmax(0,1fr));
+      }
+    }
+    .kpi-col {
+      border-radius: 10px;
+      border: 1px solid #1f2937;
+      padding: 8px 10px;
+    }
+    .kpi-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .kpi-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      margin-bottom: 2px;
+    }
+    .kpi-label {
+      color: #9ca3af;
+    }
+    .kpi-value {
+      font-weight: 600;
+    }
+    .delta-pos {
+      color: #22c55e;
+    }
+    .delta-neg {
+      color: #f97316;
+    }
+    .delta-neutral {
+      color: #9ca3af;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 11px;
+      min-width: 600px;
+    }
+    th, td {
+      border: 1px solid #1f2937;
+      padding: 4px 6px;
+      text-align: left;
+    }
+    th {
+      background: #020617;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    tr:nth-child(even) td {
+      background: #020617;
+    }
+    tr:nth-child(odd) td {
+      background: #020617;
+    }
+    .scroll-box {
+      max-height: 60vh;
+      overflow: auto;
+      border-radius: 10px;
+      border: 1px solid #1f2937;
+    }
+    .help-text {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Guerra Fit – Comparar Logs</h1>
+  <small>Compare um backup antigo (guerra_fit_logs.json) com o estado atual do navegador.</small>
+</header>
+<main>
+  <div class="card">
+    <label for="fileOld">Log antigo (guerra_fit_logs.json exportado e baixado do GitHub)</label>
+    <input type="file" id="fileOld" accept=".json" />
+    <div style="margin-top:8px; display:flex; flex-wrap:wrap; gap:8px;">
+      <button id="btnLoad" class="primary">Carregar log atual + antigo</button>
+    </div>
+    <div class="status" id="statusText">1) Escolha um arquivo .json antigo · 2) Clique em "Carregar log atual + antigo".</div>
+    <div class="help-text" style="margin-top:4px;">
+      O log atual é lido do <code>localStorage</code> (chave <code>treino_diario_guerra_v1_mobile</code>) no seu navegador.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="kpi-grid">
+      <div class="kpi-col">
+        <div class="kpi-title">Antigo</div>
+        <div class="kpi-row"><span class="kpi-label">Dias treinados</span><span class="kpi-value" id="oldDias">–</span></div>
+        <div class="kpi-row"><span class="kpi-label">Sessões concluídas</span><span class="kpi-value" id="oldSessoes">–</span></div>
+        <div class="kpi-row"><span class="kpi-label">RPE médio</span><span class="kpi-value" id="oldRpe">–</span></div>
+        <div class="kpi-row"><span class="kpi-label">Peso médio (kg)</span><span class="kpi-value" id="oldPeso">–</span></div>
+      </div>
+      <div class="kpi-col">
+        <div class="kpi-title">Atual</div>
+        <div class="kpi-row"><span class="kpi-label">Dias treinados</span><span class="kpi-value" id="curDias">–</span></div>
+        <div class="kpi-row"><span class="kpi-label">Sessões concluídas</span><span class="kpi-value" id="curSessoes">–</span></div>
+        <div class="kpi-row"><span class="kpi-label">RPE médio</span><span class="kpi-value" id="curRpe">–</span></div>
+        <div class="kpi-row"><span class="kpi-label">Peso médio (kg)</span><span class="kpi-value" id="curPeso">–</span></div>
+      </div>
+      <div class="kpi-col">
+        <div class="kpi-title">Diferença</div>
+        <div class="kpi-row"><span class="kpi-label">Dias treinados</span><span class="kpi-value" id="diffDias">–</span></div>
+        <div class="kpi-row"><span class="kpi-label">Sessões concluídas</span><span class="kpi-value" id="diffSessoes">–</span></div>
+        <div class="kpi-row"><span class="kpi-label">RPE médio</span><span class="kpi-value" id="diffRpe">–</span></div>
+        <div class="kpi-row"><span class="kpi-label">Peso médio (kg)</span><span class="kpi-value" id="diffPeso">–</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="help-text" style="margin-bottom:6px;">
+      Comparação por exercício: número de sessões concluídas e última carga registrada (antigo vs atual).
+    </div>
+    <div class="scroll-box">
+      <div id="tableEx"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+const STORAGE_KEY = "treino_diario_guerra_v1_mobile";
+
+function setStatus(msg) {
+  const el = document.getElementById("statusText");
+  if (el) el.textContent = msg;
+}
+
+function computeKPIsFromLog(logObj) {
+  const keys = Object.keys(logObj || {});
+  if (!keys.length) {
+    return {
+      diasTreinados: 0,
+      sessoesConcluidas: 0,
+      rpeMedio: null,
+      pesoMedio: null,
+      registros: []
+    };
+  }
+  const registros = [];
+  keys.forEach(k => {
+    const parts = k.split("::");
+    const exId = parts[0] || "";
+    const data = parts[1] || "";
+    const log = logObj[k] || {};
+    registros.push({
+      exId,
+      data,
+      peso: log.peso || "",
+      rpePercebido: log.rpePercebido || "",
+      carga1: log.carga1 || "",
+      carga2: log.carga2 || "",
+      carga3: log.carga3 || "",
+      carga4: log.carga4 || "",
+      obs: log.obs || "",
+      concluido: !!log.concluido
+    });
+  });
+  const byDate = {};
+  let sumRpe = 0, cRpe = 0;
+  let sumPeso = 0, cPeso = 0;
+  let sessoesConcluidas = 0;
+  registros.forEach(r => {
+    if (!byDate[r.data]) byDate[r.data] = [];
+    byDate[r.data].push(r);
+    if (r.concluido) sessoesConcluidas++;
+    if (r.rpePercebido) {
+      const v = parseFloat(r.rpePercebido);
+      if (!isNaN(v)) { sumRpe += v; cRpe++; }
+    }
+    if (r.peso) {
+      const vp = parseFloat(r.peso);
+      if (!isNaN(vp)) { sumPeso += vp; cPeso++; }
+    }
+  });
+  const diasTreinados = Object.keys(byDate).filter(d => {
+    return byDate[d].some(r => r.concluido);
+  }).length;
+  return {
+    diasTreinados,
+    sessoesConcluidas,
+    rpeMedio: cRpe ? (sumRpe / cRpe) : null,
+    pesoMedio: cPeso ? (sumPeso / cPeso) : null,
+    registros
+  };
+}
+
+function fmtDelta(cur, old, invert=false) {
+  if (cur === null || cur === undefined || old === null || old === undefined) {
+    return "<span class='delta-neutral'>–</span>";
+  }
+  const d = cur - old;
+  let cls = "delta-neutral";
+  if (!invert) {
+    if (d > 0) cls = "delta-pos";
+    else if (d < 0) cls = "delta-neg";
+  } else {
+    if (d < 0) cls = "delta-pos";
+    else if (d > 0) cls = "delta-neg";
+  }
+  const sign = d > 0 ? "+" : "";
+  return `<span class="${cls}">${sign}${d.toFixed(1)}</span>`;
+}
+
+function fillKPI(prefix, kpi) {
+  document.getElementById(prefix + "Dias").textContent = kpi ? kpi.diasTreinados : "–";
+  document.getElementById(prefix + "Sessoes").textContent = kpi && kpi.sessoesConcluidas != null ? kpi.sessoesConcluidas : "–";
+  document.getElementById(prefix + "Rpe").textContent = kpi && kpi.rpeMedio != null ? kpi.rpeMedio.toFixed(1) : "–";
+  document.getElementById(prefix + "Peso").textContent = kpi && kpi.pesoMedio != null ? kpi.pesoMedio.toFixed(1) : "–";
+}
+
+function renderComparison(oldKPI, curKPI) {
+  fillKPI("old", oldKPI);
+  fillKPI("cur", curKPI);
+
+  document.getElementById("diffDias").innerHTML = fmtDelta(curKPI ? curKPI.diasTreinados : null, oldKPI ? oldKPI.diasTreinados : null, false);
+  document.getElementById("diffSessoes").innerHTML = fmtDelta(curKPI ? curKPI.sessoesConcluidas : null, oldKPI ? oldKPI.sessoesConcluidas : null, false);
+  document.getElementById("diffRpe").innerHTML = fmtDelta(curKPI ? curKPI.rpeMedio : null, oldKPI ? oldKPI.rpeMedio : null, true);
+  document.getElementById("diffPeso").innerHTML = fmtDelta(curKPI ? curKPI.pesoMedio : null, oldKPI ? oldKPI.pesoMedio : null, false);
+
+  const tableDiv = document.getElementById("tableEx");
+  tableDiv.innerHTML = "";
+  if (!oldKPI || !curKPI) {
+    tableDiv.innerHTML = "<div style='padding:8px;font-size:12px;color:#9ca3af;'>Carregue ambos os logs para ver a comparação.</div>";
+    return;
+  }
+  const byExOld = {};
+  (oldKPI.registros || []).forEach(r => {
+    if (!byExOld[r.exId]) byExOld[r.exId] = [];
+    byExOld[r.exId].push(r);
+  });
+  const byExCur = {};
+  (curKPI.registros || []).forEach(r => {
+    if (!byExCur[r.exId]) byExCur[r.exId] = [];
+    byExCur[r.exId].push(r);
+  });
+  const allExIds = Array.from(new Set([
+    ...Object.keys(byExOld),
+    ...Object.keys(byExCur)
+  ])).sort();
+
+  if (!allExIds.length) {
+    tableDiv.innerHTML = "<div style='padding:8px;font-size:12px;color:#9ca3af;'>Nenhum exercício encontrado nos logs.</div>";
+    return;
+  }
+
+  let html = "<table><thead><tr>" +
+    "<th>Exercício (ID técnico)</th>" +
+    "<th>Sessões antigas</th>" +
+    "<th>Sessões atuais</th>" +
+    "<th>Última carga antiga (S1–S4)</th>" +
+    "<th>Última carga atual (S1–S4)</th>" +
+    "</tr></thead><tbody>";
+
+  allExIds.forEach(id => {
+    const arrOld = byExOld[id] || [];
+    const arrCur = byExCur[id] || [];
+    const sessOld = arrOld.filter(r => r.concluido).length;
+    const sessCur = arrCur.filter(r => r.concluido).length;
+    arrOld.sort((a,b) => (a.data || "").localeCompare(b.data || ""));
+    arrCur.sort((a,b) => (a.data || "").localeCompare(b.data || ""));
+    const lastOld = arrOld.length ? arrOld[arrOld.length - 1] : null;
+    const lastCur = arrCur.length ? arrCur[arrCur.length - 1] : null;
+    const cargasOld = lastOld ? [lastOld.carga1, lastOld.carga2, lastOld.carga3, lastOld.carga4].map(v => v || "-").join(" / ") : "-";
+    const cargasCur = lastCur ? [lastCur.carga1, lastCur.carga2, lastCur.carga3, lastCur.carga4].map(v => v || "-").join(" / ") : "-";
+
+    html += "<tr>" +
+      "<td>" + id + "</td>" +
+      "<td>" + sessOld + "</td>" +
+      "<td>" + sessCur + "</td>" +
+      "<td>" + cargasOld + "</td>" +
+      "<td>" + cargasCur + "</td>" +
+      "</tr>";
+  });
+
+  html += "</tbody></table>";
+  tableDiv.innerHTML = html;
+}
+
+function loadAndCompare() {
+  let curLogObj = {};
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) curLogObj = JSON.parse(raw);
+  } catch (e) {
+    console.error("Erro lendo log atual", e);
+    setStatus("Erro ao ler log atual do navegador.");
+    return;
+  }
+  const fileInput = document.getElementById("fileOld");
+  const file = fileInput && fileInput.files && fileInput.files[0];
+  if (!file) {
+    setStatus("Selecione um arquivo .json antigo antes de carregar.");
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const text = e.target.result;
+      const oldLogObj = JSON.parse(text);
+      const kOld = computeKPIsFromLog(oldLogObj);
+      const kCur = computeKPIsFromLog(curLogObj);
+      renderComparison(kOld, kCur);
+      setStatus("Logs carregados: " + Object.keys(oldLogObj || {}).length + " registros antigos · " + Object.keys(curLogObj || {}).length + " registros atuais.");
+    } catch (err) {
+      console.error(err);
+      setStatus("Erro ao ler arquivo JSON antigo.");
+    }
+  };
+  reader.readAsText(file, "utf-8");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("btnLoad");
+  if (btn) {
+    btn.addEventListener("click", loadAndCompare);
+  }
+});
+</script>
+</body>
+</html>
