@@ -1,859 +1,1128 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Guerra Fit – Treinos</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="guerra-fit-icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="guerra-fit-icon-192.png">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0f172a">
-    <style>
-        :root {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            color-scheme: light dark;
-        }
-        body {
-            margin: 0;
-            background: #020617;
-            color: #e5e7eb;
-        }
-        header {
-            padding: 12px 16px 10px;
-            background: #020617;
-            border-bottom: 1px solid #1f2937;
-        }
-        header h1 {
-            margin: 0;
-            font-size: 18px;
-        }
-        header small {
-            color: #9ca3af;
-            font-size: 12px;
-        }
-        main {
-            padding: 10px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        .card {
-            background: #020617;
-            border-radius: 12px;
-            border: 1px solid #1f2937;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-        label {
-            font-size: 12px;
-            display: block;
-            margin-bottom: 2px;
-        }
-        input[type="file"],
-        select,
-        input[type="date"] {
-            background: #020617;
-            border-radius: 8px;
-            border: 1px solid #4b5563;
-            padding: 8px 10px;
-            font-size: 13px;
-            color: #e5e7eb;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        input[type="file"] {
-            padding: 6px;
-        }
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .col-6 {
-            flex: 1 1 48%;
-            min-width: 150px;
-        }
-        @media (max-width: 640px) {
-            .col-6 {
-                flex: 1 1 100%;
-            }
-        }
-        .tabs {
-            display: flex;
-            gap: 6px;
-            margin-top: 4px;
-            margin-bottom: 8px;
-        }
-        .tab-btn {
-            flex: 1;
-            padding: 8px 10px;
-            border-radius: 999px;
-            border: 1px solid #4b5563;
-            background: #020617;
-            color: #e5e7eb;
-            font-size: 13px;
-            cursor: pointer;
-        }
-        .tab-btn.active {
-            background: #2563eb;
-            border-color: #2563eb;
-        }
-        .status {
-            font-size: 11px;
-            color: #9ca3af;
-            margin-top: 4px;
-        }
-        .help-text {
-            font-size: 11px;
-            color: #9ca3af;
-        }
-        .pill {
-            display: inline-flex;
-            align-items: center;
-            padding: 4px 8px;
-            border-radius: 999px;
-            background: #0b1120;
-            border: 1px solid #374151;
-            font-size: 11px;
-            gap: 6px;
-        }
-        .pill-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 999px;
-            background: #22c55e;
-        }
-        .scroll-box {
-            max-height: 60vh;
-            overflow: auto;
-            border-radius: 12px;
-            border: 1px solid #1f2937;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            font-size: 11px;
-            min-width: 600px;
-        }
-        th, td {
-            border: 1px solid #1f2937;
-            padding: 4px 6px;
-            text-align: left;
-        }
-        th {
-            background: #020617;
-            position: sticky;
-            top: 0;
-            z-index: 1;
-        }
-        tr:nth-child(even) td {
-            background: #020617;
-        }
-        tr:nth-child(odd) td {
-            background: #020617;
-        }
-        button.link-btn, button.ghost-btn {
-            padding: 7px 10px;
-            font-size: 12px;
-            border-radius: 999px;
-            border: 1px solid #4b5563;
-            background: #020617;
-            color: #e5e7eb;
-            cursor: pointer;
-        }
-        button.link-btn:hover,
-        button.ghost-btn:hover {
-            background: #111827;
-        }
-        button.primary {
-            background: #2563eb;
-            border-color: #2563eb;
-        }
-        .week-section-title {
-            font-weight: 600;
-            font-size: 13px;
-            margin-top: 10px;
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .week-section-title span {
-            font-size: 11px;
-            color: #9ca3af;
-        }
-        .badge {
-            padding: 3px 6px;
-            border-radius: 999px;
-            font-size: 10px;
-        }
-        .badge-dia {
-            background: #0b1120;
-            border: 1px solid #3b82f6;
-        }
-        .badge-rpe-alvo {
-            background: #0b1120;
-            border: 1px solid #f97316;
-        }
-        /* --- Estilo MOBILE para o treino do dia (cards) --- */
-        .day-cards-wrapper {
-            padding: 8px;
-        }
-        .exercise-card {
-            border-radius: 12px;
-            border: 1px solid #1f2937;
-            background: #020617;
-            padding: 10px;
-            margin-bottom: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .exercise-header {
-            display: flex;
-            justify-content: space-between;
-            gap: 8px;
-            align-items: center;
-        }
-        .exercise-title {
-            font-size: 13px;
-            font-weight: 600;
-        }
-        .exercise-sub {
-            font-size: 11px;
-            color: #9ca3af;
-        }
-        .exercise-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            font-size: 11px;
-        }
-        .pill-small {
-            padding: 2px 6px;
-            border-radius: 999px;
-            border: 1px solid #4b5563;
-            font-size: 10px;
-        }
-        .exercise-fields {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px;
-        }
-        @media (max-width: 640px) {
-            .exercise-fields {
-                grid-template-columns: 1fr;
-            }
-        }
-        .field-block {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-        .field-block label {
-            font-size: 11px;
-        }
-        input.cell-input, textarea.cell-input {
-            width: 100%;
-            box-sizing: border-box;
-            border-radius: 8px;
-            border: 1px solid #4b5563;
-            background: #020617;
-            color: #e5e7eb;
-            font-size: 12px;
-            padding: 6px 8px;
-        }
-        textarea.cell-input {
-            resize: vertical;
-            min-height: 48px;
-        }
-        .cargas-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 4px;
-        }
-        .cargas-grid input {
-            text-align: center;
-        }
-        @media (max-width: 640px) {
-            .cargas-grid {
-                grid-template-columns: repeat(4, minmax(0,1fr));
-            }
-        }
-        .bottom-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 8px;
-            margin-top: 4px;
-        }
-        .chk-label {
-            font-size: 11px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .hidden {
-            display: none;
-        }
-        .top-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 8px;
-        }
-        @media (max-width: 640px) {
-            .top-actions {
-                flex-direction: column;
-            }
-            .top-actions button {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Guerra Fit – Treinos, Corrida e Alimentação</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color-scheme: light dark;
+    }
+    body {
+      margin: 0;
+      background: #020617;
+      color: #e5e7eb;
+    }
+    header {
+      padding: 12px 16px 10px;
+      background: #020617;
+      border-bottom: 1px solid #1f2937;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 18px;
+    }
+    header small {
+      color: #9ca3af;
+      font-size: 12px;
+    }
+    main {
+      padding: 10px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #020617;
+      border-radius: 12px;
+      border: 1px solid #1f2937;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    label {
+      font-size: 12px;
+      display: block;
+      margin-bottom: 2px;
+    }
+    input[type="file"],
+    select,
+    input[type="date"],
+    input[type="number"],
+    input[type="text"],
+    textarea {
+      background: #020617;
+      border-radius: 8px;
+      border: 1px solid #4b5563;
+      padding: 6px 8px;
+      font-size: 13px;
+      color: #e5e7eb;
+      box-sizing: border-box;
+      width: 100%;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .col-6 {
+      flex: 1 1 48%;
+      min-width: 150px;
+    }
+    @media (max-width: 640px) {
+      .col-6 {
+        flex: 1 1 100%;
+      }
+    }
+    .top-tabs {
+      display: flex;
+      gap: 6px;
+    }
+    .top-tab-btn {
+      flex: 1;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .top-tab-btn.active {
+      background: #16a34a;
+      border-color: #16a34a;
+    }
+    .tabs-treino,
+    .tabs-alim {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .tab-btn-treino,
+    .tab-btn-alim {
+      flex: 1;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .tab-btn-treino.active,
+    .tab-btn-alim.active {
+      background: #2563eb;
+      border-color: #2563eb;
+    }
+    .status {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 4px;
+    }
+    .help-text {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    .exercise-card {
+      border-radius: 12px;
+      border: 1px solid #1f2937;
+      padding: 10px;
+      margin-bottom: 8px;
+    }
+    .exercise-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    .exercise-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .exercise-sub {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    .pill {
+      display: inline-flex;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      font-size: 10px;
+    }
+    .exercise-fields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    @media (max-width: 640px) {
+      .exercise-fields {
+        grid-template-columns: 1fr;
+      }
+    }
+    .field-block {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .field-block label {
+      font-size: 11px;
+    }
+    .bottom-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    button {
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    button.primary {
+      background: #2563eb;
+      border-color: #2563eb;
+    }
+    .hidden {
+      display: none;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 8px;
+    }
+    @media (max-width: 640px) {
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .summary-box {
+      border-radius: 10px;
+      border: 1px solid #1f2937;
+      padding: 8px;
+      font-size: 12px;
+    }
+    .summary-title {
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge {
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      font-size: 10px;
+      display: inline-block;
+      margin-right: 4px;
+    }
+    .shopping-category {
+      margin-bottom: 8px;
+    }
+    .shopping-category-title {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .shopping-item {
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 2px;
+    }
+    .meal-block {
+      border-radius: 10px;
+      border: 1px solid #1f2937;
+      padding: 8px;
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+    .meal-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+  </style>
 </head>
 <body>
 <header>
-    <h1>Guerra Fit – Treinos</h1>
-    <small>Guerra Fit · Treinos semanais com registro de carga, peso e RPE no próprio navegador.</small>
+  <h1>Guerra Fit</h1>
+  <small>Treinos, corrida e alimentação – semana iniciando na terça.</small>
 </header>
 <main>
+  <!-- Navegação principal: Treinos x Alimentação -->
+  <div class="card">
+    <div class="top-tabs">
+      <button class="top-tab-btn active" data-main="treino">Treinos</button>
+      <button class="top-tab-btn" data-main="alimentacao">Alimentação</button>
+    </div>
+  </div>
+
+  <!-- VISTA TREINO -->
+  <div id="view-treino">
     <div class="card">
-        <div class="row">
-            <div class="col-6">
-                <label for="fileInput">Arquivo de treinos (.csv ou .json)</label>
-                <input type="file" id="fileInput" accept=".csv,.json" />
-            </div>
-            <div class="col-6">
-                <label for="diaSelect">Dia do treino</label>
-                <select id="diaSelect"></select>
-            </div>
+      <div class="row">
+        <div class="col-6">
+          <label for="fileInput">Arquivo de treinos (.csv)</label>
+          <input type="file" id="fileInput" accept=".csv">
         </div>
-        <div class="row" style="margin-top:8px;">
-            <div class="col-6">
-                <label for="dataInput">Data do treino</label>
-                <input type="date" id="dataInput" />
-            </div>
-            <div class="col-6">
-                <label>&nbsp;</label>
-                <div class="pill">
-                    <span class="pill-dot"></span>
-                    <span>RPE alvo = planejado · RPE percebido = sua percepção real</span>
-                </div>
-            </div>
+        <div class="col-6">
+          <label for="diaSelect">Dia do treino</label>
+          <select id="diaSelect"></select>
         </div>
-
-        <div class="top-actions">
-            <button id="btnExportJson" class="ghost-btn">Exportar dados (.json) para salvar no GitHub</button>
-            <button id="btnVerEvolucao" class="link-btn primary">Ver evolução (abrir dashboard)</button>
+      </div>
+      <div class="row" style="margin-top:8px;">
+        <div class="col-6">
+          <label for="dataInput">Data do treino</label>
+          <input type="date" id="dataInput">
         </div>
-
-        <div class="status" id="statusText">Nenhum arquivo carregado ainda.</div>
-        <div class="help-text" style="margin-top:4px;">
-            Formato sugerido do .csv: Dia, Grupo, Exercício, Tipo, Séries, Reps alvo, RPE alvo, Intervalo (seg), Aquecimento?, Link vídeo/imagem.
+        <div class="col-6">
+          <label>&nbsp;</label>
+          <div class="help-text">
+            Peso corporal, cargas, corrida (tempo, km, esteira/rua) e RPE são salvos automaticamente no navegador.
+          </div>
         </div>
+      </div>
+      <div class="row" style="margin-top:8px;">
+        <div class="col-6">
+          <button id="btnExport" class="primary">Exportar dados (.json)</button>
+        </div>
+        <div class="col-6">
+          <button id="btnReset">Limpar dados deste dia</button>
+        </div>
+      </div>
+      <div class="status" id="statusText">Carregue o arquivo de treinos para começar (treinos_guerra_corrida.csv).</div>
     </div>
 
     <div class="card">
-        <div class="tabs">
-            <button class="tab-btn active" data-tab="semana">Treinos da semana</button>
-            <button class="tab-btn" data-tab="dia">Treino do dia</button>
-        </div>
+      <div class="tabs-treino">
+        <button class="tab-btn-treino active" data-tab="dia">Treino do dia</button>
+        <button class="tab-btn-treino" data-tab="cardio">Cardio (corrida) – dia / semana</button>
+      </div>
 
-        <div id="tab-semana">
-            <div style="overflow-x:auto;" class="scroll-box">
-                <div id="semanaContainer"></div>
+      <div id="tab-dia">
+        <div id="diaInfo" class="help-text" style="margin-bottom:6px;"></div>
+        <div id="diaContainer"></div>
+      </div>
+
+      <div id="tab-cardio" class="hidden">
+        <div class="summary-grid">
+          <div class="summary-box">
+            <div class="summary-title">Cardio do dia</div>
+            <div id="cardioDiaResumo">
+              Nenhum registro de corrida/caminhada ainda para esta data.
             </div>
+          </div>
+          <div class="summary-box">
+            <div class="summary-title">Cardio últimos 7 dias</div>
+            <div id="cardioSemanaResumo">
+              Nenhum registro nos últimos 7 dias.
+            </div>
+          </div>
         </div>
-
-        <div id="tab-dia" class="hidden">
-            <div id="diaContainer" class="scroll-box"></div>
+        <div class="help-text" style="margin-top:6px;">
+          São considerados cardio os exercícios com grupo "Corrida", "Aquecimento", "Recuperação"
+          ou tipo contendo "Cardio".
         </div>
+      </div>
     </div>
+  </div>
+
+  <!-- VISTA ALIMENTAÇÃO -->
+  <div id="view-alimentacao" class="hidden">
+    <div class="card">
+      <div class="tabs-alim">
+        <button class="tab-btn-alim active" data-tab="alim-dia">Cardápio do dia</button>
+        <button class="tab-btn-alim" data-tab="alim-semana">Cardápio da semana</button>
+        <button class="tab-btn-alim" data-tab="alim-compras">Lista de compras</button>
+      </div>
+
+      <!-- Cardápio do dia -->
+      <div id="tab-alim-dia">
+        <div id="cardapioDiaInfo" class="help-text" style="margin-bottom:6px;"></div>
+        <div id="cardapioDiaContainer"></div>
+      </div>
+
+      <!-- Cardápio da semana -->
+      <div id="tab-alim-semana" class="hidden">
+        <div id="cardapioSemanaContainer" class="help-text"></div>
+      </div>
+
+      <!-- Lista de compras -->
+      <div id="tab-alim-compras" class="hidden">
+        <div class="help-text" style="margin-bottom:6px;">
+          Lista base para 1 semana de dieta (~2.200–2.400 kcal/dia, alto em proteína).
+          Marque o que já comprou.
+        </div>
+        <div id="shoppingContainer"></div>
+      </div>
+    </div>
+  </div>
 </main>
 
 <script>
+const STORAGE_KEY = "treino_diario_guerra_v1_mobile";
+const SHOPPING_KEY = "guerra_fit_shopping_v1";
+
 let baseExercises = [];
 let dailyLog = {};
-const STORAGE_KEY = "treino_diario_guerra_v1_mobile";
+
+const shoppingItems = [
+  { id: "frango", label: "Peito de frango (2–3kg)", category: "Proteínas" },
+  { id: "ovos", label: "Ovos (36 unidades)", category: "Proteínas" },
+  { id: "carne_mag", label: "Carne vermelha magra (1–2kg)", category: "Proteínas" },
+  { id: "peixe", label: "Peixe (1kg)", category: "Proteínas" },
+  { id: "iogurte", label: "Iogurte natural/greco sem açúcar (6×500g)", category: "Proteínas" },
+  { id: "cottage", label: "Cottage ou ricota (500g)", category: "Proteínas" },
+
+  { id: "arroz_int", label: "Arroz integral (2kg)", category: "Carboidratos" },
+  { id: "batata_doce", label: "Batata doce (2,5kg)", category: "Carboidratos" },
+  { id: "aveia", label: "Aveia em flocos (1kg)", category: "Carboidratos" },
+  { id: "pao_int", label: "Pão integral 100% (2 pacotes)", category: "Carboidratos" },
+  { id: "banana", label: "Banana (14 unidades)", category: "Carboidratos" },
+  { id: "maca", label: "Maçã (7 unidades)", category: "Carboidratos" },
+
+  { id: "verd_verde", label: "Folhas verdes (3 pacotes)", category: "Verduras/Legumes" },
+  { id: "brocolis", label: "Brócolis (2 cabeças)", category: "Verduras/Legumes" },
+  { id: "abobrinha", label: "Abobrinha (4 unidades)", category: "Verduras/Legumes" },
+  { id: "cenoura", label: "Cenoura (1kg)", category: "Verduras/Legumes" },
+  { id: "tomate", label: "Tomate (1,5kg)", category: "Verduras/Legumes" },
+
+  { id: "azeite", label: "Azeite de oliva extra virgem (500ml)", category: "Gorduras boas" },
+  { id: "castanhas", label: "Castanhas/nozes/amêndoas (600g)", category: "Gorduras boas" },
+  { id: "abacate", label: "Abacate (4 unidades)", category: "Gorduras boas" },
+  { id: "pasta_amendoim", label: "Pasta de amendoim (450g)", category: "Gorduras boas" },
+
+  { id: "agua", label: "Água (galão/garrafas para a semana)", category: "Suporte" },
+  { id: "cafe", label: "Café / chá sem açúcar", category: "Suporte" }
+];
 
 function setStatus(msg) {
-    const s = document.getElementById("statusText");
-    if (s) s.textContent = msg;
+  const el = document.getElementById("statusText");
+  if (el) el.textContent = msg;
 }
+
 function todayISO() {
-    const d = new Date();
-    const off = d.getTimezoneOffset();
-    const local = new Date(d.getTime() - off*60*1000);
-    return local.toISOString().slice(0,10);
+  const d = new Date();
+  const off = d.getTimezoneOffset();
+  const local = new Date(d.getTime() - off * 60000);
+  return local.toISOString().slice(0, 10);
 }
+
 function loadDailyLog() {
-    try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return;
-        dailyLog = JSON.parse(raw);
-    } catch (e) {
-        console.error("Erro ao carregar dailyLog", e);
-        dailyLog = {};
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      dailyLog = {};
+      return;
     }
+    dailyLog = JSON.parse(raw);
+  } catch (e) {
+    console.error("Erro ao carregar dailyLog", e);
+    dailyLog = {};
+  }
 }
+
 function saveDailyLog() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(dailyLog));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(dailyLog));
 }
-function normalizeDiaLabel(dia) {
-    if (!dia) return "";
-    return dia.toString().trim();
-}
-function parseCSV(text) {
-    const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
-    if (lines.length < 2) return [];
-    let delimiter = ",";
-    const firstLine = lines[0];
-    const countComma = (firstLine.match(/,/g) || []).length;
-    const countSemicolon = (firstLine.match(/;/g) || []).length;
-    if (countSemicolon > countComma) delimiter = ";";
-    const headers = lines[0].split(delimiter).map(h => h.trim());
-    function getVal(cells, name) {
-        const idx = headers.indexOf(name);
-        if (idx === -1) return "";
-        return (cells[idx] || "").trim();
-    }
-    const rows = [];
-    for (let i = 1; i < lines.length; i++) {
-        const line = lines[i];
-        if (!line.trim()) continue;
-        const cells = line.split(delimiter);
-        const row = {
-            dia: getVal(cells, "Dia"),
-            grupo: getVal(cells, "Grupo"),
-            exercicio: getVal(cells, "Exercício") || getVal(cells, "Exercicio"),
-            tipo: getVal(cells, "Tipo"),
-            series: getVal(cells, "Séries") || getVal(cells, "Series"),
-            repsAlvo: getVal(cells, "Reps alvo") || getVal(cells, "Reps"),
-            rpeAlvo: getVal(cells, "RPE alvo") || getVal(cells, "RPE"),
-            intervaloSeg: getVal(cells, "Intervalo (seg)") || getVal(cells, "Intervalo"),
-            aquecimento: getVal(cells, "Aquecimento?") || getVal(cells, "Aquecimento"),
-            midia: getVal(cells, "Link vídeo/imagem") || getVal(cells, "Midia") || getVal(cells, "Mídia")
-        };
-        if (Object.values(row).every(v => !v)) continue;
-        rows.push(row);
-    }
-    return rows;
-}
-function parseJSON(text) {
-    const data = JSON.parse(text);
-    if (!Array.isArray(data)) return [];
-    return data.map((r) => ({
-        dia: r.Dia || r.dia || "",
-        grupo: r.Grupo || r.grupo || "",
-        exercicio: r["Exercício"] || r.exercicio || r.Exercicio || "",
-        tipo: r.Tipo || r.tipo || "",
-        series: r["Séries"] || r.series || r.Series || "",
-        repsAlvo: r["Reps alvo"] || r.repsAlvo || r.Reps || "",
-        rpeAlvo: r["RPE alvo"] || r.rpeAlvo || r.RPE || "",
-        intervaloSeg: r["Intervalo (seg)"] || r.intervaloSeg || r.Intervalo || "",
-        aquecimento: r["Aquecimento?"] || r.aquecimento || r.Aquecimento || "",
-        midia: r["Link vídeo/imagem"] || r.midia || r.Midia || ""
-    }));
-}
-function handleFile(file) {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        try {
-            const text = e.target.result;
-            let rows = [];
-            if (file.name.toLowerCase().endsWith(".json")) {
-                rows = parseJSON(text);
-            } else {
-                rows = parseCSV(text);
-            }
-            if (!rows.length) {
-                setStatus("Arquivo carregado, mas não foi possível ler exercícios.");
-                return;
-            }
-            baseExercises = rows.map((r, idx) => ({ id: "ex_" + idx, ...r }));
-            setStatus("Arquivo carregado com " + baseExercises.length + " exercícios.");
-            rebuildDiaOptions();
-            renderSemana();
-            renderDia();
-        } catch (err) {
-            console.error(err);
-            setStatus("Erro ao ler arquivo: " + err.message);
-        }
-    };
-    reader.readAsText(file, "utf-8");
-}
-function groupByDia() {
-    const map = {};
-    baseExercises.forEach(ex => {
-        const dia = normalizeDiaLabel(ex.dia);
-        if (!dia) return;
-        if (!map[dia]) map[dia] = [];
-        map[dia].push(ex);
-    });
-    return map;
-}
-function renderSemana() {
-    const container = document.getElementById("semanaContainer");
-    if (!container) return;
-    container.innerHTML = "";
-    if (!baseExercises.length) {
-        container.innerHTML = "<div style='padding:8px;font-size:12px;color:#9ca3af;'>Carregue um arquivo para ver os treinos da semana.</div>";
-        return;
-    }
-    const byDia = groupByDia();
-    const diasOrdenados = Object.keys(byDia);
-    if (!diasOrdenados.length) {
-        container.innerHTML = "<div style='padding:8px;font-size:12px;color:#9ca3af;'>Nenhum dia encontrado no arquivo.</div>";
-        return;
-    }
-    diasOrdenados.forEach(dia => {
-        const sectionTitle = document.createElement("div");
-        sectionTitle.className = "week-section-title";
-        sectionTitle.innerHTML = "<span class='badge badge-dia'>" + dia + "</span><span>" + byDia[dia].length + " exercícios</span>";
-        container.appendChild(sectionTitle);
-        const table = document.createElement("table");
-        const thead = document.createElement("thead");
-        thead.innerHTML = "<tr>" +
-            "<th>Grupo</th>" +
-            "<th>Exercício</th>" +
-            "<th>Tipo</th>" +
-            "<th>Séries</th>" +
-            "<th>Reps</th>" +
-            "<th>RPE alvo</th>" +
-            "<th>Intervalo (s)</th>" +
-            "<th>Aquecimento</th>" +
-            "<th>Mídia</th>" +
-            "</tr>";
-        table.appendChild(thead);
-        const tbody = document.createElement("tbody");
-        byDia[dia].forEach(ex => {
-            const tr = document.createElement("tr");
-            tr.innerHTML =
-                "<td>" + (ex.grupo || "") + "</td>" +
-                "<td>" + (ex.exercicio || "") + "</td>" +
-                "<td>" + (ex.tipo || "") + "</td>" +
-                "<td>" + (ex.series || "") + "</td>" +
-                "<td>" + (ex.repsAlvo || "") + "</td>" +
-                "<td>" + (ex.rpeAlvo || "") + "</td>" +
-                "<td>" + (ex.intervaloSeg || "") + "</td>" +
-                "<td>" + (ex.aquecimento || "") + "</td>" +
-                "<td>" + (ex.midia ? "<button class='link-btn' onclick=\"window.open('" + ex.midia + "', '_blank')\">Abrir</button>" : "") + "</td>";
-            tbody.appendChild(tr);
-        });
-        table.appendChild(tbody);
-        container.appendChild(table);
-    });
-}
+
 function getDiaSelecionado() {
-    const sel = document.getElementById("diaSelect");
-    if (!sel) return "";
-    return sel.value || "";
+  const sel = document.getElementById("diaSelect");
+  return sel && sel.value ? sel.value : "";
 }
+
 function getDataSelecionada() {
-    const inp = document.getElementById("dataInput");
-    if (!inp) return todayISO();
-    return inp.value || todayISO();
+  const inp = document.getElementById("dataInput");
+  return inp && inp.value ? inp.value : todayISO();
 }
-function keyForLog(exId, dateStr) {
-    return exId + "::" + dateStr;
+
+function keyFor(exId, dateStr) {
+  return exId + "::" + dateStr;
 }
-function getLogFor(exId, dateStr) {
-    const key = keyForLog(exId, dateStr);
-    return dailyLog[key] || {
-        peso: "",
-        rpePercebido: "",
-        carga1: "",
-        carga2: "",
-        carga3: "",
-        carga4: "",
-        obs: "",
-        concluido: false
+
+function getLog(exId, dateStr) {
+  const key = keyFor(exId, dateStr);
+  if (!dailyLog[key]) {
+    dailyLog[key] = {
+      peso: "",
+      rpePercebido: "",
+      carga1: "",
+      carga2: "",
+      carga3: "",
+      carga4: "",
+      tempoCardioMin: "",
+      distCardioKm: "",
+      cardioTipo: "",
+      obs: "",
+      concluido: false
     };
+  }
+  return dailyLog[key];
 }
+
 function updateLogField(exId, field, value) {
-    const dateStr = getDataSelecionada();
-    const key = keyForLog(exId, dateStr);
-    const current = dailyLog[key] || {
-        peso: "",
-        rpePercebido: "",
-        carga1: "",
-        carga2: "",
-        carga3: "",
-        carga4: "",
-        obs: "",
-        concluido: false
-    };
-    current[field] = value;
-    dailyLog[key] = current;
-    saveDailyLog();
+  const dateStr = getDataSelecionada();
+  const log = getLog(exId, dateStr);
+  log[field] = value;
+  const key = keyFor(exId, dateStr);
+  dailyLog[key] = log;
+  saveDailyLog();
+  updateCardioSummary();
 }
+
 function updateLogCheckbox(exId, field, checked) {
-    updateLogField(exId, field, !!checked);
+  updateLogField(exId, field, !!checked);
 }
-function renderDia() {
-    const container = document.getElementById("diaContainer");
-    if (!container) return;
-    container.innerHTML = "";
-    if (!baseExercises.length) {
-        container.innerHTML = "<div style='padding:8px;font-size:12px;color:#9ca3af;'>Carregue um arquivo para ver o treino do dia.</div>";
-        return;
-    }
-    const diaSel = getDiaSelecionado();
-    const dataSel = getDataSelecionada();
-    if (!diaSel) {
-        container.innerHTML = "<div style='padding:8px;font-size:12px;color:#9ca3af;'>Selecione o dia do treino.</div>";
-        return;
-    }
-    const exDia = baseExercises.filter(ex => normalizeDiaLabel(ex.dia) === diaSel);
-    if (!exDia.length) {
-        container.innerHTML = "<div style='padding:8px;font-size:12px;color:#9ca3af;'>Nenhum exercício encontrado para \"" + diaSel + "\".</div>";
-        return;
-    }
-    const info = document.createElement("div");
-    info.className = "help-text";
-    info.style.margin = "6px 8px";
-    info.innerHTML = "Treino de <b>" + diaSel + "</b> em " + dataSel + ". Preencha peso corporal, cargas, RPE percebido e marque concluído.";
-    container.appendChild(info);
-    const wrapper = document.createElement("div");
-    wrapper.className = "day-cards-wrapper";
-    exDia.forEach(ex => {
-        const log = getLogFor(ex.id, dataSel);
-        const card = document.createElement("div");
-        card.className = "exercise-card";
-        const header = document.createElement("div");
-        header.className = "exercise-header";
-        const left = document.createElement("div");
-        const title = document.createElement("div");
-        title.className = "exercise-title";
-        title.textContent = ex.exercicio || "";
-        const subtitle = document.createElement("div");
-        subtitle.className = "exercise-sub";
-        subtitle.textContent = (ex.grupo || "") + (ex.tipo ? " · " + ex.tipo : "");
-        left.appendChild(title);
-        left.appendChild(subtitle);
-        header.appendChild(left);
-        const badge = document.createElement("div");
-        badge.className = "badge badge-rpe-alvo";
-        badge.textContent = "RPE alvo: " + (ex.rpeAlvo || "");
-        header.appendChild(badge);
-        card.appendChild(header);
-        const meta = document.createElement("div");
-        meta.className = "exercise-meta";
-        const pill1 = document.createElement("div");
-        pill1.className = "pill-small";
-        pill1.textContent = (ex.series || "") + " x " + (ex.repsAlvo || "");
-        const pill2 = document.createElement("div");
-        pill2.className = "pill-small";
-        pill2.textContent = "Intervalo: " + (ex.intervaloSeg || "") + "s";
-        const pill3 = document.createElement("div");
-        pill3.className = "pill-small";
-        pill3.textContent = ex.aquecimento ? ("Aquecimento: " + ex.aquecimento) : "Aquecimento: padrão";
-        meta.appendChild(pill1);
-        meta.appendChild(pill2);
-        meta.appendChild(pill3);
-        card.appendChild(meta);
-        const fields = document.createElement("div");
-        fields.className = "exercise-fields";
-        const fbPeso = document.createElement("div");
-        fbPeso.className = "field-block";
-        const lbPeso = document.createElement("label");
-        lbPeso.textContent = "Peso corporal (kg)";
-        const inpPeso = document.createElement("input");
-        inpPeso.type = "number";
-        inpPeso.step = "0.1";
-        inpPeso.className = "cell-input";
-        inpPeso.value = log.peso || "";
-        inpPeso.onchange = (e) => updateLogField(ex.id, "peso", e.target.value);
-        fbPeso.appendChild(lbPeso);
-        fbPeso.appendChild(inpPeso);
-        fields.appendChild(fbPeso);
-        const fbRPE = document.createElement("div");
-        fbRPE.className = "field-block";
-        const lbRPE = document.createElement("label");
-        lbRPE.textContent = "RPE percebido (1–10)";
-        const inpRPE = document.createElement("input");
-        inpRPE.type = "number";
-        inpRPE.step = "0.5";
-        inpRPE.min = "1";
-        inpRPE.max = "10";
-        inpRPE.className = "cell-input";
-        inpRPE.value = log.rpePercebido || "";
-        inpRPE.onchange = (e) => updateLogField(ex.id, "rpePercebido", e.target.value);
-        fbRPE.appendChild(lbRPE);
-        fbRPE.appendChild(inpRPE);
-        fields.appendChild(fbRPE);
-        const fbCargas = document.createElement("div");
-        fbCargas.className = "field-block";
-        const lbCargas = document.createElement("label");
-        lbCargas.textContent = "Cargas (S1–S4)";
-        const cg = document.createElement("div");
-        cg.className = "cargas-grid";
-        ["carga1","carga2","carga3","carga4"].forEach((field, idx) => {
-            const inp = document.createElement("input");
-            inp.type = "number";
-            inp.step = "0.5";
-            inp.className = "cell-input";
-            inp.placeholder = "S" + (idx + 1);
-            inp.value = log[field] || "";
-            inp.onchange = (e) => updateLogField(ex.id, field, e.target.value);
-            cg.appendChild(inp);
-        });
-        fbCargas.appendChild(lbCargas);
-        fbCargas.appendChild(cg);
-        fields.appendChild(fbCargas);
-        const fbObs = document.createElement("div");
-        fbObs.className = "field-block";
-        const lbObs = document.createElement("label");
-        lbObs.textContent = "Observações";
-        const taObs = document.createElement("textarea");
-        taObs.className = "cell-input";
-        taObs.value = log.obs || "";
-        taObs.onchange = (e) => updateLogField(ex.id, "obs", e.target.value);
-        fbObs.appendChild(lbObs);
-        fbObs.appendChild(taObs);
-        fields.appendChild(fbObs);
-        card.appendChild(fields);
-        const bottom = document.createElement("div");
-        bottom.className = "bottom-row";
-        const chkWrap = document.createElement("label");
-        chkWrap.className = "chk-label";
-        const chk = document.createElement("input");
-        chk.type = "checkbox";
-        chk.checked = !!log.concluido;
-        chk.onchange = (e) => updateLogCheckbox(ex.id, "concluido", e.target.checked);
-        chkWrap.appendChild(chk);
-        const txtChk = document.createElement("span");
-        txtChk.textContent = "Exercício concluído";
-        chkWrap.appendChild(txtChk);
-        bottom.appendChild(chkWrap);
-        if (ex.midia) {
-            const btn = document.createElement("button");
-            btn.className = "link-btn";
-            btn.textContent = "Vídeo / imagem";
-            btn.onclick = () => window.open(ex.midia, "_blank");
-            bottom.appendChild(btn);
-        }
-        card.appendChild(bottom);
-        wrapper.appendChild(card);
-    });
-    container.appendChild(wrapper);
-}
-function rebuildDiaOptions() {
-    const sel = document.getElementById("diaSelect");
-    if (!sel) return;
-    const dias = Array.from(new Set(baseExercises.map(ex => normalizeDiaLabel(ex.dia)))).filter(Boolean);
-    sel.innerHTML = "";
-    const optEmpty = document.createElement("option");
-    optEmpty.value = "";
-    optEmpty.textContent = "Selecione...";
-    sel.appendChild(optEmpty);
-    dias.forEach(d => {
-        const opt = document.createElement("option");
-        opt.value = d;
-        opt.textContent = d;
-        sel.appendChild(opt);
-    });
-    const hoje = new Date();
-    const wd = hoje.getDay();
-    const map = {
-        0: "Domingo",
-        1: "Segunda",
-        2: "Terça",
-        3: "Quarta",
-        4: "Quinta",
-        5: "Sexta",
-        6: "Sábado"
+
+function parseCSV(text) {
+  const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+  if (lines.length < 2) return [];
+  let delimiter = ";";
+  const headerLine = lines[0];
+  if (headerLine.includes(",") && !headerLine.includes(";")) delimiter = ",";
+  const headers = headerLine.split(delimiter).map(h => h.trim());
+  function getVal(cells, name) {
+    const idx = headers.indexOf(name);
+    return idx === -1 ? "" : (cells[idx] || "").trim();
+  }
+  const out = [];
+  for (let i = 1; i < lines.length; i++) {
+    const cells = lines[i].split(delimiter);
+    const row = {
+      dia: getVal(cells, "Dia"),
+      grupo: getVal(cells, "Grupo"),
+      exercicio: getVal(cells, "Exercício"),
+      tipo: getVal(cells, "Tipo"),
+      series: getVal(cells, "Séries"),
+      repsTempo: getVal(cells, "Reps/Tempo"),
+      rpeZona: getVal(cells, "RPE/Zona"),
+      aquecimento: getVal(cells, "Aquecimento?"),
+      midia: getVal(cells, "Link vídeo")
     };
-    const nomeHoje = map[wd] || "";
-    const found = dias.find(d => d.toLowerCase().startsWith(nomeHoje.toLowerCase().slice(0,3)));
-    if (found) sel.value = found;
-}
-function initDate() {
-    const inp = document.getElementById("dataInput");
-    if (!inp) return;
-    if (!inp.value) inp.value = todayISO();
-}
-function initTabs() {
-    const buttons = document.querySelectorAll(".tab-btn");
-    buttons.forEach(btn => {
-        btn.addEventListener("click", () => {
-            buttons.forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            const tab = btn.dataset.tab;
-            document.getElementById("tab-semana").classList.add("hidden");
-            document.getElementById("tab-dia").classList.add("hidden");
-            if (tab === "semana") {
-                document.getElementById("tab-semana").classList.remove("hidden");
-            } else {
-                document.getElementById("tab-dia").classList.remove("hidden");
-            }
-        });
-    });
+    if (Object.values(row).every(v => !v)) continue;
+    out.push(row);
+  }
+  return out;
 }
 
-// Exporta os dados (dailyLog) em JSON para download
-function exportJsonLogs() {
-    try {
-        const dataStr = JSON.stringify(dailyLog, null, 2);
-        const blob = new Blob([dataStr], { type: "application/json;charset=utf-8" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "guerra_fit_logs.json";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        setStatus("Arquivo guerra_fit_logs.json exportado. Envie esse arquivo para o seu repositório no GitHub para versionar sua evolução.");
-    } catch (e) {
-        console.error(e);
-        setStatus("Erro ao exportar JSON de evolução.");
+function rebuildDiaOptions() {
+  const sel = document.getElementById("diaSelect");
+  if (!sel) return;
+  const dias = Array.from(new Set(baseExercises.map(e => (e.dia || "").trim()))).filter(Boolean);
+
+  const ordemDesejada = ["Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo", "Segunda"];
+  dias.sort((a, b) => {
+    const ia = ordemDesejada.indexOf(a);
+    const ib = ordemDesejada.indexOf(b);
+    if (ia === -1 && ib === -1) return a.localeCompare(b);
+    if (ia === -1) return 1;
+    if (ib === -1) return -1;
+    return ia - ib;
+  });
+
+  sel.innerHTML = "";
+  const opt0 = document.createElement("option");
+  opt0.value = "";
+  opt0.textContent = "Selecione o dia";
+  sel.appendChild(opt0);
+  dias.forEach(d => {
+    const opt = document.createElement("option");
+    opt.value = d;
+    opt.textContent = d;
+    sel.appendChild(opt);
+  });
+
+  const hoje = new Date();
+  const wd = hoje.getDay();
+  const mapa = {
+    0: "Domingo",
+    1: "Segunda",
+    2: "Terça",
+    3: "Quarta",
+    4: "Quinta",
+    5: "Sexta",
+    6: "Sábado"
+  };
+  const nomeHoje = mapa[wd] || "";
+  const found = dias.find(d => d === nomeHoje);
+  if (found) sel.value = found;
+}
+
+function renderDia() {
+  const container = document.getElementById("diaContainer");
+  const info = document.getElementById("diaInfo");
+  if (!container || !info) return;
+  container.innerHTML = "";
+
+  if (!baseExercises.length) {
+    info.textContent = "Carregue um arquivo de treinos (.csv).";
+    return;
+  }
+
+  const diaSel = getDiaSelecionado();
+  const dataSel = getDataSelecionada();
+  if (!diaSel) {
+    info.textContent = "Selecione o dia do treino.";
+    return;
+  }
+  info.textContent = "Treino de " + diaSel + " em " + dataSel + ".";
+
+  const doDia = baseExercises.filter(e => (e.dia || "").trim() === diaSel);
+  if (!doDia.length) {
+    container.innerHTML = "<div class='help-text'>Nenhum exercício encontrado para este dia.</div>";
+    return;
+  }
+
+  doDia.forEach((ex, idx) => {
+    const exId = "ex_" + idx + "_" + diaSel;
+    const log = getLog(exId, dataSel);
+
+    const card = document.createElement("div");
+    card.className = "exercise-card";
+
+    const header = document.createElement("div");
+    header.className = "exercise-header";
+
+    const left = document.createElement("div");
+    const title = document.createElement("div");
+    title.className = "exercise-title";
+    title.textContent = ex.exercicio || "";
+    const sub = document.createElement("div");
+    sub.className = "exercise-sub";
+    sub.textContent = (ex.grupo || "") + (ex.tipo ? " · " + ex.tipo : "");
+    left.appendChild(title);
+    left.appendChild(sub);
+    header.appendChild(left);
+
+    const badge = document.createElement("div");
+    badge.className = "pill";
+    badge.textContent = ex.repsTempo + (ex.rpeZona ? " · " + ex.rpeZona : "");
+    header.appendChild(badge);
+
+    card.appendChild(header);
+
+    const isCardio = (ex.grupo || "").toLowerCase().includes("corrida") ||
+                     (ex.grupo || "").toLowerCase().includes("recuperação") ||
+                     (ex.grupo || "").toLowerCase().includes("aquecimento") ||
+                     (ex.tipo || "").toLowerCase().includes("cardio");
+
+    if (isCardio) {
+      const alvo = document.createElement("div");
+      alvo.className = "exercise-sub";
+      alvo.textContent = "Alvo da corrida: " +
+        (ex.repsTempo || "tempo definido") +
+        (ex.rpeZona ? " · " + ex.rpeZona : "");
+      card.appendChild(alvo);
     }
+
+    const fields = document.createElement("div");
+    fields.className = "exercise-fields";
+
+    // Peso corporal
+    const fbPeso = document.createElement("div");
+    fbPeso.className = "field-block";
+    const lbPeso = document.createElement("label");
+    lbPeso.textContent = "Peso corporal (kg)";
+    const inpPeso = document.createElement("input");
+    inpPeso.type = "number";
+    inpPeso.step = "0.1";
+    inpPeso.value = log.peso || "";
+    inpPeso.onchange = (e) => updateLogField(exId, "peso", e.target.value);
+    fbPeso.appendChild(lbPeso);
+    fbPeso.appendChild(inpPeso);
+    fields.appendChild(fbPeso);
+
+    // RPE percebido
+    const fbRPE = document.createElement("div");
+    fbRPE.className = "field-block";
+    const lbRPE = document.createElement("label");
+    lbRPE.textContent = "RPE percebido (1–10)";
+    const inpRPE = document.createElement("input");
+    inpRPE.type = "number";
+    inpRPE.step = "0.5";
+    inpRPE.min = "1";
+    inpRPE.max = "10";
+    inpRPE.value = log.rpePercebido || "";
+    inpRPE.onchange = (e) => updateLogField(exId, "rpePercebido", e.target.value);
+    fbRPE.appendChild(lbRPE);
+    fbRPE.appendChild(inpRPE);
+    fields.appendChild(fbRPE);
+
+    if (!isCardio) {
+      const fbCarga = document.createElement("div");
+      fbCarga.className = "field-block";
+      const lbCarga = document.createElement("label");
+      lbCarga.textContent = "Cargas (S1–S4)";
+      const wrap = document.createElement("div");
+      wrap.style.display = "grid";
+      wrap.style.gridTemplateColumns = "repeat(4, minmax(0,1fr))";
+      wrap.style.gap = "4px";
+      ["carga1","carga2","carga3","carga4"].forEach((field, i) => {
+        const inp = document.createElement("input");
+        inp.type = "number";
+        inp.step = "0.5";
+        inp.placeholder = "S" + (i+1);
+        inp.value = log[field] || "";
+        inp.onchange = (e) => updateLogField(exId, field, e.target.value);
+        wrap.appendChild(inp);
+      });
+      fbCarga.appendChild(lbCarga);
+      fbCarga.appendChild(wrap);
+      fields.appendChild(fbCarga);
+    } else {
+      const fbTipo = document.createElement("div");
+      fbTipo.className = "field-block";
+      const lbTipo = document.createElement("label");
+      lbTipo.textContent = "Tipo de corrida";
+      const selTipo = document.createElement("select");
+      ["","Esteira","Rua/Outdoor"].forEach(v => {
+        const opt = document.createElement("option");
+        opt.value = v;
+        opt.textContent = v === "" ? "Selecione" : v;
+        selTipo.appendChild(opt);
+      });
+      selTipo.value = log.cardioTipo || "";
+      selTipo.onchange = (e) => updateLogField(exId, "cardioTipo", e.target.value);
+      fbTipo.appendChild(lbTipo);
+      fbTipo.appendChild(selTipo);
+      fields.appendChild(fbTipo);
+
+      const fbTempo = document.createElement("div");
+      fbTempo.className = "field-block";
+      const lbTempo = document.createElement("label");
+      lbTempo.textContent = "Tempo de corrida (min)";
+      const inpTempo = document.createElement("input");
+      inpTempo.type = "number";
+      inpTempo.step = "1";
+      inpTempo.value = log.tempoCardioMin || "";
+      inpTempo.onchange = (e) => updateLogField(exId, "tempoCardioMin", e.target.value);
+      fbTempo.appendChild(lbTempo);
+      fbTempo.appendChild(inpTempo);
+      fields.appendChild(fbTempo);
+
+      const fbDist = document.createElement("div");
+      fbDist.className = "field-block";
+      const lbDist = document.createElement("label");
+      lbDist.textContent = "Distância (km)";
+      const inpDist = document.createElement("input");
+      inpDist.type = "number";
+      inpDist.step = "0.1";
+      inpDist.value = log.distCardioKm || "";
+      inpDist.onchange = (e) => updateLogField(exId, "distCardioKm", e.target.value);
+      fbDist.appendChild(lbDist);
+      fbDist.appendChild(inpDist);
+      fields.appendChild(fbDist);
+    }
+
+    // Observações
+    const fbObs = document.createElement("div");
+    fbObs.className = "field-block";
+    const lbObs = document.createElement("label");
+    lbObs.textContent = "Observações";
+    const taObs = document.createElement("textarea");
+    taObs.value = log.obs || "";
+    taObs.onchange = (e) => updateLogField(exId, "obs", e.target.value);
+    fbObs.appendChild(lbObs);
+    fbObs.appendChild(taObs);
+    fields.appendChild(fbObs);
+
+    card.appendChild(fields);
+
+    const bottom = document.createElement("div");
+    bottom.className = "bottom-row";
+
+    const lblChk = document.createElement("label");
+    lblChk.style.fontSize = "11px";
+    const chk = document.createElement("input");
+    chk.type = "checkbox";
+    chk.checked = !!log.concluido;
+    chk.onchange = (e) => updateLogCheckbox(exId, "concluido", e.target.checked);
+    lblChk.appendChild(chk);
+    const spanTxt = document.createElement("span");
+    spanTxt.textContent = "Exercício concluído";
+    lblChk.appendChild(spanTxt);
+    bottom.appendChild(lblChk);
+
+    if (ex.midia) {
+      const btn = document.createElement("button");
+      btn.textContent = "Vídeo / imagem";
+      btn.onclick = () => window.open(ex.midia, "_blank");
+      bottom.appendChild(btn);
+    }
+
+    card.appendChild(bottom);
+    container.appendChild(card);
+  });
+
+  updateCardioSummary();
 }
 
-// Abre o dashboard de análise (analise.html)
-function openAnalise() {
-    window.open("analise.html", "_blank");
+function updateCardioSummary() {
+  const diaSel = getDiaSelecionado();
+  const dataSel = getDataSelecionada();
+  const diaDiv = document.getElementById("cardioDiaResumo");
+  const semDiv = document.getElementById("cardioSemanaResumo");
+  if (!diaDiv || !semDiv) return;
+
+  if (!baseExercises.length || !diaSel) {
+    diaDiv.textContent = "Selecione um dia e registre pelo menos uma corrida/caminhada.";
+    semDiv.textContent = "Nenhum registro para calcular.";
+    return;
+  }
+
+  let totalMinDia = 0;
+  let totalKmDia = 0;
+  Object.keys(dailyLog).forEach(key => {
+    const parts = key.split("::");
+    const exId = parts[0];
+    const data = parts[1];
+    if (data !== dataSel) return;
+    const log = dailyLog[key];
+    const match = exId.match(/^ex_(\d+)_/);
+    if (!match) return;
+    const idx = parseInt(match[1], 10);
+    const diaEx = getDiaSelecionado();
+    const doDia = baseExercises.filter(e => (e.dia || "").trim() === diaEx);
+    const ex = doDia[idx];
+    if (!ex) return;
+    const isCardio = (ex.grupo || "").toLowerCase().includes("corrida") ||
+                     (ex.grupo || "").toLowerCase().includes("recuperação") ||
+                     (ex.grupo || "").toLowerCase().includes("aquecimento") ||
+                     (ex.tipo || "").toLowerCase().includes("cardio");
+    if (!isCardio) return;
+    const min = parseFloat(log.tempoCardioMin || "0") || 0;
+    const km = parseFloat(log.distCardioKm || "0") || 0;
+    totalMinDia += min;
+    totalKmDia += km;
+  });
+  if (totalMinDia > 0 || totalKmDia > 0) {
+    diaDiv.innerHTML = "<span class='badge'>Hoje</span> " +
+                       totalMinDia.toFixed(0) + " min · " +
+                       totalKmDia.toFixed(2) + " km";
+  } else {
+    diaDiv.textContent = "Nenhum registro de corrida/caminhada para esta data.";
+  }
+
+  let totalMinSem = 0;
+  let totalKmSem = 0;
+  const baseDate = new Date(dataSel);
+  Object.keys(dailyLog).forEach(key => {
+    const parts = key.split("::");
+    const data = parts[1];
+    const d = new Date(data);
+    const diff = (baseDate - d) / (1000*60*60*24);
+    if (diff < 0 || diff > 7) return;
+    const log = dailyLog[key];
+    const exId = parts[0];
+    const match = exId.match(/^ex_(\d+)_([^:]+)$/);
+    if (!match) return;
+    const idx = parseInt(match[1], 10);
+    const diaEx = match[2];
+    const doDia = baseExercises.filter(e => (e.dia || "").trim() === diaEx);
+    const ex = doDia[idx];
+    if (!ex) return;
+    const isCardio = (ex.grupo || "").toLowerCase().includes("corrida") ||
+                     (ex.grupo || "").toLowerCase().includes("recuperação") ||
+                     (ex.grupo || "").toLowerCase().includes("aquececimento") ||
+                     (ex.tipo || "").toLowerCase().includes("cardio");
+    if (!isCardio) return;
+    const min = parseFloat(log.tempoCardioMin || "0") || 0;
+    const km = parseFloat(log.distCardioKm || "0") || 0;
+    totalMinSem += min;
+    totalKmSem += km;
+  });
+  if (totalMinSem > 0 || totalKmSem > 0) {
+    semDiv.innerHTML = "<span class='badge'>Últimos 7 dias</span> " +
+                       totalMinSem.toFixed(0) + " min · " +
+                       totalKmSem.toFixed(2) + " km";
+  } else {
+    semDiv.textContent = "Nenhum registro de cardio nos últimos 7 dias.";
+  }
+}
+
+function exportJson() {
+  const dataStr = JSON.stringify(dailyLog, null, 2);
+  const blob = new Blob([dataStr], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "guerra_fit_logs.json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  setStatus("Exportado guerra_fit_logs.json. Envie para o GitHub para versionar sua evolução.");
+}
+
+function resetDia() {
+  const dataSel = getDataSelecionada();
+  const diaSel = getDiaSelecionado();
+  if (!diaSel) return;
+  const novoLog = {};
+  Object.keys(dailyLog).forEach(key => {
+    const parts = key.split("::");
+    const data = parts[1];
+    if (data === dataSel) {
+      return;
+    }
+    novoLog[key] = dailyLog[key];
+  });
+  dailyLog = novoLog;
+  saveDailyLog();
+  renderDia();
+  setStatus("Dados do dia " + dataSel + " limpos.");
+}
+
+function loadShopping() {
+  let state = {};
+  try {
+    const raw = localStorage.getItem(SHOPPING_KEY);
+    if (raw) state = JSON.parse(raw);
+  } catch (e) {
+    state = {};
+  }
+  const container = document.getElementById("shoppingContainer");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const byCat = {};
+  shoppingItems.forEach(item => {
+    if (!byCat[item.category]) byCat[item.category] = [];
+    byCat[item.category].push(item);
+  });
+
+  Object.keys(byCat).forEach(cat => {
+    const catDiv = document.createElement("div");
+    catDiv.className = "shopping-category";
+    const title = document.createElement("div");
+    title.className = "shopping-category-title";
+    title.textContent = cat;
+    catDiv.appendChild(title);
+
+    byCat[cat].forEach(item => {
+      const row = document.createElement("div");
+      row.className = "shopping-item";
+      const chk = document.createElement("input");
+      chk.type = "checkbox";
+      chk.checked = !!state[item.id];
+      chk.onchange = (e) => {
+        state[item.id] = e.target.checked;
+        localStorage.setItem(SHOPPING_KEY, JSON.stringify(state));
+      };
+      const span = document.createElement("span");
+      span.textContent = item.label;
+      row.appendChild(chk);
+      row.appendChild(span);
+      catDiv.appendChild(row);
+    });
+
+    container.appendChild(catDiv);
+  });
+}
+
+function renderCardapioDia() {
+  const info = document.getElementById("cardapioDiaInfo");
+  const cont = document.getElementById("cardapioDiaContainer");
+  if (!info || !cont) return;
+  const diaSel = getDiaSelecionado() || "dia padrão";
+  const dataSel = getDataSelecionada();
+
+  info.textContent = "Sugestão básica para " + diaSel + " (" + dataSel + "). Depois ajustamos o cardápio fino.";
+
+  let tipoDia = "musculacao";
+  if (diaSel === "Sábado" || diaSel === "Domingo") tipoDia = "corrida";
+  if (diaSel === "Quinta") tipoDia = "leve";
+
+  const blocos = [];
+
+  if (tipoDia === "musculacao") {
+    blocos.push({
+      titulo: "Café da manhã",
+      texto: "Ovos + aveia + fruta (banana/maçã) + café sem açúcar."
+    });
+    blocos.push({
+      titulo: "Almoço",
+      texto: "Frango ou carne magra + arroz integral ou batata doce + salada de folhas + legumes."
+    });
+    blocos.push({
+      titulo: "Lanche pré-treino",
+      texto: "Pão integral + pasta de amendoim ou banana + café."
+    });
+    blocos.push({
+      titulo: "Jantar",
+      texto: "Peixe ou frango + legumes + salada. Carbo moderado (pouco arroz/batata)."
+    });
+    blocos.push({
+      titulo: "Ceia (opcional)",
+      texto: "Iogurte + castanhas, focando proteína e gordura boa."
+    });
+  } else if (tipoDia === "corrida") {
+    blocos.push({
+      titulo: "Pré-corrida",
+      texto: "Carbo leve: banana + mel ou pão integral + geleia. 30–60min antes."
+    });
+    blocos.push({
+      titulo: "Pós-corrida",
+      texto: "Iogurte + fruta + um pouco de aveia, hidratação com água."
+    });
+    blocos.push({
+      titulo: "Almoço/Jantar",
+      texto: "Proteína alta (frango, peixe) + carbo limpo (arroz integral/batata) + bastante legumes."
+    });
+  } else {
+    blocos.push({
+      titulo: "Dia leve",
+      texto: "Manter padrão com proteína alta, carbo moderado e muitas fibras (saladas/legumes)."
+    });
+  }
+
+  cont.innerHTML = "";
+  blocos.forEach(b => {
+    const div = document.createElement("div");
+    div.className = "meal-block";
+    const t = document.createElement("div");
+    t.className = "meal-title";
+    t.textContent = b.titulo;
+    const p = document.createElement("div");
+    p.textContent = b.texto;
+    div.appendChild(t);
+    div.appendChild(p);
+    cont.appendChild(div);
+  });
+}
+
+function renderCardapioSemana() {
+  const cont = document.getElementById("cardapioSemanaContainer");
+  if (!cont) return;
+  cont.innerHTML = `
+    <p>
+      Estrutura semanal alvo (2.200–2.400 kcal/dia, ~160–180g de proteína):
+    </p>
+    <ul>
+      <li>Proteína em TODAS as refeições principais (frango, carne magra, peixe, ovos, iogurte).</li>
+      <li>Carboidratos mais fortes perto de treino/corrida (arroz, batata doce, pão integral, aveia).</li>
+      <li>Verduras e legumes em pelo menos 2 refeições ao dia.</li>
+      <li>Gorduras boas moderadas (azeite, castanhas, abacate, pasta de amendoim).</li>
+      <li>Água ao longo do dia, atenção especial em dias de corrida.</li>
+    </ul>
+    <p>
+      Depois ajustamos aqui refeição por refeição (Seg–Dom) com quantidade aproximada em gramas,
+      de acordo com o plano final de macros.
+    </p>
+  `;
+}
+
+function initMainTabs() {
+  const buttons = document.querySelectorAll(".top-tab-btn");
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      buttons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const main = btn.dataset.main;
+      const vTreino = document.getElementById("view-treino");
+      const vAlim = document.getElementById("view-alimentacao");
+      if (!vTreino || !vAlim) return;
+      vTreino.classList.add("hidden");
+      vAlim.classList.add("hidden");
+      if (main === "treino") vTreino.classList.remove("hidden");
+      if (main === "alimentacao") vAlim.classList.remove("hidden");
+    });
+  });
+}
+
+function initTreinoTabs() {
+  const buttons = document.querySelectorAll(".tab-btn-treino");
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      buttons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const tab = btn.dataset.tab;
+      document.getElementById("tab-dia").classList.add("hidden");
+      document.getElementById("tab-cardio").classList.add("hidden");
+      if (tab === "dia") document.getElementById("tab-dia").classList.remove("hidden");
+      if (tab === "cardio") document.getElementById("tab-cardio").classList.remove("hidden");
+    });
+  });
+}
+
+function initAlimentacaoTabs() {
+  const buttons = document.querySelectorAll(".tab-btn-alim");
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      buttons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const tab = btn.dataset.tab;
+      document.getElementById("tab-alim-dia").classList.add("hidden");
+      document.getElementById("tab-alim-semana").classList.add("hidden");
+      document.getElementById("tab-alim-compras").classList.add("hidden");
+      if (tab === "alim-dia") document.getElementById("tab-alim-dia").classList.remove("hidden");
+      if (tab === "alim-semana") document.getElementById("tab-alim-semana").classList.remove("hidden");
+      if (tab === "alim-compras") document.getElementById("tab-alim-compras").classList.remove("hidden");
+    });
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    loadDailyLog();
-    initTabs();
-    initDate();
+  loadDailyLog();
+  initMainTabs();
+  initTreinoTabs();
+  initAlimentacaoTabs();
+  loadShopping();
+  renderCardapioSemana();
+  renderCardapioDia();
 
-    const fileInput = document.getElementById("fileInput");
-    if (fileInput) {
-        fileInput.addEventListener("change", (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                setStatus("Lendo arquivo de treinos: " + file.name + "...");
-                handleFile(file);
-            }
-        });
-    }
-    const diaSelect = document.getElementById("diaSelect");
-    if (diaSelect) {
-        diaSelect.addEventListener("change", () => renderDia());
-    }
-    const dataInput = document.getElementById("dataInput");
-    if (dataInput) {
-        dataInput.addEventListener("change", () => renderDia());
-    }
+  const dataInput = document.getElementById("dataInput");
+  if (dataInput && !dataInput.value) {
+    dataInput.value = todayISO();
+  }
 
-    const btnExport = document.getElementById("btnExportJson");
-    if (btnExport) {
-        btnExport.addEventListener("click", exportJsonLogs);
-    }
-    const btnEvol = document.getElementById("btnVerEvolucao");
-    if (btnEvol) {
-        btnEvol.addEventListener("click", openAnalise);
-    }
+  const fileInput = document.getElementById("fileInput");
+  if (fileInput) {
+    fileInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        try {
+          const text = ev.target.result;
+          baseExercises = parseCSV(text);
+          setStatus("Arquivo carregado com " + baseExercises.length + " linhas de treino.");
+          rebuildDiaOptions();
+          renderDia();
+          renderCardapioDia();
+        } catch (err) {
+          console.error(err);
+          setStatus("Erro ao ler arquivo de treinos.");
+        }
+      };
+      reader.readAsText(file, "utf-8");
+    });
+  }
 
-    renderSemana();
-    renderDia();
+  const diaSelect = document.getElementById("diaSelect");
+  if (diaSelect) {
+    diaSelect.addEventListener("change", () => { renderDia(); renderCardapioDia(); });
+  }
+  if (dataInput) {
+    dataInput.addEventListener("change", () => { renderDia(); renderCardapioDia(); });
+  }
+
+  const btnExport = document.getElementById("btnExport");
+  if (btnExport) {
+    btnExport.addEventListener("click", exportJson);
+  }
+  const btnReset = document.getElementById("btnReset");
+  if (btnReset) {
+    btnReset.addEventListener("click", resetDia);
+  }
 });
 </script>
 </body>
