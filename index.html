@@ -585,9 +585,12 @@ function renderDia() {
     const exId = "ex_" + idx + "_" + diaSel;
     const log = getLog(exId, dataSel);
 
+    const isCardio = (ex.grupo || "").toLowerCase().includes("corrida");
+
     const card = document.createElement("div");
     card.className = "exercise-card";
 
+    /* --- Título --- */
     const header = document.createElement("div");
     header.className = "exercise-header";
 
@@ -597,159 +600,118 @@ function renderDia() {
     title.textContent = ex.exercicio || "";
     const sub = document.createElement("div");
     sub.className = "exercise-sub";
-    sub.textContent = (ex.grupo || "") + (ex.tipo ? " · " + ex.tipo : "");
+    sub.textContent = (ex.grupo || "") + (ex.tipo ? " • " + ex.tipo : "");
     left.appendChild(title);
     left.appendChild(sub);
     header.appendChild(left);
 
+    /* --- Badge: Agora curto e limpo --- */
     const badge = document.createElement("div");
     badge.className = "pill";
-    badge.textContent = ex.repsTempo + (ex.rpeZona ? " · " + ex.rpeZona : "");
+    badge.textContent = isCardio ? "Corrida • Zona alvo" : ex.repsTempo;
     header.appendChild(badge);
-
     card.appendChild(header);
 
-    const isCardio = (ex.grupo || "").toLowerCase().includes("corrida") ||
-                     (ex.grupo || "").toLowerCase().includes("recuperação") ||
-                     (ex.grupo || "").toLowerCase().includes("aquecimento") ||
-                     (ex.tipo || "").toLowerCase().includes("cardio");
-
+    /* --- NOVO BLOCO DE META (somente corrida) --- */
     if (isCardio) {
-      const alvo = document.createElement("div");
-      alvo.className = "exercise-sub";
-      alvo.textContent = "Alvo da corrida: " +
-        (ex.repsTempo || "tempo definido") +
-        (ex.rpeZona ? " · " + ex.rpeZona : "");
-      card.appendChild(alvo);
+      const meta = document.createElement("div");
+      meta.style.padding = "6px 0 10px 0";
+      meta.style.fontSize = "12px";
+
+      meta.innerHTML = `
+        <div style="margin-bottom:6px; font-weight:600;">🎯 Meta da corrida</div>
+        <div><b>Tempo:</b> ${ex.repsTempo || "—"}</div>
+        <div><b>Intensidade:</b> ${ex.rpeZona || "—"}</div>
+      `;
+
+      card.appendChild(meta);
     }
 
+    /* --- Campos --- */
     const fields = document.createElement("div");
     fields.className = "exercise-fields";
 
     // Peso corporal
     const fbPeso = document.createElement("div");
     fbPeso.className = "field-block";
-    const lbPeso = document.createElement("label");
-    lbPeso.textContent = "Peso corporal (kg)";
-    const inpPeso = document.createElement("input");
-    inpPeso.type = "number";
-    inpPeso.step = "0.1";
-    inpPeso.value = log.peso || "";
-    inpPeso.onchange = (e) => updateLogField(exId, "peso", e.target.value);
-    fbPeso.appendChild(lbPeso);
-    fbPeso.appendChild(inpPeso);
+    fbPeso.innerHTML = `
+      <label>Peso corporal (kg)</label>
+      <input type="number" step="0.1" value="${log.peso || ""}"/>
+    `;
+    fbPeso.querySelector("input").onchange = e => updateLogField(exId, "peso", e.target.value);
     fields.appendChild(fbPeso);
 
     // RPE percebido
     const fbRPE = document.createElement("div");
     fbRPE.className = "field-block";
-    const lbRPE = document.createElement("label");
-    lbRPE.textContent = "RPE percebido (1–10)";
-    const inpRPE = document.createElement("input");
-    inpRPE.type = "number";
-    inpRPE.step = "0.5";
-    inpRPE.min = "1";
-    inpRPE.max = "10";
-    inpRPE.value = log.rpePercebido || "";
-    inpRPE.onchange = (e) => updateLogField(exId, "rpePercebido", e.target.value);
-    fbRPE.appendChild(lbRPE);
-    fbRPE.appendChild(inpRPE);
+    fbRPE.innerHTML = `
+      <label>RPE percebido (1–10)</label>
+      <input type="number" step="0.5" min="1" max="10" value="${log.rpePercebido || ""}"/>
+    `;
+    fbRPE.querySelector("input").onchange = e => updateLogField(exId, "rpePercebido", e.target.value);
     fields.appendChild(fbRPE);
 
-    if (!isCardio) {
-      const fbCarga = document.createElement("div");
-      fbCarga.className = "field-block";
-      const lbCarga = document.createElement("label");
-      lbCarga.textContent = "Cargas (S1–S4)";
-      const wrap = document.createElement("div");
-      wrap.style.display = "grid";
-      wrap.style.gridTemplateColumns = "repeat(4, minmax(0,1fr))";
-      wrap.style.gap = "4px";
-      ["carga1","carga2","carga3","carga4"].forEach((field, i) => {
-        const inp = document.createElement("input");
-        inp.type = "number";
-        inp.step = "0.5";
-        inp.placeholder = "S" + (i+1);
-        inp.value = log[field] || "";
-        inp.onchange = (e) => updateLogField(exId, field, e.target.value);
-        wrap.appendChild(inp);
-      });
-      fbCarga.appendChild(lbCarga);
-      fbCarga.appendChild(wrap);
-      fields.appendChild(fbCarga);
-    } else {
+    /* --- Campos de corrida: versão limpa --- */
+    if (isCardio) {
+      // Tipo
       const fbTipo = document.createElement("div");
       fbTipo.className = "field-block";
-      const lbTipo = document.createElement("label");
-      lbTipo.textContent = "Tipo de corrida";
-      const selTipo = document.createElement("select");
-      ["","Esteira","Rua/Outdoor"].forEach(v => {
-        const opt = document.createElement("option");
-        opt.value = v;
-        opt.textContent = v === "" ? "Selecione" : v;
-        selTipo.appendChild(opt);
-      });
-      selTipo.value = log.cardioTipo || "";
-      selTipo.onchange = (e) => updateLogField(exId, "cardioTipo", e.target.value);
-      fbTipo.appendChild(lbTipo);
-      fbTipo.appendChild(selTipo);
+      fbTipo.innerHTML = `
+        <label>Tipo de corrida</label>
+        <select>
+          <option value="">Selecione</option>
+          <option value="Esteira">Esteira</option>
+          <option value="Rua">Rua/Outdoor</option>
+        </select>
+      `;
+      fbTipo.querySelector("select").value = log.cardioTipo || "";
+      fbTipo.querySelector("select").onchange = e => updateLogField(exId, "cardioTipo", e.target.value);
       fields.appendChild(fbTipo);
 
+      // Tempo realizado
       const fbTempo = document.createElement("div");
       fbTempo.className = "field-block";
-      const lbTempo = document.createElement("label");
-      lbTempo.textContent = "Tempo de corrida (min)";
-      const inpTempo = document.createElement("input");
-      inpTempo.type = "number";
-      inpTempo.step = "1";
-      inpTempo.value = log.tempoCardioMin || "";
-      inpTempo.onchange = (e) => updateLogField(exId, "tempoCardioMin", e.target.value);
-      fbTempo.appendChild(lbTempo);
-      fbTempo.appendChild(inpTempo);
+      fbTempo.innerHTML = `
+        <label>Tempo realizado (min)</label>
+        <input type="number" step="1" value="${log.tempoCardioMin || ""}"/>
+      `;
+      fbTempo.querySelector("input").onchange = e => updateLogField(exId, "tempoCardioMin", e.target.value);
       fields.appendChild(fbTempo);
 
+      // Distância realizada
       const fbDist = document.createElement("div");
       fbDist.className = "field-block";
-      const lbDist = document.createElement("label");
-      lbDist.textContent = "Distância (km)";
-      const inpDist = document.createElement("input");
-      inpDist.type = "number";
-      inpDist.step = "0.1";
-      inpDist.value = log.distCardioKm || "";
-      inpDist.onchange = (e) => updateLogField(exId, "distCardioKm", e.target.value);
-      fbDist.appendChild(lbDist);
-      fbDist.appendChild(inpDist);
+      fbDist.innerHTML = `
+        <label>Distância realizada (km)</label>
+        <input type="number" step="0.1" value="${log.distCardioKm || ""}"/>
+      `;
+      fbDist.querySelector("input").onchange = e => updateLogField(exId, "distCardioKm", e.target.value);
       fields.appendChild(fbDist);
     }
 
-    // Observações
+    /* Observações */
     const fbObs = document.createElement("div");
     fbObs.className = "field-block";
-    const lbObs = document.createElement("label");
-    lbObs.textContent = "Observações";
-    const taObs = document.createElement("textarea");
-    taObs.value = log.obs || "";
-    taObs.onchange = (e) => updateLogField(exId, "obs", e.target.value);
-    fbObs.appendChild(lbObs);
-    fbObs.appendChild(taObs);
+    fbObs.innerHTML = `
+      <label>Observações</label>
+      <textarea>${log.obs || ""}</textarea>
+    `;
+    fbObs.querySelector("textarea").onchange = e => updateLogField(exId, "obs", e.target.value);
     fields.appendChild(fbObs);
 
     card.appendChild(fields);
 
+    /* Concluído e vídeo */
     const bottom = document.createElement("div");
     bottom.className = "bottom-row";
 
-    const lblChk = document.createElement("label");
-    lblChk.style.fontSize = "11px";
-    const chk = document.createElement("input");
-    chk.type = "checkbox";
-    chk.checked = !!log.concluido;
-    chk.onchange = (e) => updateLogCheckbox(exId, "concluido", e.target.checked);
-    lblChk.appendChild(chk);
-    const spanTxt = document.createElement("span");
-    spanTxt.textContent = "Exercício concluído";
-    lblChk.appendChild(spanTxt);
-    bottom.appendChild(lblChk);
+    const chkWrap = document.createElement("label");
+    chkWrap.style.fontSize = "11px";
+    chkWrap.innerHTML = `
+      <input type="checkbox" ${log.concluido ? "checked" : ""}> Exercício concluído
+    `;
+    chkWrap.querySelector("input").onchange = e => updateLogCheckbox(exId, "concluido", e.target.checked);
+    bottom.appendChild(chkWrap);
 
     if (ex.midia) {
       const btn = document.createElement("button");
