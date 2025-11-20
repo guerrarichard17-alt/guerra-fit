@@ -4,465 +4,401 @@
   <meta charset="UTF-8">
   <title>Guerra Fit – Treinos, Corrida e Alimentação</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    :root {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color-scheme: light dark;
-    }
-    body {
-      margin: 0;
-      background: #020617;
-      color: #e5e7eb;
-    }
-    header {
-      padding: 12px 16px 10px;
-      background: #020617;
-      border-bottom: 1px solid #1f2937;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 18px;
-    }
-    header small {
-      color: #9ca3af;
-      font-size: 12px;
-    }
-    main {
-      padding: 10px;
-      max-width: 960px;
-      margin: 0 auto;
-    }
-    .card {
-      background: #020617;
-      border-radius: 12px;
-      border: 1px solid #1f2937;
-      padding: 10px;
-      margin-bottom: 10px;
-    }
-    label {
-      font-size: 12px;
-      display: block;
-      margin-bottom: 2px;
-    }
-    input[type="file"],
-    select,
-    input[type="date"],
-    input[type="number"],
-    input[type="text"],
-    textarea {
-      background: #020617;
-      border-radius: 8px;
-      border: 1px solid #4b5563;
-      padding: 6px 8px;
-      font-size: 13px;
-      color: #e5e7eb;
-      box-sizing: border-box;
-      width: 100%;
-    }
-    textarea {
-      resize: vertical;
-      min-height: 60px;
-    }
-    .row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .col-6 {
-      flex: 1 1 48%;
-      min-width: 150px;
-    }
-    @media (max-width: 640px) {
-      .col-6 {
-        flex: 1 1 100%;
-      }
-    }
-    .top-tabs {
-      display: flex;
-      gap: 6px;
-    }
-    .top-tab-btn {
-      flex: 1;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid #4b5563;
-      background: #020617;
-      color: #e5e7eb;
-      font-size: 13px;
-      cursor: pointer;
-    }
-    .top-tab-btn.active {
-      background: #16a34a;
-      border-color: #16a34a;
-    }
-    .tabs-treino,
-    .tabs-alim {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 8px;
-    }
-    .tab-btn-treino,
-    .tab-btn-alim {
-      flex: 1;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid #4b5563;
-      background: #020617;
-      color: #e5e7eb;
-      font-size: 13px;
-      cursor: pointer;
-    }
-    .tab-btn-treino.active,
-    .tab-btn-alim.active {
-      background: #2563eb;
-      border-color: #2563eb;
-    }
-    .status {
-      font-size: 11px;
-      color: #9ca3af;
-      margin-top: 4px;
-    }
-    .help-text {
-      font-size: 11px;
-      color: #9ca3af;
-    }
-    .exercise-card {
-      border-radius: 12px;
-      border: 1px solid #1f2937;
-      padding: 10px;
-      margin-bottom: 8px;
-    }
-    .exercise-header {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      align-items: center;
-      margin-bottom: 4px;
-    }
-    .exercise-title {
-      font-size: 13px;
-      font-weight: 600;
-    }
-    .exercise-sub {
-      font-size: 11px;
-      color: #9ca3af;
-    }
-    .pill {
-      display: inline-flex;
-      padding: 3px 8px;
-      border-radius: 999px;
-      border: 1px solid #4b5563;
-      font-size: 10px;
-    }
-    .exercise-fields {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-    }
-    @media (max-width: 640px) {
-      .exercise-fields {
-        grid-template-columns: 1fr;
-      }
-    }
-    .field-block {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-    .field-block label {
-      font-size: 11px;
-    }
-    .bottom-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-top: 4px;
-    }
-    button {
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid #4b5563;
-      background: #020617;
-      color: #e5e7eb;
-      font-size: 12px;
-      cursor: pointer;
-    }
-    button.primary {
-      background: #2563eb;
-      border-color: #2563eb;
-    }
-    .hidden {
-      display: none;
-    }
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 8px;
-    }
-    @media (max-width: 640px) {
-      .summary-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    .summary-box {
-      border-radius: 10px;
-      border: 1px solid #1f2937;
-      padding: 8px;
-      font-size: 12px;
-    }
-    .summary-title {
-      font-size: 12px;
-      font-weight: 600;
-    }
-    .badge {
-      padding: 2px 6px;
-      border-radius: 999px;
-      border: 1px solid #4b5563;
-      font-size: 10px;
-      display: inline-block;
-      margin-right: 4px;
-    }
-    .shopping-category {
-      margin-bottom: 8px;
-    }
-    .shopping-category-title {
-      font-size: 12px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-    .shopping-item {
-      font-size: 12px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 2px;
-    }
-    .meal-block {
-      border-radius: 10px;
-      border: 1px solid #1f2937;
-      padding: 8px;
-      margin-bottom: 6px;
-      font-size: 12px;
-    }
-    .meal-title {
-      font-weight: 600;
-      margin-bottom: 2px;
-    }
 
-    /* ===== LAYOUT AVANÇADO DE CORRIDA ===== */
-    .run-card {
-      background: radial-gradient(circle at top left, #0f172a 0, #020617 60%);
-      border-color: #0ea5e9;
-    }
-    .run-badge {
-      border-color: #0ea5e9;
-      font-size: 10px;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .run-badge span {
-      font-size: 12px;
-    }
-    .run-meta {
-      padding: 6px 8px 10px 8px;
-      border-radius: 10px;
-      border: 1px solid #0ea5e9;
-      background: rgba(15, 23, 42, 0.8);
-      margin-bottom: 6px;
-      font-size: 11px;
-    }
-    .run-meta-title {
-      font-size: 12px;
-      font-weight: 600;
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .run-meta-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0,1fr));
-      gap: 4px;
-    }
-    @media (max-width: 640px) {
-      .run-meta-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    .run-meta-item {
-      font-size: 11px;
-      color: #e5e7eb;
-    }
-    .run-meta-item b {
-      display: block;
-      font-size: 11px;
-      color: #93c5fd;
-    }
-    .run-summary-line {
-      font-size: 12px;
-      margin-top: 4px;
-    }
-  </style>
+<style>
+:root {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color-scheme: light dark;
+}
+body {
+  margin: 0;
+  background: #020617;
+  color: #e5e7eb;
+}
+header {
+  padding: 12px 16px 10px;
+  background: #020617;
+  border-bottom: 1px solid #1f2937;
+}
+header h1 {
+  margin: 0;
+  font-size: 20px;
+}
+header small {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+main {
+  padding: 10px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* ---------- COMPONENTES GERAIS ---------- */
+.card {
+  background: #020617;
+  border-radius: 12px;
+  border: 1px solid #1f2937;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.col-6 {
+  flex: 1 1 48%;
+  min-width: 150px;
+}
+@media (max-width: 640px) {
+  .col-6 { flex: 1 1 100%; }
+}
+
+label {
+  font-size: 12px;
+  margin-bottom: 2px;
+  display: block;
+}
+input, select, textarea {
+  width: 100%;
+  background: #020617;
+  border-radius: 8px;
+  border: 1px solid #4b5563;
+  padding: 6px 8px;
+  color: #e5e7eb;
+  font-size: 13px;
+}
+textarea {
+  min-height: 60px;
+  resize: vertical;
+}
+button {
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid #4b5563;
+  background: #020617;
+  color: #e5e7eb;
+  cursor: pointer;
+  font-size: 12px;
+}
+button.primary {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.top-tabs {
+  display: flex;
+  gap: 6px;
+}
+.top-tab-btn {
+  flex: 1;
+  padding: 10px 10px;
+  border-radius: 999px;
+  background: #020617;
+  border: 1px solid #4b5563;
+  color: #e5e7eb;
+  font-size: 13px;
+}
+.top-tab-btn.active {
+  background: #16a34a;
+  border-color: #16a34a;
+}
+
+/* Tabs internas */
+.tab-btn-treino,
+.tab-btn-alim {
+  flex: 1;
+  padding: 8px 10px;
+  background: #020617;
+  border-radius: 999px;
+  border: 1px solid #4b5563;
+  font-size: 13px;
+}
+.tab-btn-treino.active {
+  background: #2563eb;
+}
+.tab-btn-alim.active {
+  background: #2563eb;
+}
+
+.hidden { display: none; }
+
+/* ---------- EXERCÍCIOS ---------- */
+.exercise-card {
+  border-radius: 12px;
+  border: 1px solid #1f2937;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+/* PESO – card violeta */
+.card-weight {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 1px rgba(99,102,241,0.20);
+}
+.weight-title {
+  color: #818cf8;
+}
+
+/* CARDIO – card ciano */
+.card-cardio {
+  background: radial-gradient(circle at top, #0f172a 0, #020617 80%);
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 1px rgba(14,165,233,0.25);
+}
+.cardio-title {
+  color: #38bdf8;
+}
+
+.exercise-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.exercise-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+.exercise-sub {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+/* badges */
+.pill {
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  border: 1px solid #4b5563;
+}
+.badge-weight {
+  border-color: #6366f1;
+}
+.badge-cardio {
+  border-color: #0ea5e9;
+}
+
+/* Form fields */
+.exercise-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+@media (max-width: 640px) {
+  .exercise-fields {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.bottom-row {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* --- META DA CORRIDA --- */
+.run-meta {
+  border: 1px solid #0ea5e9;
+  background: rgba(14,165,233,0.06);
+  padding: 8px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+.run-meta-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.run-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 8px;
+}
+@media (max-width: 500px) {
+  .run-meta-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.run-meta-item {
+  font-size: 12px;
+}
+.run-meta-item b {
+  font-size: 12px;
+  color: #7dd3fc;
+}
+
+/* CARDIO RESUMO */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 10px;
+}
+@media (max-width: 640px) {
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.summary-box {
+  border-radius: 10px;
+  border: 1px solid #1f2937;
+  padding: 10px;
+}
+.summary-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+/* ---------- ALIMENTAÇÃO ---------- */
+.meal-block {
+  border: 1px solid #1f2937;
+  border-radius: 10px;
+  padding: 8px;
+  margin-bottom: 6px;
+}
+.meal-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.shopping-category-title {
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+.shopping-item {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+</style>
 </head>
+
 <body>
 <header>
   <h1>Guerra Fit</h1>
-  <small>Treinos, corrida e alimentação – semana iniciando na terça.</small>
+  <small>Treinos, corrida e alimentação — semana iniciando na terça.</small>
 </header>
+
 <main>
-  <!-- Navegação principal: Treinos x Alimentação -->
+
+<!-- ------------------ NAVEGAÇÃO PRINCIPAL ------------------ -->
+<div class="card">
+  <div class="top-tabs">
+    <button class="top-tab-btn active" data-main="treino">Treinos</button>
+    <button class="top-tab-btn" data-main="alim">Alimentação</button>
+  </div>
+</div>
+
+<!-- ------------------ VIEW: TREINO ------------------ -->
+<div id="view-treino">
+
   <div class="card">
-    <div class="top-tabs">
-      <button class="top-tab-btn active" data-main="treino">Treinos</button>
-      <button class="top-tab-btn" data-main="alimentacao">Alimentação</button>
+    <div class="row">
+      <div class="col-6">
+        <label>Arquivo de treinos (.csv)</label>
+        <input type="file" id="csvInput" accept=".csv">
+      </div>
+      <div class="col-6">
+        <label>Dia do treino</label>
+        <select id="diaSelect"></select>
+      </div>
     </div>
+
+    <div class="row" style="margin-top:8px;">
+      <div class="col-6">
+        <label>Data</label>
+        <input type="date" id="dataInput">
+      </div>
+      <div class="col-6">
+        <div class="help-text" style="padding-top:6px;">
+          Todos os dados são salvos automaticamente no navegador.
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:8px;">
+      <div class="col-6"><button class="primary" id="btnExport">Exportar dados (.json)</button></div>
+      <div class="col-6"><button id="btnReset">Limpar dados deste dia</button></div>
+    </div>
+
+    <div id="statusArea" class="help-text" style="margin-top:6px;">Nenhum treino carregado ainda.</div>
   </div>
 
-  <!-- VISTA TREINO -->
-  <div id="view-treino">
-    <div class="card">
-      <div class="row">
-        <div class="col-6">
-          <label for="fileInput">Arquivo de treinos (.csv)</label>
-          <input type="file" id="fileInput" accept=".csv">
-        </div>
-        <div class="col-6">
-          <label for="diaSelect">Dia do treino</label>
-          <select id="diaSelect"></select>
-        </div>
-      </div>
-      <div class="row" style="margin-top:8px;">
-        <div class="col-6">
-          <label for="dataInput">Data do treino</label>
-          <input type="date" id="dataInput">
-        </div>
-        <div class="col-6">
-          <label>&nbsp;</label>
-          <div class="help-text">
-            Peso corporal, cargas, corrida (tempo, km, esteira/rua) e RPE são salvos automaticamente no navegador.
-          </div>
-        </div>
-      </div>
-      <div class="row" style="margin-top:8px;">
-        <div class="col-6">
-          <button id="btnExport" class="primary">Exportar dados (.json)</button>
-        </div>
-        <div class="col-6">
-          <button id="btnReset">Limpar dados deste dia</button>
-        </div>
-      </div>
-      <div class="status" id="statusText">Carregue o arquivo de treinos para começar (treinos_guerra_corrida.csv).</div>
+  <div class="card">
+    <div class="tabs-treino" style="display:flex; gap:6px;">
+      <button class="tab-btn-treino active" data-tab="dia">Treino do dia</button>
+      <button class="tab-btn-treino" data-tab="cardio">Cardio — dia / semana</button>
     </div>
 
-    <div class="card">
-      <div class="tabs-treino">
-        <button class="tab-btn-treino active" data-tab="dia">Treino do dia</button>
-        <button class="tab-btn-treino" data-tab="cardio">Cardio (corrida) – dia / semana</button>
-      </div>
+    <!-- Conteúdo: Treino do dia -->
+    <div id="tab-dia">
+      <div id="diaInfo" class="help-text" style="margin-bottom:8px;"></div>
+      <div id="diaContainer"></div>
+    </div>
 
-      <div id="tab-dia">
-        <div id="diaInfo" class="help-text" style="margin-bottom:6px;"></div>
-        <div id="diaContainer"></div>
-      </div>
-
-      <div id="tab-cardio" class="hidden">
-        <div class="summary-grid">
-          <div class="summary-box">
-            <div class="summary-title">Cardio do dia</div>
-            <div id="cardioDiaResumo">
-              Nenhum registro de corrida/caminhada ainda para esta data.
-            </div>
-          </div>
-          <div class="summary-box">
-            <div class="summary-title">Cardio últimos 7 dias</div>
-            <div id="cardioSemanaResumo">
-              Nenhum registro nos últimos 7 dias.
-            </div>
-          </div>
+    <!-- Conteúdo: Cardio -->
+    <div id="tab-cardio" class="hidden">
+      <div class="summary-grid">
+        <div class="summary-box">
+          <div class="summary-title">Cardio do dia</div>
+          <div id="cardioDiaResumo"></div>
         </div>
-        <div class="help-text" style="margin-top:6px;">
-          São considerados cardio os exercícios com grupo "Corrida", "Aquecimento", "Recuperação"
-          ou tipo contendo "Cardio".
+        <div class="summary-box">
+          <div class="summary-title">Cardio últimos 7 dias</div>
+          <div id="cardioSemanaResumo"></div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- VISTA ALIMENTAÇÃO -->
-  <div id="view-alimentacao" class="hidden">
-    <div class="card">
-      <div class="tabs-alim">
-        <button class="tab-btn-alim active" data-tab="alim-dia">Cardápio do dia</button>
-        <button class="tab-btn-alim" data-tab="alim-semana">Cardápio da semana</button>
-        <button class="tab-btn-alim" data-tab="alim-compras">Lista de compras</button>
-      </div>
+<!-- ------------------ VIEW: ALIMENTAÇÃO ------------------ -->
+<div id="view-alim" class="hidden">
+  <div class="card">
+    <div class="tabs-alim" style="display:flex; gap:6px;">
+      <button class="tab-btn-alim active" data-tab="alim-dia">Cardápio do dia</button>
+      <button class="tab-btn-alim" data-tab="alim-semana">Semana</button>
+      <button class="tab-btn-alim" data-tab="alim-compras">Lista de compras</button>
+    </div>
 
-      <!-- Cardápio do dia -->
-      <div id="tab-alim-dia">
-        <div id="cardapioDiaInfo" class="help-text" style="margin-bottom:6px;"></div>
-        <div id="cardapioDiaContainer"></div>
-      </div>
+    <div id="alim-dia">
+      <div id="alimDiaInfo" class="help-text" style="margin-bottom:8px;"></div>
+      <div id="alimDiaContainer"></div>
+    </div>
 
-      <!-- Cardápio da semana -->
-      <div id="tab-alim-semana" class="hidden">
-        <div id="cardapioSemanaContainer" class="help-text"></div>
-      </div>
+    <div id="alim-semana" class="hidden">
+      <div id="alimSemanaContainer"></div>
+    </div>
 
-      <!-- Lista de compras -->
-      <div id="tab-alim-compras" class="hidden">
-        <div class="help-text" style="margin-bottom:6px;">
-          Lista base para 1 semana de dieta (~2.200–2.400 kcal/dia, alto em proteína).
-          Marque o que já comprou.
-        </div>
-        <div id="shoppingContainer"></div>
-      </div>
+    <div id="alim-compras" class="hidden">
+      <div id="shoppingContainer"></div>
     </div>
   </div>
-</main>
+</div>
 
 <script>
-const STORAGE_KEY = "treino_diario_guerra_v1_mobile";
+/* =====================
+   CONFIGURAÇÃO BÁSICA
+   ===================== */
+const STORAGE_KEY = "guerra_fit_logs_v1";
 const SHOPPING_KEY = "guerra_fit_shopping_v1";
 
-let baseExercises = [];
-let dailyLog = {};
-
-const shoppingItems = [
-  { id: "frango", label: "Peito de frango (2–3kg)", category: "Proteínas" },
-  { id: "ovos", label: "Ovos (36 unidades)", category: "Proteínas" },
-  { id: "carne_mag", label: "Carne vermelha magra (1–2kg)", category: "Proteínas" },
-  { id: "peixe", label: "Peixe (1kg)", category: "Proteínas" },
-  { id: "iogurte", label: "Iogurte natural/greco sem açúcar (6×500g)", category: "Proteínas" },
-  { id: "cottage", label: "Cottage ou ricota (500g)", category: "Proteínas" },
-
-  { id: "arroz_int", label: "Arroz integral (2kg)", category: "Carboidratos" },
-  { id: "batata_doce", label: "Batata doce (2,5kg)", category: "Carboidratos" },
-  { id: "aveia", label: "Aveia em flocos (1kg)", category: "Carboidratos" },
-  { id: "pao_int", label: "Pão integral 100% (2 pacotes)", category: "Carboidratos" },
-  { id: "banana", label: "Banana (14 unidades)", category: "Carboidratos" },
-  { id: "maca", label: "Maçã (7 unidades)", category: "Carboidratos" },
-
-  { id: "verd_verde", label: "Folhas verdes (3 pacotes)", category: "Verduras/Legumes" },
-  { id: "brocolis", label: "Brócolis (2 cabeças)", category: "Verduras/Legumes" },
-  { id: "abobrinha", label: "Abobrinha (4 unidades)", category: "Verduras/Legumes" },
-  { id: "cenoura", label: "Cenoura (1kg)", category: "Verduras/Legumes" },
-  { id: "tomate", label: "Tomate (1,5kg)", category: "Verduras/Legumes" },
-
-  { id: "azeite", label: "Azeite de oliva extra virgem (500ml)", category: "Gorduras boas" },
-  { id: "castanhas", label: "Castanhas/nozes/amêndoas (600g)", category: "Gorduras boas" },
-  { id: "abacate", label: "Abacate (4 unidades)", category: "Gorduras boas" },
-  { id: "pasta_amendoim", label: "Pasta de amendoim (450g)", category: "Gorduras boas" },
-
-  { id: "agua", label: "Água (galão/garrafas para a semana)", category: "Suporte" },
-  { id: "cafe", label: "Café / chá sem açúcar", category: "Suporte" }
-];
-
-function setStatus(msg) {
-  const el = document.getElementById("statusText");
-  if (el) el.textContent = msg;
-}
+let baseExercises = [];   // vindo do CSV
+let dailyLog = {};        // dados salvos no navegador
 
 function todayISO() {
   const d = new Date();
@@ -474,26 +410,104 @@ function todayISO() {
 function loadDailyLog() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      dailyLog = {};
-      return;
-    }
-    dailyLog = JSON.parse(raw);
+    dailyLog = raw ? JSON.parse(raw) : {};
   } catch (e) {
-    console.error("Erro ao carregar dailyLog", e);
     dailyLog = {};
   }
 }
-
 function saveDailyLog() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(dailyLog));
 }
 
+function setStatus(msg) {
+  const el = document.getElementById("statusArea");
+  if (el) el.textContent = msg;
+}
+
+/* =====================
+   CSV / TREINOS
+   ===================== */
+function parseCSV(text) {
+  const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+  if (lines.length < 2) return [];
+  let delimiter = ";";
+  if (lines[0].includes(",") && !lines[0].includes(";")) delimiter = ",";
+  const headers = lines[0].split(delimiter).map(h => h.trim());
+
+  function getVal(cells, name) {
+    const idx = headers.indexOf(name);
+    return idx === -1 ? "" : (cells[idx] || "").trim();
+  }
+
+  const result = [];
+  for (let i = 1; i < lines.length; i++) {
+    const cells = lines[i].split(delimiter);
+    const row = {
+      dia:        getVal(cells, "Dia"),
+      grupo:      getVal(cells, "Grupo"),
+      exercicio:  getVal(cells, "Exercício"),
+      tipo:       getVal(cells, "Tipo"),
+      series:     getVal(cells, "Séries"),
+      repsTempo:  getVal(cells, "Reps/Tempo"),
+      rpeZona:    getVal(cells, "RPE/Zona"),
+      aquecimento:getVal(cells, "Aquecimento?"),
+      midia:      getVal(cells, "Link vídeo")
+    };
+    if (Object.values(row).every(v => !v)) continue;
+    result.push(row);
+  }
+  return result;
+}
+
+function rebuildDiaOptions() {
+  const sel = document.getElementById("diaSelect");
+  if (!sel) return;
+
+  const dias = Array.from(new Set(baseExercises.map(e => (e.dia || "").trim())))
+    .filter(Boolean);
+
+  const ordem = ["Terça","Quarta","Quinta","Sexta","Sábado","Domingo","Segunda"];
+  dias.sort((a,b) => {
+    const ia = ordem.indexOf(a);
+    const ib = ordem.indexOf(b);
+    if (ia === -1 && ib === -1) return a.localeCompare(b);
+    if (ia === -1) return 1;
+    if (ib === -1) return -1;
+    return ia - ib;
+  });
+
+  sel.innerHTML = "";
+  const opt0 = document.createElement("option");
+  opt0.value = "";
+  opt0.textContent = "Selecione o dia";
+  sel.appendChild(opt0);
+  dias.forEach(d => {
+    const o = document.createElement("option");
+    o.value = d;
+    o.textContent = d;
+    sel.appendChild(o);
+  });
+
+  const mapaSemana = {
+    0: "Domingo",
+    1: "Segunda",
+    2: "Terça",
+    3: "Quarta",
+    4: "Quinta",
+    5: "Sexta",
+    6: "Sábado"
+  };
+  const hoje = mapaSemana[new Date().getDay()];
+  if (dias.includes(hoje)) sel.value = hoje;
+}
+
+/* =====================
+   LOG POR EXERCÍCIO
+   ===================== */
 function getDiaSelecionado() {
   const sel = document.getElementById("diaSelect");
   return sel && sel.value ? sel.value : "";
 }
-
 function getDataSelecionada() {
   const inp = document.getElementById("dataInput");
   return inp && inp.value ? inp.value : todayISO();
@@ -524,102 +538,29 @@ function getLog(exId, dateStr) {
 }
 
 function updateLogField(exId, field, value) {
-  const dateStr = getDataSelecionada();
-  const log = getLog(exId, dateStr);
+  const date = getDataSelecionada();
+  const log = getLog(exId, date);
   log[field] = value;
-  const key = keyFor(exId, dateStr);
-  dailyLog[key] = log;
+  dailyLog[keyFor(exId, date)] = log;
   saveDailyLog();
   updateCardioSummary();
 }
-
 function updateLogCheckbox(exId, field, checked) {
   updateLogField(exId, field, !!checked);
 }
 
-function parseCSV(text) {
-  const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
-  if (lines.length < 2) return [];
-  let delimiter = ";";
-  const headerLine = lines[0];
-  if (headerLine.includes(",") && !headerLine.includes(";")) delimiter = ",";
-  const headers = headerLine.split(delimiter).map(h => h.trim());
-  function getVal(cells, name) {
-    const idx = headers.indexOf(name);
-    return idx === -1 ? "" : (cells[idx] || "").trim();
-  }
-  const out = [];
-  for (let i = 1; i < lines.length; i++) {
-    const cells = lines[i].split(delimiter);
-    const row = {
-      dia: getVal(cells, "Dia"),
-      grupo: getVal(cells, "Grupo"),
-      exercicio: getVal(cells, "Exercício"),
-      tipo: getVal(cells, "Tipo"),
-      series: getVal(cells, "Séries"),
-      repsTempo: getVal(cells, "Reps/Tempo"),
-      rpeZona: getVal(cells, "RPE/Zona"),
-      aquecimento: getVal(cells, "Aquecimento?"),
-      midia: getVal(cells, "Link vídeo")
-    };
-    if (Object.values(row).every(v => !v)) continue;
-    out.push(row);
-  }
-  return out;
-}
-
-function rebuildDiaOptions() {
-  const sel = document.getElementById("diaSelect");
-  if (!sel) return;
-  const dias = Array.from(new Set(baseExercises.map(e => (e.dia || "").trim()))).filter(Boolean);
-
-  const ordemDesejada = ["Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo", "Segunda"];
-  dias.sort((a, b) => {
-    const ia = ordemDesejada.indexOf(a);
-    const ib = ordemDesejada.indexOf(b);
-    if (ia === -1 && ib === -1) return a.localeCompare(b);
-    if (ia === -1) return 1;
-    if (ib === -1) return -1;
-    return ia - ib;
-  });
-
-  sel.innerHTML = "";
-  const opt0 = document.createElement("option");
-  opt0.value = "";
-  opt0.textContent = "Selecione o dia";
-  sel.appendChild(opt0);
-  dias.forEach(d => {
-    const opt = document.createElement("option");
-    opt.value = d;
-    opt.textContent = d;
-    sel.appendChild(opt);
-  });
-
-  const hoje = new Date();
-  const wd = hoje.getDay();
-  const mapa = {
-    0: "Domingo",
-    1: "Segunda",
-    2: "Terça",
-    3: "Quarta",
-    4: "Quinta",
-    5: "Sexta",
-    6: "Sábado"
-  };
-  const nomeHoje = mapa[wd] || "";
-  const found = dias.find(d => d === nomeHoje);
-  if (found) sel.value = found;
-}
-
-/* ===== RENDER DIA COM LAYOUT AVANÇADO DE CORRIDA ===== */
+/* =====================
+   RENDER: TREINO DO DIA
+   ===================== */
 function renderDia() {
   const container = document.getElementById("diaContainer");
   const info = document.getElementById("diaInfo");
   if (!container || !info) return;
+
   container.innerHTML = "";
 
   if (!baseExercises.length) {
-    info.textContent = "Carregue um arquivo de treinos (.csv).";
+    info.textContent = "Carregue um arquivo de treinos (.csv) para começar.";
     return;
   }
 
@@ -629,15 +570,16 @@ function renderDia() {
     info.textContent = "Selecione o dia do treino.";
     return;
   }
-  info.textContent = "Treino de " + diaSel + " em " + dataSel + ".";
 
-  const doDia = baseExercises.filter(e => (e.dia || "").trim() === diaSel);
-  if (!doDia.length) {
-    container.innerHTML = "<div class='help-text'>Nenhum exercício encontrado para este dia.</div>";
+  info.textContent = "Treino de " + diaSel + " em " + dataSel + ".";
+  const listaDia = baseExercises.filter(e => (e.dia || "").trim() === diaSel);
+
+  if (!listaDia.length) {
+    container.innerHTML = "<div class='help-text'>Nenhum exercício configurado para este dia.</div>";
     return;
   }
 
-  doDia.forEach((ex, idx) => {
+  listaDia.forEach((ex, idx) => {
     const exId = "ex_" + idx + "_" + diaSel;
     const log = getLog(exId, dataSel);
 
@@ -646,49 +588,51 @@ function renderDia() {
 
     const isCorrida = grupoLower.includes("corrida");
     const isCardio  = isCorrida ||
-                      grupoLower.includes("recuperação") ||
                       grupoLower.includes("aquecimento") ||
+                      grupoLower.includes("recuperação") ||
                       tipoLower.includes("cardio");
+    const isPeso    = !isCardio;
 
     const card = document.createElement("div");
     card.className = "exercise-card";
-    if (isCorrida) card.classList.add("run-card");
+    if (isCardio) card.classList.add("card-cardio");
+    if (isPeso)   card.classList.add("card-weight");
 
-    /* --- Cabeçalho --- */
+    /* Cabeçalho */
     const header = document.createElement("div");
     header.className = "exercise-header";
 
     const left = document.createElement("div");
     const title = document.createElement("div");
     title.className = "exercise-title";
-    title.textContent = ex.exercicio || "";
+    if (isCardio) title.classList.add("cardio-title");
+    if (isPeso)   title.classList.add("weight-title");
+
+    const icon = isCardio ? "🏃 " : "🏋️ ";
+    title.textContent = icon + (ex.exercicio || "");
+
     const sub = document.createElement("div");
     sub.className = "exercise-sub";
     sub.textContent = (ex.grupo || "") + (ex.tipo ? " • " + ex.tipo : "");
+
     left.appendChild(title);
     left.appendChild(sub);
     header.appendChild(left);
 
     const badge = document.createElement("div");
     badge.className = "pill";
-    if (isCorrida) {
-      badge.classList.add("run-badge");
-      badge.innerHTML = "<span>🏃</span><span>Corrida</span>";
-    } else {
-      badge.textContent = ex.repsTempo + (ex.rpeZona ? " · " + ex.rpeZona : "");
-    }
+    if (isCardio) badge.classList.add("badge-cardio");
+    if (isPeso)   badge.classList.add("badge-weight");
+
+    badge.textContent = ex.repsTempo + (ex.rpeZona ? " · " + ex.rpeZona : "");
     header.appendChild(badge);
+
     card.appendChild(header);
 
-    /* --- Bloco meta corrida --- */
+    /* Meta da corrida – só para corrida principal */
     if (isCorrida) {
       const meta = document.createElement("div");
       meta.className = "run-meta";
-
-      const tempoAlvo = ex.repsTempo || "—";
-      const intensidade = ex.rpeZona || "—";
-      // se no texto tiver algo como "(alvo 4-6 km)" deixamos junto da linha de distância
-      const distanciaInfo = tempoAlvo.includes("alvo") ? tempoAlvo : "Conforme plano";
 
       meta.innerHTML = `
         <div class="run-meta-title">
@@ -697,21 +641,22 @@ function renderDia() {
         <div class="run-meta-grid">
           <div class="run-meta-item">
             <b>Tempo alvo</b>
-            <span>${tempoAlvo}</span>
+            <span>${ex.repsTempo || "—"}</span>
           </div>
           <div class="run-meta-item">
-            <b>Distância/descrição</b>
-            <span>${distanciaInfo}</span>
+            <b>Distância / descrição</b>
+            <span>${ex.repsTempo.includes("alvo") ? ex.repsTempo : "Conforme plano"}</span>
           </div>
           <div class="run-meta-item">
             <b>Intensidade</b>
-            <span>${intensidade}</span>
+            <span>${ex.rpeZona || "—"}</span>
           </div>
         </div>
       `;
       card.appendChild(meta);
     }
 
+    /* Campos */
     const fields = document.createElement("div");
     fields.className = "exercise-fields";
 
@@ -722,7 +667,8 @@ function renderDia() {
       <label>Peso corporal (kg)</label>
       <input type="number" step="0.1" value="${log.peso || ""}">
     `;
-    fbPeso.querySelector("input").onchange = e => updateLogField(exId, "peso", e.target.value);
+    fbPeso.querySelector("input").onchange = e =>
+      updateLogField(exId, "peso", e.target.value);
     fields.appendChild(fbPeso);
 
     // RPE percebido
@@ -732,11 +678,12 @@ function renderDia() {
       <label>RPE percebido (1–10)</label>
       <input type="number" step="0.5" min="1" max="10" value="${log.rpePercebido || ""}">
     `;
-    fbRPE.querySelector("input").onchange = e => updateLogField(exId, "rpePercebido", e.target.value);
+    fbRPE.querySelector("input").onchange = e =>
+      updateLogField(exId, "rpePercebido", e.target.value);
     fields.appendChild(fbRPE);
 
+    // Cargas (para peso e aquecimentos de força)
     if (!isCardio || (isCardio && !isCorrida)) {
-      /* força / aquecimento / bike etc */
       const fbCarga = document.createElement("div");
       fbCarga.className = "field-block";
       fbCarga.innerHTML = `<label>Cargas (S1–S4)</label>`;
@@ -744,7 +691,7 @@ function renderDia() {
       wrap.style.display = "grid";
       wrap.style.gridTemplateColumns = "repeat(4, minmax(0,1fr))";
       wrap.style.gap = "4px";
-      ["carga1","carga2","carga3","carga4"].forEach((field, i) => {
+      ["carga1","carga2","carga3","carga4"].forEach((field,i) => {
         const inp = document.createElement("input");
         inp.type = "number";
         inp.step = "0.5";
@@ -757,6 +704,7 @@ function renderDia() {
       fields.appendChild(fbCarga);
     }
 
+    // Campos específicos de corrida
     if (isCorrida) {
       const fbTipo = document.createElement("div");
       fbTipo.className = "field-block";
@@ -769,7 +717,8 @@ function renderDia() {
         </select>
       `;
       fbTipo.querySelector("select").value = log.cardioTipo || "";
-      fbTipo.querySelector("select").onchange = e => updateLogField(exId, "cardioTipo", e.target.value);
+      fbTipo.querySelector("select").onchange = e =>
+        updateLogField(exId, "cardioTipo", e.target.value);
       fields.appendChild(fbTipo);
 
       const fbTempo = document.createElement("div");
@@ -778,7 +727,8 @@ function renderDia() {
         <label>Tempo realizado (min)</label>
         <input type="number" step="1" value="${log.tempoCardioMin || ""}">
       `;
-      fbTempo.querySelector("input").onchange = e => updateLogField(exId, "tempoCardioMin", e.target.value);
+      fbTempo.querySelector("input").onchange = e =>
+        updateLogField(exId, "tempoCardioMin", e.target.value);
       fields.appendChild(fbTempo);
 
       const fbDist = document.createElement("div");
@@ -787,31 +737,34 @@ function renderDia() {
         <label>Distância realizada (km)</label>
         <input type="number" step="0.1" value="${log.distCardioKm || ""}">
       `;
-      fbDist.querySelector("input").onchange = e => updateLogField(exId, "distCardioKm", e.target.value);
+      fbDist.querySelector("input").onchange = e =>
+        updateLogField(exId, "distCardioKm", e.target.value);
       fields.appendChild(fbDist);
     }
 
+    // Observações
     const fbObs = document.createElement("div");
     fbObs.className = "field-block";
     fbObs.innerHTML = `
       <label>Observações</label>
       <textarea>${log.obs || ""}</textarea>
     `;
-    fbObs.querySelector("textarea").onchange = e => updateLogField(exId, "obs", e.target.value);
+    fbObs.querySelector("textarea").onchange = e =>
+      updateLogField(exId, "obs", e.target.value);
     fields.appendChild(fbObs);
 
     card.appendChild(fields);
 
+    /* Rodapé */
     const bottom = document.createElement("div");
     bottom.className = "bottom-row";
 
-    const chkWrap = document.createElement("label");
-    chkWrap.style.fontSize = "11px";
-    chkWrap.innerHTML = `
-      <input type="checkbox" ${log.concluido ? "checked" : ""}> Exercício concluído
-    `;
-    chkWrap.querySelector("input").onchange = e => updateLogCheckbox(exId, "concluido", e.target.checked);
-    bottom.appendChild(chkWrap);
+    const lblChk = document.createElement("label");
+    lblChk.style.fontSize = "11px";
+    lblChk.innerHTML = `<input type="checkbox" ${log.concluido ? "checked" : ""}> Exercício concluído`;
+    lblChk.querySelector("input").onchange = e =>
+      updateLogCheckbox(exId, "concluido", e.target.checked);
+    bottom.appendChild(lblChk);
 
     if (ex.midia) {
       const btn = document.createElement("button");
@@ -827,123 +780,117 @@ function renderDia() {
   updateCardioSummary();
 }
 
-/* ===== RESUMO CARDIO AVANÇADO (inclui pace) ===== */
+/* =====================
+   CARDIO RESUMO (DIA / SEMANA)
+   ===================== */
 function updateCardioSummary() {
   const diaSel = getDiaSelecionado();
   const dataSel = getDataSelecionada();
-  const diaDiv = document.getElementById("cardioDiaResumo");
-  const semDiv = document.getElementById("cardioSemanaResumo");
+  const diaDiv  = document.getElementById("cardioDiaResumo");
+  const semDiv  = document.getElementById("cardioSemanaResumo");
   if (!diaDiv || !semDiv) return;
 
   if (!baseExercises.length || !diaSel) {
-    diaDiv.textContent = "Selecione um dia e registre pelo menos uma corrida/caminhada.";
-    semDiv.textContent = "Nenhum registro para calcular.";
+    diaDiv.textContent = "Nenhum treino selecionado.";
+    semDiv.textContent = "Nenhum dado disponível.";
     return;
   }
 
+  /* --- Dia --- */
   let totalMinDia = 0;
-  let totalKmDia = 0;
+  let totalKmDia  = 0;
+
   Object.keys(dailyLog).forEach(key => {
-    const parts = key.split("::");
-    const exId = parts[0];
-    const data = parts[1];
+    const [exId, data] = key.split("::");
     if (data !== dataSel) return;
     const log = dailyLog[key];
+
     const match = exId.match(/^ex_(\d+)_/);
     if (!match) return;
     const idx = parseInt(match[1], 10);
-    const doDia = baseExercises.filter(e => (e.dia || "").trim() === diaSel);
-    const ex = doDia[idx];
+
+    const exList = baseExercises.filter(e => (e.dia || "").trim() === diaSel);
+    const ex = exList[idx];
     if (!ex) return;
 
     const grupoLower = (ex.grupo || "").toLowerCase();
     const tipoLower  = (ex.tipo  || "").toLowerCase();
     const isCardio = grupoLower.includes("corrida") ||
-                     grupoLower.includes("recuperação") ||
                      grupoLower.includes("aquecimento") ||
+                     grupoLower.includes("recuperação") ||
                      tipoLower.includes("cardio");
     if (!isCardio) return;
 
     const min = parseFloat(log.tempoCardioMin || "0") || 0;
-    const km = parseFloat(log.distCardioKm || "0") || 0;
+    const km  = parseFloat(log.distCardioKm   || "0") || 0;
     totalMinDia += min;
-    totalKmDia += km;
+    totalKmDia  += km;
   });
 
   if (totalMinDia > 0 || totalKmDia > 0) {
-    let paceStr = "";
+    let pace = "";
     if (totalMinDia > 0 && totalKmDia > 0) {
-      const pace = totalMinDia / totalKmDia;
-      paceStr = " · " + pace.toFixed(1) + " min/km";
+      pace = " · " + (totalMinDia / totalKmDia).toFixed(1) + " min/km";
     }
-    diaDiv.innerHTML = `
-      <div class="run-summary-line">
-        <span class="badge">Hoje</span>
-        ${totalMinDia.toFixed(0)} min · ${totalKmDia.toFixed(2)} km${paceStr}
-      </div>
-    `;
+    diaDiv.textContent =
+      totalMinDia.toFixed(0) + " min · " + totalKmDia.toFixed(2) + " km" + pace;
   } else {
-    diaDiv.textContent = "Nenhum registro de corrida/caminhada para esta data.";
+    diaDiv.textContent = "Nenhum registro de cardio para esta data.";
   }
 
+  /* --- Semana (últimos 7 dias) --- */
   let totalMinSem = 0;
-  let totalKmSem = 0;
+  let totalKmSem  = 0;
   const baseDate = new Date(dataSel);
 
   Object.keys(dailyLog).forEach(key => {
-    const parts = key.split("::");
-    const data = parts[1];
+    const [exId, data] = key.split("::");
     const d = new Date(data);
     const diff = (baseDate - d) / (1000*60*60*24);
     if (diff < 0 || diff > 7) return;
 
     const log = dailyLog[key];
-    const exId = parts[0];
     const match = exId.match(/^ex_(\d+)_([^:]+)$/);
     if (!match) return;
     const idx = parseInt(match[1], 10);
     const diaEx = match[2];
 
-    const doDia = baseExercises.filter(e => (e.dia || "").trim() === diaEx);
-    const ex = doDia[idx];
+    const exList = baseExercises.filter(e => (e.dia || "").trim() === diaEx);
+    const ex = exList[idx];
     if (!ex) return;
 
     const grupoLower = (ex.grupo || "").toLowerCase();
     const tipoLower  = (ex.tipo  || "").toLowerCase();
     const isCardio = grupoLower.includes("corrida") ||
-                     grupoLower.includes("recuperação") ||
                      grupoLower.includes("aquecimento") ||
+                     grupoLower.includes("recuperação") ||
                      tipoLower.includes("cardio");
     if (!isCardio) return;
 
     const min = parseFloat(log.tempoCardioMin || "0") || 0;
-    const km = parseFloat(log.distCardioKm || "0") || 0;
+    const km  = parseFloat(log.distCardioKm   || "0") || 0;
     totalMinSem += min;
-    totalKmSem += km;
+    totalKmSem  += km;
   });
 
   if (totalMinSem > 0 || totalKmSem > 0) {
-    let paceStr = "";
+    let pace = "";
     if (totalMinSem > 0 && totalKmSem > 0) {
-      const pace = totalMinSem / totalKmSem;
-      paceStr = " · " + pace.toFixed(1) + " min/km";
+      pace = " · " + (totalMinSem / totalKmSem).toFixed(1) + " min/km";
     }
-    semDiv.innerHTML = `
-      <div class="run-summary-line">
-        <span class="badge">Últimos 7 dias</span>
-        ${totalMinSem.toFixed(0)} min · ${totalKmSem.toFixed(2)} km${paceStr}
-      </div>
-    `;
+    semDiv.textContent =
+      totalMinSem.toFixed(0) + " min · " + totalKmSem.toFixed(2) + " km" + pace;
   } else {
     semDiv.textContent = "Nenhum registro de cardio nos últimos 7 dias.";
   }
 }
 
-/* ===== Alimentação ===== */
-
+/* =====================
+   EXPORT / RESET
+   ===================== */
 function exportJson() {
-  const dataStr = JSON.stringify(dailyLog, null, 2);
-  const blob = new Blob([dataStr], { type: "application/json;charset=utf-8" });
+  const data = JSON.stringify(dailyLog, null, 2);
+  const blob = new Blob([data], { type: "application/json;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
@@ -952,38 +899,76 @@ function exportJson() {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  setStatus("Exportado guerra_fit_logs.json. Envie para o GitHub para versionar sua evolução.");
+  setStatus("Exportado guerra_fit_logs.json.");
 }
 
 function resetDia() {
-  const dataSel = getDataSelecionada();
   const diaSel = getDiaSelecionado();
+  const dataSel = getDataSelecionada();
   if (!diaSel) return;
-  const novoLog = {};
+
+  const novo = {};
   Object.keys(dailyLog).forEach(key => {
-    const parts = key.split("::");
-    const data = parts[1];
-    if (data === dataSel) return;
-    novoLog[key] = dailyLog[key];
+    const [exId, data] = key.split("::");
+    if (data === dataSel) return; // descarta este dia
+    novo[key] = dailyLog[key];
   });
-  dailyLog = novoLog;
+  dailyLog = novo;
   saveDailyLog();
   renderDia();
-  setStatus("Dados do dia " + dataSel + " limpos.");
+  setStatus("Dados de " + dataSel + " limpos.");
 }
+/* =====================
+   ALIMENTAÇÃO / LISTA DE COMPRAS
+   ===================== */
+
+const shoppingItems = [
+  // Proteínas
+  { id: "frango",    label: "Peito de frango (2–3kg)",           category: "Proteínas" },
+  { id: "ovos",      label: "Ovos (36 unidades)",                category: "Proteínas" },
+  { id: "carne",     label: "Carne vermelha magra (1–2kg)",      category: "Proteínas" },
+  { id: "peixe",     label: "Peixe (1kg)",                       category: "Proteínas" },
+  { id: "iogurte",   label: "Iogurte natural/greco s/ açúcar",   category: "Proteínas" },
+  { id: "cottage",   label: "Cottage / ricota (500g)",           category: "Proteínas" },
+
+  // Carbo
+  { id: "arrozint",  label: "Arroz integral (2kg)",              category: "Carboidratos" },
+  { id: "batata",    label: "Batata doce (2,5kg)",               category: "Carboidratos" },
+  { id: "aveia",     label: "Aveia em flocos (1kg)",             category: "Carboidratos" },
+  { id: "pao",       label: "Pão integral 100% (2 pacotes)",     category: "Carboidratos" },
+  { id: "banana",    label: "Banana (14 unid.)",                 category: "Carboidratos" },
+  { id: "maca",      label: "Maçã (7 unid.)",                    category: "Carboidratos" },
+
+  // Verduras / legumes
+  { id: "folhas",    label: "Folhas verdes (3 pacotes)",         category: "Verduras/Legumes" },
+  { id: "brocolis",  label: "Brócolis (2 cabeças)",              category: "Verduras/Legumes" },
+  { id: "abobrinha", label: "Abobrinha (4 unid.)",               category: "Verduras/Legumes" },
+  { id: "cenoura",   label: "Cenoura (1kg)",                     category: "Verduras/Legumes" },
+  { id: "tomate",    label: "Tomate (1,5kg)",                    category: "Verduras/Legumes" },
+
+  // Gorduras boas
+  { id: "azeite",    label: "Azeite extra virgem (500ml)",       category: "Gorduras boas" },
+  { id: "castanhas", label: "Castanhas/nozes (600g)",            category: "Gorduras boas" },
+  { id: "abacate",   label: "Abacate (4 unid.)",                 category: "Gorduras boas" },
+  { id: "pastaam",   label: "Pasta de amendoim (450g)",          category: "Gorduras boas" },
+
+  // Suporte
+  { id: "agua",      label: "Água (galões/garrafas p/ semana)",  category: "Suporte" },
+  { id: "cafe",      label: "Café / chás sem açúcar",            category: "Suporte" }
+];
 
 function loadShopping() {
+  const cont = document.getElementById("shoppingContainer");
+  if (!cont) return;
   let state = {};
   try {
     const raw = localStorage.getItem(SHOPPING_KEY);
-    if (raw) state = JSON.parse(raw);
+    state = raw ? JSON.parse(raw) : {};
   } catch (e) {
     state = {};
   }
-  const container = document.getElementById("shoppingContainer");
-  if (!container) return;
-  container.innerHTML = "";
 
+  cont.innerHTML = "";
   const byCat = {};
   shoppingItems.forEach(item => {
     if (!byCat[item.category]) byCat[item.category] = [];
@@ -992,7 +977,6 @@ function loadShopping() {
 
   Object.keys(byCat).forEach(cat => {
     const catDiv = document.createElement("div");
-    catDiv.className = "shopping-category";
     const title = document.createElement("div");
     title.className = "shopping-category-title";
     title.textContent = cat;
@@ -1010,23 +994,26 @@ function loadShopping() {
       };
       const span = document.createElement("span");
       span.textContent = item.label;
+
       row.appendChild(chk);
       row.appendChild(span);
       catDiv.appendChild(row);
     });
 
-    container.appendChild(catDiv);
+    cont.appendChild(catDiv);
   });
 }
 
+/* ---------- Cardápio do dia ---------- */
 function renderCardapioDia() {
-  const info = document.getElementById("cardapioDiaInfo");
-  const cont = document.getElementById("cardapioDiaContainer");
+  const info = document.getElementById("alimDiaInfo");
+  const cont = document.getElementById("alimDiaContainer");
   if (!info || !cont) return;
+
   const diaSel = getDiaSelecionado() || "dia padrão";
   const dataSel = getDataSelecionada();
 
-  info.textContent = "Sugestão básica para " + diaSel + " (" + dataSel + "). Depois ajustamos o cardápio fino.";
+  info.textContent = "Sugestão rápida para " + diaSel + " (" + dataSel + "). Depois refinamos macros refeição a refeição.";
 
   let tipoDia = "musculacao";
   if (diaSel === "Sábado" || diaSel === "Domingo") tipoDia = "corrida";
@@ -1037,41 +1024,41 @@ function renderCardapioDia() {
   if (tipoDia === "musculacao") {
     blocos.push({
       titulo: "Café da manhã",
-      texto: "Ovos + aveia + fruta (banana/maçã) + café sem açúcar."
+      texto: "Ovos + aveia + fruta (banana/maçã) + café sem açúcar. Base proteica + carbo limpo."
     });
     blocos.push({
       titulo: "Almoço",
-      texto: "Frango ou carne magra + arroz integral ou batata doce + salada de folhas + legumes."
+      texto: "Frango/carne magra + arroz integral ou batata doce + bastante salada e legumes."
     });
     blocos.push({
       titulo: "Lanche pré-treino",
-      texto: "Pão integral + pasta de amendoim ou banana + café."
+      texto: "Pão integral + pasta de amendoim OU banana + café. Foco em energia p/ treino."
     });
     blocos.push({
       titulo: "Jantar",
-      texto: "Peixe ou frango + legumes + salada. Carbo moderado (pouco arroz/batata)."
+      texto: "Peixe ou frango + legumes + salada. Carbo moderado, proteína alta."
     });
     blocos.push({
-      titulo: "Ceia (opcional)",
-      texto: "Iogurte + castanhas, focando proteína e gordura boa."
+      titulo: "Ceia",
+      texto: "Iogurte + castanhas ou cottage. Proteína + gordura boa para saciedade."
     });
   } else if (tipoDia === "corrida") {
     blocos.push({
       titulo: "Pré-corrida",
-      texto: "Carbo leve: banana + mel ou pão integral + geleia, 30–60min antes."
+      texto: "Banana + mel OU pão integral com geleia. 30–60min antes da corrida."
     });
     blocos.push({
       titulo: "Pós-corrida",
-      texto: "Iogurte + fruta + um pouco de aveia, hidratação com água."
+      texto: "Iogurte + fruta + um pouco de aveia. Repor carbo + proteína leve."
     });
     blocos.push({
       titulo: "Refeições principais",
-      texto: "Proteína alta (frango, peixe) + carbo limpo (arroz integral/batata) + bastante legumes."
+      texto: "Frango/peixe + arroz integral/batata + legumes. Atenção à hidratação."
     });
   } else {
     blocos.push({
       titulo: "Dia leve",
-      texto: "Manter padrão com proteína alta, carbo moderado e muitas fibras (saladas/legumes)."
+      texto: "Manter proteína alta em todas as refeições, carbo moderado e muitas fibras."
     });
   }
 
@@ -1090,99 +1077,121 @@ function renderCardapioDia() {
   });
 }
 
+/* ---------- Cardápio da semana (texto geral) ---------- */
 function renderCardapioSemana() {
-  const cont = document.getElementById("cardapioSemanaContainer");
+  const cont = document.getElementById("alimSemanaContainer");
   if (!cont) return;
   cont.innerHTML = `
-    <p>
-      Estrutura semanal alvo (2.200–2.400 kcal/dia, ~160–180g de proteína):
-    </p>
+    <p>Estrutura alvo (~2.200–2.400 kcal/dia, 160–180g de proteína):</p>
     <ul>
-      <li>Proteína em todas as refeições principais.</li>
-      <li>Carboidratos mais fortes perto de treino/corrida.</li>
-      <li>Verduras e legumes em pelo menos 2 refeições ao dia.</li>
+      <li>Proteína em todas as refeições principais (frango, carne magra, peixe, ovos, iogurte).</li>
+      <li>Carboidratos concentrados perto de treino/corrida (arroz, batata doce, pão integral, aveia).</li>
+      <li>Muitas fibras: verduras e legumes em pelo menos 2 refeições por dia.</li>
       <li>Gorduras boas moderadas (azeite, castanhas, abacate, pasta de amendoim).</li>
-      <li>Água ao longo do dia, atenção especial em dias de corrida.</li>
+      <li>Hidratação alta, especialmente nos dias de corrida.</li>
     </ul>
-    <p>Depois detalhamos aqui refeição por refeição (Terça a Domingo).</p>
+    <p>Depois podemos trocar este bloco por um cardápio completo refeição a refeição (Terça a Domingo) com quantidades.</p>
   `;
 }
 
+/* =====================
+   TABS / INICIALIZAÇÃO
+   ===================== */
+
 function initMainTabs() {
-  const buttons = document.querySelectorAll(".top-tab-btn");
-  buttons.forEach(btn => {
+  const mainBtns = document.querySelectorAll(".top-tab-btn");
+  const viewTreino = document.getElementById("view-treino");
+  const viewAlim   = document.getElementById("view-alim");
+
+  mainBtns.forEach(btn => {
     btn.addEventListener("click", () => {
-      buttons.forEach(b => b.classList.remove("active"));
+      mainBtns.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
-      const main = btn.dataset.main;
-      const vTreino = document.getElementById("view-treino");
-      const vAlim = document.getElementById("view-alimentacao");
-      if (!vTreino || !vAlim) return;
-      vTreino.classList.add("hidden");
-      vAlim.classList.add("hidden");
-      if (main === "treino") vTreino.classList.remove("hidden");
-      if (main === "alimentacao") vAlim.classList.remove("hidden");
+      const target = btn.dataset.main;
+      if (target === "treino") {
+        viewTreino.classList.remove("hidden");
+        viewAlim.classList.add("hidden");
+      } else {
+        viewTreino.classList.add("hidden");
+        viewAlim.classList.remove("hidden");
+      }
     });
   });
 }
 
 function initTreinoTabs() {
-  const buttons = document.querySelectorAll(".tab-btn-treino");
-  buttons.forEach(btn => {
+  const btns = document.querySelectorAll(".tab-btn-treino");
+  const tabDia = document.getElementById("tab-dia");
+  const tabCardio = document.getElementById("tab-cardio");
+
+  btns.forEach(btn => {
     btn.addEventListener("click", () => {
-      buttons.forEach(b => b.classList.remove("active"));
+      btns.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       const tab = btn.dataset.tab;
-      document.getElementById("tab-dia").classList.add("hidden");
-      document.getElementById("tab-cardio").classList.add("hidden");
-      if (tab === "dia") document.getElementById("tab-dia").classList.remove("hidden");
-      if (tab === "cardio") document.getElementById("tab-cardio").classList.remove("hidden");
+      if (tab === "dia") {
+        tabDia.classList.remove("hidden");
+        tabCardio.classList.add("hidden");
+      } else {
+        tabDia.classList.add("hidden");
+        tabCardio.classList.remove("hidden");
+      }
     });
   });
 }
 
-function initAlimentacaoTabs() {
-  const buttons = document.querySelectorAll(".tab-btn-alim");
-  buttons.forEach(btn => {
+function initAlimTabs() {
+  const btns = document.querySelectorAll(".tab-btn-alim");
+  const d = document.getElementById("alim-dia");
+  const s = document.getElementById("alim-semana");
+  const c = document.getElementById("alim-compras");
+
+  btns.forEach(btn => {
     btn.addEventListener("click", () => {
-      buttons.forEach(b => b.classList.remove("active"));
+      btns.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       const tab = btn.dataset.tab;
-      document.getElementById("tab-alim-dia").classList.add("hidden");
-      document.getElementById("tab-alim-semana").classList.add("hidden");
-      document.getElementById("tab-alim-compras").classList.add("hidden");
-      if (tab === "alim-dia") document.getElementById("tab-alim-dia").classList.remove("hidden");
-      if (tab === "alim-semana") document.getElementById("tab-alim-semana").classList.remove("hidden");
-      if (tab === "alim-compras") document.getElementById("tab-alim-compras").classList.remove("hidden");
+      d.classList.add("hidden");
+      s.classList.add("hidden");
+      c.classList.add("hidden");
+      if (tab === "alim-dia") d.classList.remove("hidden");
+      if (tab === "alim-semana") s.classList.remove("hidden");
+      if (tab === "alim-compras") c.classList.remove("hidden");
     });
   });
 }
 
+/* ---------- DOMContentLoaded ---------- */
 document.addEventListener("DOMContentLoaded", () => {
   loadDailyLog();
-  initMainTabs();
-  initTreinoTabs();
-  initAlimentacaoTabs();
-  loadShopping();
-  renderCardapioSemana();
-  renderCardapioDia();
 
+  // data hoje
   const dataInput = document.getElementById("dataInput");
   if (dataInput && !dataInput.value) {
     dataInput.value = todayISO();
   }
 
-  const fileInput = document.getElementById("fileInput");
-  if (fileInput) {
-    fileInput.addEventListener("change", (e) => {
+  // Tabs
+  initMainTabs();
+  initTreinoTabs();
+  initAlimTabs();
+
+  // Alimentação
+  loadShopping();
+  renderCardapioSemana();
+  renderCardapioDia();
+
+  // CSV input
+  const csvInput = document.getElementById("csvInput");
+  if (csvInput) {
+    csvInput.addEventListener("change", e => {
       const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = (ev) => {
+      reader.onload = ev => {
         try {
-          const text = ev.target.result;
-          baseExercises = parseCSV(text);
-          setStatus("Arquivo carregado com " + baseExercises.length + " linhas de treino.");
+          baseExercises = parseCSV(ev.target.result);
+          setStatus("Arquivo carregado com " + baseExercises.length + " linhas.");
           rebuildDiaOptions();
           renderDia();
           renderCardapioDia();
@@ -1195,22 +1204,27 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Mudanças de dia/data
   const diaSelect = document.getElementById("diaSelect");
   if (diaSelect) {
-    diaSelect.addEventListener("change", () => { renderDia(); renderCardapioDia(); });
+    diaSelect.addEventListener("change", () => {
+      renderDia();
+      renderCardapioDia();
+    });
   }
   if (dataInput) {
-    dataInput.addEventListener("change", () => { renderDia(); renderCardapioDia(); });
+    dataInput.addEventListener("change", () => {
+      renderDia();
+      renderCardapioDia();
+    });
   }
 
+  // Export / reset
   const btnExport = document.getElementById("btnExport");
-  if (btnExport) {
-    btnExport.addEventListener("click", exportJson);
-  }
+  if (btnExport) btnExport.addEventListener("click", exportJson);
+
   const btnReset = document.getElementById("btnReset");
-  if (btnReset) {
-    btnReset.addEventListener("click", resetDia);
-  }
+  if (btnReset) btnReset.addEventListener("click", resetDia);
 });
 </script>
 </body>
