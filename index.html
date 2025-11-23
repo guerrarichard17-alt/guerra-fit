@@ -5,7 +5,7 @@
   <title>Guerra Fit – Treinos, Corrida e Alimentação</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Tema Apple Fitness-like: cardio verde, força vermelha -->
+  <!-- Tema Apple Fitness-like -->
   <style>
     :root {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
@@ -89,7 +89,7 @@
       white-space: nowrap;
     }
     button.primary {
-      background: #0a84ff; /* azul Apple */
+      background: #0a84ff;
       border-color: #0a84ff;
     }
     .help-text {
@@ -97,7 +97,7 @@
       color: #9ca3af;
     }
 
-    /* Tabs principais (Treinos / Alimentação) */
+    /* Tabs principais */
     .top-tabs {
       display: flex;
       gap: 8px;
@@ -113,7 +113,7 @@
       font-weight: 500;
     }
     .top-tab-btn.active {
-      background: #34c759;  /* verde Apple Fitness */
+      background: #34c759;
       border-color: #34c759;
       color: #000000;
     }
@@ -305,7 +305,7 @@
 
     .shopping-category-title {
       font-weight: 600;
-      margin: 8px 0 4px 0;
+      margin: 12px 0 4px 0;
       font-size: 13px;
     }
     .shopping-item {
@@ -314,6 +314,9 @@
       gap: 6px;
       font-size: 12px;
       margin-bottom: 3px;
+    }
+    #shoppingContainer {
+      padding-top: 4px;
     }
 
     #statusArea {
@@ -406,6 +409,18 @@
     <!-- VIEW ALIMENTAÇÃO -->
     <div id="view-alimentacao" class="hidden">
       <div class="card">
+        <div class="row" style="margin-bottom:10px;">
+          <div class="col-6">
+            <label>Arquivo de alimentação (.csv)</label>
+            <input type="file" id="alimCsvInput" accept=".csv" />
+          </div>
+          <div class="col-6">
+            <div class="help-text" style="padding-top: 9px;">
+              Formato: Dia;Refeição;Item;Quantidade;Unidade;Grupo.
+            </div>
+          </div>
+        </div>
+
         <div class="tab-strip">
           <button class="tab-btn active" data-tab-alim="dia">Cardápio do dia</button>
           <button class="tab-btn" data-tab-alim="semana">Semana</button>
@@ -430,10 +445,11 @@
 
   <script>
     const STORAGE_KEY = "guerra_fit_logs_v3";
-    const SHOPPING_KEY = "guerra_fit_shopping_v2";
+    const SHOPPING_KEY = "guerra_fit_shopping_v3";
 
     let baseExercises = [];
     let dailyLog = {};
+    let nutritionEntries = []; // alimentação via CSV
 
     function todayISO() {
       const d = new Date();
@@ -455,7 +471,11 @@
       if (el) el.textContent = msg;
     }
 
-    /* ---- CSV ---- */
+    function cleanText(str) {
+      return (str || "").replace(/\uFFFD/g, "-");
+    }
+
+    /* ---- CSV TREINO ---- */
     function parseCSV(text) {
       const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
       if (lines.length < 2) return [];
@@ -464,7 +484,7 @@
       const headers = lines[0].split(delimiter).map(h => h.trim());
       function getVal(cells, name) {
         const idx = headers.indexOf(name);
-        return idx === -1 ? "" : (cells[idx] || "").trim();
+        return idx === -1 ? "" : cleanText((cells[idx] || "").trim());
       }
       const out = [];
       for (let i = 1; i < lines.length; i++) {
@@ -627,7 +647,8 @@
         pill.className = "pill";
         if (isCardio) pill.classList.add("badge-cardio");
         if (isForca)  pill.classList.add("badge-strength");
-        pill.textContent = (ex.repsTempo || "") + (ex.rpeZona ? " · " + ex.rpeZona : "");
+        pill.textContent = cleanText(ex.repsTempo || "") +
+          (ex.rpeZona ? " · " + cleanText(ex.rpeZona) : "");
         right.appendChild(pill);
 
         header.appendChild(left);
@@ -637,6 +658,8 @@
         if (isCorrida) {
           const meta = document.createElement("div");
           meta.className = "run-meta";
+          const tempo = cleanText(ex.repsTempo || "");
+          const zona  = cleanText(ex.rpeZona || "");
           meta.innerHTML = `
             <div class="run-meta-title">
               <span>🏃</span><span>Meta da corrida</span>
@@ -644,15 +667,15 @@
             <div class="run-meta-grid">
               <div class="run-meta-item">
                 <b>Tempo alvo</b>
-                <span>${ex.repsTempo || "—"}</span>
+                <span>${tempo || "—"}</span>
               </div>
               <div class="run-meta-item">
                 <b>Distância / descrição</b>
-                <span>${(ex.repsTempo || "").includes("alvo") ? ex.repsTempo : "Conforme plano"}</span>
+                <span>${tempo || "Conforme plano"}</span>
               </div>
               <div class="run-meta-item">
                 <b>Intensidade</b>
-                <span>${ex.rpeZona || "—"}</span>
+                <span>${zona || "—"}</span>
               </div>
             </div>`;
           card.appendChild(meta);
@@ -898,112 +921,93 @@
       setStatus("Dados de " + dataSel + " limpos.");
     }
 
-    /* ---- ALIMENTAÇÃO ---- */
-    const shoppingItems = [
-      { id:"frango",    label:"Peito de frango (2–3kg)",             category:"Proteínas" },
-      { id:"ovos",      label:"Ovos (36 unidades)",                  category:"Proteínas" },
-      { id:"carne",     label:"Carne vermelha magra (1–2kg)",        category:"Proteínas" },
-      { id:"peixe",     label:"Peixe (1kg)",                         category:"Proteínas" },
-      { id:"iogurte",   label:"Iogurte natural/greco s/ açúcar",     category:"Proteínas" },
-      { id:"cottage",   label:"Cottage / ricota (500g)",             category:"Proteínas" },
-      { id:"arrozint",  label:"Arroz integral (2kg)",                category:"Carboidratos" },
-      { id:"batata",    label:"Batata doce (2,5kg)",                 category:"Carboidratos" },
-      { id:"aveia",     label:"Aveia em flocos (1kg)",               category:"Carboidratos" },
-      { id:"pao",       label:"Pão integral 100% (2 pacotes)",       category:"Carboidratos" },
-      { id:"banana",    label:"Banana (14 unid.)",                   category:"Carboidratos" },
-      { id:"maca",      label:"Maçã (7 unid.)",                      category:"Carboidratos" },
-      { id:"folhas",    label:"Folhas verdes (3 pacotes)",           category:"Verduras/Legumes" },
-      { id:"brocolis",  label:"Brócolis (2 cabeças)",                category:"Verduras/Legumes" },
-      { id:"abobrinha", label:"Abobrinha (4 unid.)",                 category:"Verduras/Legumes" },
-      { id:"cenoura",   label:"Cenoura (1kg)",                       category:"Verduras/Legumes" },
-      { id:"tomate",    label:"Tomate (1,5kg)",                      category:"Verduras/Legumes" },
-      { id:"azeite",    label:"Azeite extra virgem (500ml)",         category:"Gorduras boas" },
-      { id:"castanhas", label:"Castanhas/nozes (600g)",              category:"Gorduras boas" },
-      { id:"abacate",   label:"Abacate (4 unid.)",                   category:"Gorduras boas" },
-      { id:"pastaam",   label:"Pasta de amendoim (450g)",            category:"Gorduras boas" },
-      { id:"agua",      label:"Água (galões/garrafas p/ semana)",    category:"Suporte" },
-      { id:"cafe",      label:"Café / chás sem açúcar",              category:"Suporte" }
-    ];
-
-    function loadShopping() {
-      const cont = document.getElementById("shoppingContainer");
-      if (!cont) return;
-      let state = {};
-      try {
-        const raw = localStorage.getItem(SHOPPING_KEY);
-        state = raw ? JSON.parse(raw) : {};
-      } catch { state = {}; }
-      cont.innerHTML = "";
-      const byCat = {};
-      shoppingItems.forEach(item => {
-        if (!byCat[item.category]) byCat[item.category] = [];
-        byCat[item.category].push(item);
-      });
-      Object.keys(byCat).forEach(cat => {
-        const catDiv = document.createElement("div");
-        const title = document.createElement("div");
-        title.className = "shopping-category-title";
-        title.textContent = cat;
-        catDiv.appendChild(title);
-        byCat[cat].forEach(item => {
-          const row = document.createElement("div");
-          row.className = "shopping-item";
-          const chk = document.createElement("input");
-          chk.type = "checkbox";
-          chk.checked = !!state[item.id];
-          chk.addEventListener("change", e => {
-            state[item.id] = e.target.checked;
-            localStorage.setItem(SHOPPING_KEY, JSON.stringify(state));
-          });
-          const span = document.createElement("span");
-          span.textContent = item.label;
-          row.appendChild(chk);
-          row.appendChild(span);
-          catDiv.appendChild(row);
-        });
-        cont.appendChild(catDiv);
-      });
+    /* ---- CSV ALIMENTAÇÃO ---- */
+    function parseAlimCSV(text) {
+      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+      if (lines.length < 2) return [];
+      let delimiter = ";";
+      if (lines[0].includes(",") && !lines[0].includes(";")) delimiter = ",";
+      const headers = lines[0].split(delimiter).map(h => h.trim());
+      function getVal(cells, name) {
+        const idx = headers.indexOf(name);
+        return idx === -1 ? "" : (cells[idx] || "").trim();
+      }
+      const out = [];
+      for (let i = 1; i < lines.length; i++) {
+        const cells = lines[i].split(delimiter);
+        const row = {
+          dia:       getVal(cells, "Dia"),
+          refeicao:  getVal(cells, "Refeição"),
+          item:      getVal(cells, "Item"),
+          quantidade:getVal(cells, "Quantidade"),
+          unidade:   getVal(cells, "Unidade"),
+          grupo:     getVal(cells, "Grupo")
+        };
+        if (!row.dia && !row.item) continue;
+        out.push(row);
+      }
+      return out;
     }
 
+    function diaFromDate(iso) {
+      const d = new Date(iso);
+      const mapa = {0:"Domingo",1:"Segunda",2:"Terça",3:"Quarta",4:"Quinta",5:"Sexta",6:"Sábado"};
+      return mapa[d.getDay()];
+    }
+
+    /* ---- RENDER ALIMENTAÇÃO ---- */
     function renderCardapioDia() {
       const info = document.getElementById("alimDiaInfo");
       const cont = document.getElementById("alimDiaContainer");
       if (!info || !cont) return;
-      const diaSel = getDiaSelecionado() || "dia padrão";
       const dataSel = getDataSelecionada();
-      info.textContent =
-        "Sugestão simples para " + diaSel + " (" + dataSel + "). Depois refinamos macros e quantidades.";
+      const diaSel = getDiaSelecionado() || diaFromDate(dataSel);
 
-      let tipoDia = "musculacao";
-      if (diaSel === "Sábado" || diaSel === "Domingo") tipoDia = "corrida";
-      if (diaSel === "Quinta") tipoDia = "leve";
-
-      const blocos = [];
-      if (tipoDia === "musculacao") {
-        blocos.push({titulo:"Café da manhã", texto:"Ovos mexidos + aveia com fruta (banana/maçã) + café sem açúcar."});
-        blocos.push({titulo:"Almoço", texto:"Frango/carne magra + arroz integral ou batata doce + salada e legumes."});
-        blocos.push({titulo:"Lanche pré-treino", texto:"Pão integral + pasta de amendoim OU banana + café. Energia para a musculação."});
-        blocos.push({titulo:"Jantar", texto:"Peixe ou frango + legumes + salada. Carbo moderado, proteína alta."});
-        blocos.push({titulo:"Ceia", texto:"Iogurte + castanhas ou cottage. Proteína + gordura boa."});
-      } else if (tipoDia === "corrida") {
-        blocos.push({titulo:"Pré-corrida", texto:"Banana + mel OU pão integral com geleia, 30–60min antes de correr."});
-        blocos.push({titulo:"Pós-corrida", texto:"Iogurte + fruta + aveia. Repor carboidrato e proteína leve, muita água."});
-        blocos.push({titulo:"Refeições principais", texto:"Frango/peixe + arroz integral/batata + legumes. Muito líquido ao longo do dia."});
-      } else {
-        blocos.push({titulo:"Dia leve", texto:"Manter proteína alta, carbo moderado e muitas fibras (saladas e legumes)."});
+      if (!nutritionEntries.length) {
+        info.textContent = "Carregue um arquivo de alimentação (.csv) para ver o cardápio do dia.";
+        cont.innerHTML = "";
+        return;
       }
 
+      info.textContent = "Cardápio de " + diaSel + " (" + dataSel + ").";
+      const diaItens = nutritionEntries.filter(n => (n.dia || "").trim() === diaSel);
       cont.innerHTML = "";
-      blocos.forEach(b => {
+
+      if (!diaItens.length) {
+        cont.innerHTML = "<div class='help-text'>Nenhum item de alimentação cadastrado para este dia.</div>";
+        return;
+      }
+
+      const byMeal = {};
+      diaItens.forEach(n => {
+        const ref = n.refeicao || "Refeição";
+        if (!byMeal[ref]) byMeal[ref] = [];
+        byMeal[ref].push(n);
+      });
+
+      Object.keys(byMeal).forEach(ref => {
         const div = document.createElement("div");
         div.className = "meal-block";
+
         const t = document.createElement("div");
         t.className = "meal-title";
-        t.textContent = b.titulo;
-        const p = document.createElement("div");
-        p.textContent = b.texto;
+        t.textContent = ref;
         div.appendChild(t);
-        div.appendChild(p);
+
+        const ul = document.createElement("ul");
+        ul.style.margin = "0";
+        ul.style.paddingLeft = "18px";
+        ul.style.fontSize = "13px";
+
+        byMeal[ref].forEach(n => {
+          const li = document.createElement("li");
+          const qtd = n.quantidade ? n.quantidade : "";
+          const un  = n.unidade ? " " + n.unidade : "";
+          li.textContent = (qtd ? qtd + un + " " : "") + n.item;
+          ul.appendChild(li);
+        });
+
+        div.appendChild(ul);
         cont.appendChild(div);
       });
     }
@@ -1011,17 +1015,99 @@
     function renderCardapioSemana() {
       const cont = document.getElementById("alimSemanaContainer");
       if (!cont) return;
-      cont.innerHTML = `
-        <div class="help-text" style="margin-bottom:6px;">
-          Estrutura alvo (~2.200–2.400 kcal/dia, 160–180g proteína):
-        </div>
-        <ul style="padding-left:18px; font-size:13px;">
-          <li>Proteína em todas as refeições principais (frango, carne magra, peixe, ovos, iogurte).</li>
-          <li>Carboidratos focados perto de treino/corrida (arroz, batata doce, pão integral, aveia).</li>
-          <li>Verduras e legumes em pelo menos 2 refeições ao dia.</li>
-          <li>Gorduras boas moderadas (azeite, castanhas, abacate, pasta de amendoim).</li>
-          <li>Hidratação alta, com atenção extra nos dias de corrida.</li>
-        </ul>`;
+
+      if (!nutritionEntries.length) {
+        cont.innerHTML = "<div class='help-text'>Carregue um arquivo de alimentação (.csv) para ver o resumo da semana.</div>";
+        return;
+      }
+
+      const byDay = {};
+      nutritionEntries.forEach(n => {
+        const d = n.dia || "Dia";
+        if (!byDay[d]) byDay[d] = {refeicoes:new Set(), itens:0};
+        if (n.refeicao) byDay[d].refeicoes.add(n.refeicao);
+        if (n.item) byDay[d].itens += 1;
+      });
+
+      let html = "<div class='help-text' style='margin-bottom:6px;'>Resumo simples dos dias com alimentação cadastrada:</div>";
+      html += "<ul style='padding-left:18px; font-size:13px;'>";
+      Object.keys(byDay).forEach(d => {
+        const info = byDay[d];
+        html += "<li><b>" + d + ":</b> " +
+          info.refeicoes.size + " refeições, " +
+          info.itens + " itens.</li>";
+      });
+      html += "</ul>";
+
+      cont.innerHTML = html;
+    }
+
+    function renderShopping() {
+      const cont = document.getElementById("shoppingContainer");
+      if (!cont) return;
+      cont.innerHTML = "";
+
+      let state = {};
+      try {
+        const raw = localStorage.getItem(SHOPPING_KEY);
+        state = raw ? JSON.parse(raw) : {};
+      } catch { state = {}; }
+
+      if (!nutritionEntries.length) {
+        cont.innerHTML = "<div class='help-text'>Carregue um arquivo de alimentação (.csv) para gerar a lista de compras.</div>";
+        return;
+      }
+
+      const agg = {};
+      nutritionEntries.forEach(n => {
+        if (!n.item) return;
+        const unidade = n.unidade || "";
+        const key = (n.item + "|" + unidade).toLowerCase();
+        const grupo = n.grupo || "Outros";
+        let qtd = parseFloat((n.quantidade || "0").replace(",", ".")) || 0;
+        if (!agg[key]) {
+          agg[key] = {item:n.item, unidade:unidade, grupo:grupo, quantidade:0};
+        }
+        agg[key].quantidade += qtd;
+      });
+
+      const byCat = {};
+      Object.keys(agg).forEach(key => {
+        const it = agg[key];
+        if (!byCat[it.grupo]) byCat[it.grupo] = [];
+        byCat[it.grupo].push({key, ...it});
+      });
+
+      Object.keys(byCat).forEach(cat => {
+        const catDiv = document.createElement("div");
+        const title = document.createElement("div");
+        title.className = "shopping-category-title";
+        title.textContent = cat;
+        catDiv.appendChild(title);
+
+        byCat[cat].forEach(it => {
+          const row = document.createElement("div");
+          row.className = "shopping-item";
+          const chk = document.createElement("input");
+          chk.type = "checkbox";
+          chk.checked = !!state[it.key];
+          chk.addEventListener("change", e => {
+            state[it.key] = e.target.checked;
+            localStorage.setItem(SHOPPING_KEY, JSON.stringify(state));
+          });
+
+          const span = document.createElement("span");
+          const qtdTxt = it.quantidade ? it.quantidade.toFixed(1).replace(".0","") : "";
+          const un = it.unidade ? " " + it.unidade : "";
+          span.textContent = (qtdTxt ? qtdTxt + un + " " : "") + it.item;
+
+          row.appendChild(chk);
+          row.appendChild(span);
+          catDiv.appendChild(row);
+        });
+
+        cont.appendChild(catDiv);
+      });
     }
 
     /* ---- TABS / INIT ---- */
@@ -1077,9 +1163,9 @@
           d.classList.add("hidden");
           s.classList.add("hidden");
           c.classList.add("hidden");
-          if (tab === "dia") d.classList.remove("hidden");
+          if (tab === "dia")    d.classList.remove("hidden");
           if (tab === "semana") s.classList.remove("hidden");
-          if (tab === "compras") c.classList.remove("hidden");
+          if (tab === "compras")c.classList.remove("hidden");
         });
       });
     }
@@ -1094,9 +1180,9 @@
       initTreinoTabs();
       initAlimTabs();
 
-      loadShopping();
-      renderCardapioSemana();
       renderCardapioDia();
+      renderCardapioSemana();
+      renderShopping();
 
       const csvInput = document.getElementById("csvInput");
       if (csvInput) {
@@ -1110,10 +1196,29 @@
               setStatus("Arquivo carregado com " + baseExercises.length + " linhas.");
               rebuildDiaOptions();
               renderDia();
-              renderCardapioDia();
             } catch (err) {
               console.error(err);
               setStatus("Erro ao ler arquivo de treinos.");
+            }
+          };
+          reader.readAsText(file, "utf-8");
+        });
+      }
+
+      const alimCsvInput = document.getElementById("alimCsvInput");
+      if (alimCsvInput) {
+        alimCsvInput.addEventListener("change", e => {
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = ev => {
+            try {
+              nutritionEntries = parseAlimCSV(ev.target.result);
+              renderCardapioDia();
+              renderCardapioSemana();
+              renderShopping();
+            } catch (err) {
+              console.error(err);
             }
           };
           reader.readAsText(file, "utf-8");
