@@ -5,15 +5,14 @@
   <title>Guerra Fit – Treinos, Corrida e Alimentação</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+  <!-- Tema Apple Fitness-like: cardio verde, força vermelha -->
   <style>
     :root {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
         "Segoe UI", sans-serif;
       color-scheme: dark;
     }
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       background: #000000;
@@ -33,14 +32,12 @@
       color: #9ca3af;
       font-size: 12px;
     }
-
     main {
       padding: 10px;
       max-width: 960px;
       margin: 0 auto 40px auto;
     }
 
-    /* ---------- COMPONENTES GERAIS ---------- */
     .card {
       background: #05050a;
       border-radius: 16px;
@@ -95,13 +92,12 @@
       background: #0a84ff; /* azul Apple */
       border-color: #0a84ff;
     }
-
     .help-text {
       font-size: 11px;
       color: #9ca3af;
     }
 
-    /* ---------- TABS PRINCIPAIS (Treinos / Alimentação) ---------- */
+    /* Tabs principais (Treinos / Alimentação) */
     .top-tabs {
       display: flex;
       gap: 8px;
@@ -117,12 +113,12 @@
       font-weight: 500;
     }
     .top-tab-btn.active {
-      background: #34c759; /* verde Apple Fitness */
+      background: #34c759;  /* verde Apple Fitness */
       border-color: #34c759;
       color: #000000;
     }
 
-    /* ---------- TABS INTERNAS (Treino / Cardio / Alimentação) ---------- */
+    /* Tabs internas */
     .tab-strip {
       display: flex;
       gap: 8px;
@@ -143,11 +139,9 @@
       color: #ffffff;
     }
 
-    .hidden {
-      display: none;
-    }
+    .hidden { display: none; }
 
-    /* ---------- EXERCÍCIOS ---------- */
+    /* Exercícios */
     .exercise-card {
       border-radius: 16px;
       border: 1px solid #111827;
@@ -156,28 +150,24 @@
       background: #020617;
     }
 
-    /* Força / musculação – vermelho Apple */
+    /* Força / musculação – vermelho */
     .card-strength {
       border-color: #ff3b30;
       box-shadow: 0 0 0 1px rgba(255, 59, 48, 0.18);
     }
-    .strength-title {
-      color: #ff453a;
-    }
+    .strength-title { color: #ff453a; }
     .badge-strength {
       border-color: #ff3b30;
       color: #ff9f9a;
     }
 
-    /* Cardio / corrida – verde Apple */
+    /* Cardio / corrida – verde */
     .card-cardio {
       background: radial-gradient(circle at top left, #022c22, #020617 70%);
       border-color: #34c759;
       box-shadow: 0 0 0 1px rgba(52, 199, 89, 0.22);
     }
-    .cardio-title {
-      color: #34c759;
-    }
+    .cardio-title { color: #34c759; }
     .badge-cardio {
       border-color: #34c759;
       color: #bbf7d0;
@@ -189,6 +179,7 @@
       gap: 8px;
       margin-bottom: 6px;
       align-items: center;
+      flex-wrap: wrap;
     }
     .exercise-title {
       font-size: 14px;
@@ -223,9 +214,7 @@
       margin-top: 6px;
     }
     @media (max-width: 640px) {
-      .exercise-fields {
-        grid-template-columns: 1fr;
-      }
+      .exercise-fields { grid-template-columns: 1fr; }
     }
     .field-block {
       display: flex;
@@ -243,7 +232,7 @@
       font-size: 11px;
     }
 
-    /* ---------- META CORRIDA ---------- */
+    /* Meta corrida */
     .run-meta {
       border-radius: 12px;
       border: 1px solid #34c759;
@@ -267,9 +256,7 @@
       gap: 6px;
     }
     @media (max-width: 640px) {
-      .run-meta-grid {
-        grid-template-columns: 1fr;
-      }
+      .run-meta-grid { grid-template-columns: 1fr; }
     }
     .run-meta-item {
       font-size: 11px;
@@ -281,16 +268,14 @@
       color: #86efac;
     }
 
-    /* ---------- RESUMO CARDIO ---------- */
+    /* Resumo cardio */
     .summary-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
     }
     @media (max-width: 640px) {
-      .summary-grid {
-        grid-template-columns: 1fr;
-      }
+      .summary-grid { grid-template-columns: 1fr; }
     }
     .summary-box {
       border-radius: 12px;
@@ -304,7 +289,7 @@
       margin-bottom: 6px;
     }
 
-    /* ---------- ALIMENTAÇÃO ---------- */
+    /* Alimentação */
     .meal-block {
       border-radius: 12px;
       border: 1px solid #111827;
@@ -331,7 +316,6 @@
       margin-bottom: 3px;
     }
 
-    /* ---------- Pequenos detalhes ---------- */
     #statusArea {
       margin-top: 6px;
       font-size: 11px;
@@ -347,7 +331,7 @@
   </header>
 
   <main>
-    <!-- TABS PRINCIPAIS -->
+    <!-- Tabs principais -->
     <div class="card">
       <div class="top-tabs">
         <button class="top-tab-btn active" data-main="treino">Treinos</button>
@@ -355,7 +339,7 @@
       </div>
     </div>
 
-    <!-- VIEW: TREINO -->
+    <!-- VIEW TREINO -->
     <div id="view-treino">
       <div class="card">
         <div class="row">
@@ -419,7 +403,7 @@
       </div>
     </div>
 
-    <!-- VIEW: ALIMENTAÇÃO -->
+    <!-- VIEW ALIMENTAÇÃO -->
     <div id="view-alimentacao" class="hidden">
       <div class="card">
         <div class="tab-strip">
@@ -445,8 +429,7 @@
   </main>
 
   <script>
-    /* ========= CONFIG ========= */
-    const STORAGE_KEY = "guerra_fit_logs_v2";
+    const STORAGE_KEY = "guerra_fit_logs_v3";
     const SHOPPING_KEY = "guerra_fit_shopping_v2";
 
     let baseExercises = [];
@@ -458,14 +441,11 @@
       const local = new Date(d.getTime() - off * 60000);
       return local.toISOString().slice(0, 10);
     }
-
     function loadDailyLog() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         dailyLog = raw ? JSON.parse(raw) : {};
-      } catch {
-        dailyLog = {};
-      }
+      } catch { dailyLog = {}; }
     }
     function saveDailyLog() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(dailyLog));
@@ -475,38 +455,32 @@
       if (el) el.textContent = msg;
     }
 
-    /* ========= CSV ========= */
+    /* ---- CSV ---- */
     function parseCSV(text) {
-      const lines = text
-        .split(/\r?\n/)
-        .map((l) => l.trim())
-        .filter((l) => l.length > 0);
+      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
       if (lines.length < 2) return [];
-
       let delimiter = ";";
       if (lines[0].includes(",") && !lines[0].includes(";")) delimiter = ",";
-
-      const headers = lines[0].split(delimiter).map((h) => h.trim());
+      const headers = lines[0].split(delimiter).map(h => h.trim());
       function getVal(cells, name) {
         const idx = headers.indexOf(name);
         return idx === -1 ? "" : (cells[idx] || "").trim();
       }
-
       const out = [];
       for (let i = 1; i < lines.length; i++) {
         const cells = lines[i].split(delimiter);
         const row = {
-          dia: getVal(cells, "Dia"),
-          grupo: getVal(cells, "Grupo"),
-          exercicio: getVal(cells, "Exercício"),
-          tipo: getVal(cells, "Tipo"),
-          series: getVal(cells, "Séries"),
-          repsTempo: getVal(cells, "Reps/Tempo"),
-          rpeZona: getVal(cells, "RPE/Zona"),
-          aquecimento: getVal(cells, "Aquecimento?"),
-          midia: getVal(cells, "Link vídeo"),
+          dia:        getVal(cells, "Dia"),
+          grupo:      getVal(cells, "Grupo"),
+          exercicio:  getVal(cells, "Exercício"),
+          tipo:       getVal(cells, "Tipo"),
+          series:     getVal(cells, "Séries"),
+          repsTempo:  getVal(cells, "Reps/Tempo"),
+          rpeZona:    getVal(cells, "RPE/Zona"),
+          aquecimento:getVal(cells, "Aquecimento?"),
+          midia:      getVal(cells, "Link vídeo")
         };
-        if (Object.values(row).every((v) => !v)) continue;
+        if (Object.values(row).every(v => !v)) continue;
         out.push(row);
       }
       return out;
@@ -515,55 +489,30 @@
     function rebuildDiaOptions() {
       const sel = document.getElementById("diaSelect");
       if (!sel) return;
-      const dias = Array.from(
-        new Set(baseExercises.map((e) => (e.dia || "").trim()))
-      ).filter(Boolean);
-
-      const ordem = [
-        "Terça",
-        "Quarta",
-        "Quinta",
-        "Sexta",
-        "Sábado",
-        "Domingo",
-        "Segunda",
-      ];
-      dias.sort((a, b) => {
-        const ia = ordem.indexOf(a);
-        const ib = ordem.indexOf(b);
+      const dias = Array.from(new Set(baseExercises.map(e => (e.dia || "").trim()))).filter(Boolean);
+      const ordem = ["Terça","Quarta","Quinta","Sexta","Sábado","Domingo","Segunda"];
+      dias.sort((a,b) => {
+        const ia = ordem.indexOf(a), ib = ordem.indexOf(b);
         if (ia === -1 && ib === -1) return a.localeCompare(b);
         if (ia === -1) return 1;
         if (ib === -1) return -1;
         return ia - ib;
       });
-
       sel.innerHTML = "";
       const opt0 = document.createElement("option");
-      opt0.value = "";
-      opt0.textContent = "Selecione o dia";
+      opt0.value = ""; opt0.textContent = "Selecione o dia";
       sel.appendChild(opt0);
-
-      dias.forEach((d) => {
+      dias.forEach(d => {
         const o = document.createElement("option");
-        o.value = d;
-        o.textContent = d;
+        o.value = d; o.textContent = d;
         sel.appendChild(o);
       });
-
-      const mapa = {
-        0: "Domingo",
-        1: "Segunda",
-        2: "Terça",
-        3: "Quarta",
-        4: "Quinta",
-        5: "Sexta",
-        6: "Sábado",
-      };
+      const mapa = {0:"Domingo",1:"Segunda",2:"Terça",3:"Quarta",4:"Quinta",5:"Sexta",6:"Sábado"};
       const hoje = mapa[new Date().getDay()];
       if (dias.includes(hoje)) sel.value = hoje;
     }
 
-    /* ========= LOG ========= */
+    /* ---- LOG ---- */
     function getDiaSelecionado() {
       const sel = document.getElementById("diaSelect");
       return sel && sel.value ? sel.value : "";
@@ -575,22 +524,14 @@
     function keyFor(exId, dateStr) {
       return exId + "::" + dateStr;
     }
-
     function getLog(exId, dateStr) {
       const key = keyFor(exId, dateStr);
       if (!dailyLog[key]) {
         dailyLog[key] = {
-          peso: "",
-          rpePercebido: "",
-          carga1: "",
-          carga2: "",
-          carga3: "",
-          carga4: "",
-          tempoCardioMin: "",
-          distCardioKm: "",
-          cardioTipo: "",
-          obs: "",
-          concluido: false,
+          peso: "", rpePercebido: "",
+          carga1: "", carga2: "", carga3: "", carga4: "",
+          tempoCardioMin: "", distCardioKm: "", cardioTipo: "",
+          obs: "", concluido: false
         };
       }
       return dailyLog[key];
@@ -607,7 +548,7 @@
       updateLogField(exId, field, !!checked);
     }
 
-    /* ========= RENDER TREINO ========= */
+    /* ---- RENDER TREINO ---- */
     function renderDia() {
       const container = document.getElementById("diaContainer");
       const info = document.getElementById("diaInfo");
@@ -615,8 +556,7 @@
       container.innerHTML = "";
 
       if (!baseExercises.length) {
-        info.textContent =
-          "Carregue um arquivo de treinos (.csv) para começar.";
+        info.textContent = "Carregue um arquivo de treinos (.csv) para começar.";
         return;
       }
 
@@ -628,12 +568,9 @@
       }
 
       info.textContent = "Treino de " + diaSel + " em " + dataSel + ".";
-      const listaDia = baseExercises.filter(
-        (e) => (e.dia || "").trim() === diaSel
-      );
+      const listaDia = baseExercises.filter(e => (e.dia || "").trim() === diaSel);
       if (!listaDia.length) {
-        container.innerHTML =
-          "<div class='help-text'>Nenhum exercício configurado para este dia.</div>";
+        container.innerHTML = "<div class='help-text'>Nenhum exercício configurado para este dia.</div>";
         return;
       }
 
@@ -642,20 +579,29 @@
         const log = getLog(exId, dataSel);
 
         const grupoLower = (ex.grupo || "").toLowerCase();
-        const tipoLower = (ex.tipo || "").toLowerCase();
+        const tipoLower  = (ex.tipo  || "").toLowerCase();
 
-        const isCorrida = grupoLower.includes("corrida");
+        const isCorrida =
+          grupoLower.includes("corrida") ||
+          tipoLower.includes("corrida");
+
         const isCardio =
           isCorrida ||
+          grupoLower.includes("cardio") ||
           grupoLower.includes("aquecimento") ||
           grupoLower.includes("recuperação") ||
+          grupoLower.includes("esteira") ||
+          grupoLower.includes("elíptico") ||
+          grupoLower.includes("eliptico") ||
+          grupoLower.includes("bike") ||
           tipoLower.includes("cardio");
+
         const isForca = !isCardio;
 
         const card = document.createElement("div");
         card.className = "exercise-card";
         if (isCardio) card.classList.add("card-cardio");
-        if (isForca) card.classList.add("card-strength");
+        if (isForca)  card.classList.add("card-strength");
 
         const header = document.createElement("div");
         header.className = "exercise-header";
@@ -664,33 +610,28 @@
         const title = document.createElement("div");
         title.className = "exercise-title";
         if (isCardio) title.classList.add("cardio-title");
-        if (isForca) title.classList.add("strength-title");
-
+        if (isForca)  title.classList.add("strength-title");
         const icon = isCardio ? "🏃 " : "🏋️ ";
         title.textContent = icon + (ex.exercicio || "");
 
         const sub = document.createElement("div");
         sub.className = "exercise-sub";
-        sub.textContent =
-          (ex.grupo || "") + (ex.tipo ? " • " + (ex.tipo || "") : "");
+        sub.textContent = (ex.grupo || "") + (ex.tipo ? " • " + ex.tipo : "");
 
         left.appendChild(title);
         left.appendChild(sub);
 
         const right = document.createElement("div");
         right.className = "exercise-header-right";
-
         const pill = document.createElement("div");
         pill.className = "pill";
         if (isCardio) pill.classList.add("badge-cardio");
-        if (isForca) pill.classList.add("badge-strength");
-        pill.textContent =
-          (ex.repsTempo || "") + (ex.rpeZona ? " · " + ex.rpeZona : "");
-
+        if (isForca)  pill.classList.add("badge-strength");
+        pill.textContent = (ex.repsTempo || "") + (ex.rpeZona ? " · " + ex.rpeZona : "");
         right.appendChild(pill);
+
         header.appendChild(left);
         header.appendChild(right);
-
         card.appendChild(header);
 
         if (isCorrida) {
@@ -707,55 +648,39 @@
               </div>
               <div class="run-meta-item">
                 <b>Distância / descrição</b>
-                <span>${
-                  (ex.repsTempo || "").includes("alvo")
-                    ? ex.repsTempo
-                    : "Conforme plano"
-                }</span>
+                <span>${(ex.repsTempo || "").includes("alvo") ? ex.repsTempo : "Conforme plano"}</span>
               </div>
               <div class="run-meta-item">
                 <b>Intensidade</b>
                 <span>${ex.rpeZona || "—"}</span>
               </div>
-            </div>
-          `;
+            </div>`;
           card.appendChild(meta);
         }
 
         const fields = document.createElement("div");
         fields.className = "exercise-fields";
 
-        // peso
         const fbPeso = document.createElement("div");
         fbPeso.className = "field-block";
         fbPeso.innerHTML = `
           <label>Peso corporal (kg)</label>
-          <input type="number" step="0.1" value="${log.peso || ""}" />
-        `;
-        fbPeso
-          .querySelector("input")
-          .addEventListener("change", (e) =>
-            updateLogField(exId, "peso", e.target.value)
-          );
+          <input type="number" step="0.1" value="${log.peso || ""}" />`;
+        fbPeso.querySelector("input").addEventListener("change", e =>
+          updateLogField(exId, "peso", e.target.value)
+        );
         fields.appendChild(fbPeso);
 
-        // RPE percebido
         const fbRPE = document.createElement("div");
         fbRPE.className = "field-block";
         fbRPE.innerHTML = `
           <label>RPE percebido (1–10)</label>
-          <input type="number" step="0.5" min="1" max="10" value="${
-            log.rpePercebido || ""
-          }" />
-        `;
-        fbRPE
-          .querySelector("input")
-          .addEventListener("change", (e) =>
-            updateLogField(exId, "rpePercebido", e.target.value)
-          );
+          <input type="number" step="0.5" min="1" max="10" value="${log.rpePercebido || ""}" />`;
+        fbRPE.querySelector("input").addEventListener("change", e =>
+          updateLogField(exId, "rpePercebido", e.target.value)
+        );
         fields.appendChild(fbRPE);
 
-        // Cargas para força e aquecimento de peso
         if (!isCardio || (isCardio && !isCorrida)) {
           const fbCarga = document.createElement("div");
           fbCarga.className = "field-block";
@@ -764,22 +689,19 @@
           wrap.style.display = "grid";
           wrap.style.gridTemplateColumns = "repeat(4, minmax(0, 1fr))";
           wrap.style.gap = "4px";
-          ["carga1", "carga2", "carga3", "carga4"].forEach((field, i) => {
+          ["carga1","carga2","carga3","carga4"].forEach((field,i) => {
             const inp = document.createElement("input");
             inp.type = "number";
             inp.step = "0.5";
-            inp.placeholder = "S" + (i + 1);
+            inp.placeholder = "S" + (i+1);
             inp.value = log[field] || "";
-            inp.addEventListener("change", (e) =>
-              updateLogField(exId, field, e.target.value)
-            );
+            inp.addEventListener("change", e => updateLogField(exId, field, e.target.value));
             wrap.appendChild(inp);
           });
           fbCarga.appendChild(wrap);
           fields.appendChild(fbCarga);
         }
 
-        // Campos específicos de corrida
         if (isCorrida) {
           const fbTipo = document.createElement("div");
           fbTipo.className = "field-block";
@@ -789,83 +711,57 @@
               <option value="">Selecione</option>
               <option value="Esteira">Esteira</option>
               <option value="Rua">Rua / Outdoor</option>
-            </select>
-          `;
+            </select>`;
           fbTipo.querySelector("select").value = log.cardioTipo || "";
-          fbTipo
-            .querySelector("select")
-            .addEventListener("change", (e) =>
-              updateLogField(exId, "cardioTipo", e.target.value)
-            );
+          fbTipo.querySelector("select").addEventListener("change", e =>
+            updateLogField(exId, "cardioTipo", e.target.value)
+          );
           fields.appendChild(fbTipo);
 
           const fbTempo = document.createElement("div");
           fbTempo.className = "field-block";
           fbTempo.innerHTML = `
             <label>Tempo realizado (min)</label>
-            <input type="number" step="1" value="${
-              log.tempoCardioMin || ""
-            }" />
-          `;
-          fbTempo
-            .querySelector("input")
-            .addEventListener("change", (e) =>
-              updateLogField(exId, "tempoCardioMin", e.target.value)
-            );
+            <input type="number" step="1" value="${log.tempoCardioMin || ""}" />`;
+          fbTempo.querySelector("input").addEventListener("change", e =>
+            updateLogField(exId, "tempoCardioMin", e.target.value)
+          );
           fields.appendChild(fbTempo);
 
           const fbDist = document.createElement("div");
           fbDist.className = "field-block";
           fbDist.innerHTML = `
             <label>Distância realizada (km)</label>
-            <input type="number" step="0.1" value="${
-              log.distCardioKm || ""
-            }" />
-          `;
-          fbDist
-            .querySelector("input")
-            .addEventListener("change", (e) =>
-              updateLogField(exId, "distCardioKm", e.target.value)
-            );
+            <input type="number" step="0.1" value="${log.distCardioKm || ""}" />`;
+          fbDist.querySelector("input").addEventListener("change", e =>
+            updateLogField(exId, "distCardioKm", e.target.value)
+          );
           fields.appendChild(fbDist);
         }
 
-        // Observações
         const fbObs = document.createElement("div");
         fbObs.className = "field-block";
-        fbObs.innerHTML = `
-          <label>Observações</label>
-          <textarea>${log.obs || ""}</textarea>
-        `;
-        fbObs
-          .querySelector("textarea")
-          .addEventListener("change", (e) =>
-            updateLogField(exId, "obs", e.target.value)
-          );
+        fbObs.innerHTML = `<label>Observações</label><textarea>${log.obs || ""}</textarea>`;
+        fbObs.querySelector("textarea").addEventListener("change", e =>
+          updateLogField(exId, "obs", e.target.value)
+        );
         fields.appendChild(fbObs);
 
         card.appendChild(fields);
 
         const bottom = document.createElement("div");
         bottom.className = "bottom-row";
-
         const lblChk = document.createElement("label");
-        lblChk.innerHTML = `<input type="checkbox" ${
-          log.concluido ? "checked" : ""
-        } /> Exercício concluído`;
-        lblChk
-          .querySelector("input")
-          .addEventListener("change", (e) =>
-            updateLogCheckbox(exId, "concluido", e.target.checked)
-          );
+        lblChk.innerHTML = `<input type="checkbox" ${log.concluido ? "checked" : ""}/> Exercício concluído`;
+        lblChk.querySelector("input").addEventListener("change", e =>
+          updateLogCheckbox(exId, "concluido", e.target.checked)
+        );
         bottom.appendChild(lblChk);
 
         if (ex.midia) {
           const btn = document.createElement("button");
           btn.textContent = "Vídeo / imagem";
-          btn.addEventListener("click", () =>
-            window.open(ex.midia, "_blank")
-          );
+          btn.addEventListener("click", () => window.open(ex.midia, "_blank"));
           bottom.appendChild(btn);
         }
 
@@ -876,7 +772,7 @@
       updateCardioSummary();
     }
 
-    /* ========= CARDIO RESUMO ========= */
+    /* ---- CARDIO RESUMO ---- */
     function updateCardioSummary() {
       const diaSel = getDiaSelecionado();
       const dataSel = getDataSelecionada();
@@ -890,131 +786,109 @@
         return;
       }
 
-      let totalMinDia = 0;
-      let totalKmDia = 0;
-
-      Object.keys(dailyLog).forEach((key) => {
+      let totalMinDia = 0, totalKmDia = 0;
+      Object.keys(dailyLog).forEach(key => {
         const [exId, data] = key.split("::");
         if (data !== dataSel) return;
         const log = dailyLog[key];
-
         const match = exId.match(/^ex_(\d+)_/);
         if (!match) return;
-        const idx = parseInt(match[1], 10);
-
-        const exList = baseExercises.filter(
-          (e) => (e.dia || "").trim() === diaSel
-        );
+        const idx = parseInt(match[1],10);
+        const exList = baseExercises.filter(e => (e.dia || "").trim() === diaSel);
         const ex = exList[idx];
         if (!ex) return;
-
         const grupoLower = (ex.grupo || "").toLowerCase();
-        const tipoLower = (ex.tipo || "").toLowerCase();
+        const tipoLower  = (ex.tipo  || "").toLowerCase();
         const isCardio =
           grupoLower.includes("corrida") ||
+          grupoLower.includes("cardio") ||
           grupoLower.includes("aquecimento") ||
           grupoLower.includes("recuperação") ||
-          tipoLower.includes("cardio");
+          grupoLower.includes("esteira") ||
+          grupoLower.includes("elíptico") ||
+          grupoLower.includes("eliptico") ||
+          grupoLower.includes("bike") ||
+          tipoLower.includes("cardio") ||
+          tipoLower.includes("corrida");
         if (!isCardio) return;
-
         const min = parseFloat(log.tempoCardioMin || "0") || 0;
-        const km = parseFloat(log.distCardioKm || "0") || 0;
-        totalMinDia += min;
-        totalKmDia += km;
+        const km  = parseFloat(log.distCardioKm   || "0") || 0;
+        totalMinDia += min; totalKmDia += km;
       });
 
       if (totalMinDia > 0 || totalKmDia > 0) {
         let pace = "";
         if (totalMinDia > 0 && totalKmDia > 0) {
-          pace = " · " + (totalMinDia / totalKmDia).toFixed(1) + " min/km";
+          pace = " · " + (totalMinDia/totalKmDia).toFixed(1) + " min/km";
         }
-        diaDiv.textContent =
-          totalMinDia.toFixed(0) +
-          " min · " +
-          totalKmDia.toFixed(2) +
-          " km" +
-          pace;
+        diaDiv.textContent = totalMinDia.toFixed(0) + " min · " + totalKmDia.toFixed(2) + " km" + pace;
       } else {
         diaDiv.textContent = "Nenhum registro de cardio para esta data.";
       }
 
-      let totalMinSem = 0;
-      let totalKmSem = 0;
+      let totalMinSem = 0, totalKmSem = 0;
       const baseDate = new Date(dataSel);
-
-      Object.keys(dailyLog).forEach((key) => {
+      Object.keys(dailyLog).forEach(key => {
         const [exId, data] = key.split("::");
         const d = new Date(data);
-        const diff = (baseDate - d) / (1000 * 60 * 60 * 24);
+        const diff = (baseDate - d)/(1000*60*60*24);
         if (diff < 0 || diff > 7) return;
-
         const log = dailyLog[key];
         const match = exId.match(/^ex_(\d+)_([^:]+)$/);
         if (!match) return;
-        const idx = parseInt(match[1], 10);
+        const idx = parseInt(match[1],10);
         const diaEx = match[2];
-
-        const exList = baseExercises.filter(
-          (e) => (e.dia || "").trim() === diaEx
-        );
+        const exList = baseExercises.filter(e => (e.dia || "").trim() === diaEx);
         const ex = exList[idx];
         if (!ex) return;
-
         const grupoLower = (ex.grupo || "").toLowerCase();
-        const tipoLower = (ex.tipo || "").toLowerCase();
+        const tipoLower  = (ex.tipo  || "").toLowerCase();
         const isCardio =
           grupoLower.includes("corrida") ||
+          grupoLower.includes("cardio") ||
           grupoLower.includes("aquecimento") ||
           grupoLower.includes("recuperação") ||
-          tipoLower.includes("cardio");
+          grupoLower.includes("esteira") ||
+          grupoLower.includes("elíptico") ||
+          grupoLower.includes("eliptico") ||
+          grupoLower.includes("bike") ||
+          tipoLower.includes("cardio") ||
+          tipoLower.includes("corrida");
         if (!isCardio) return;
-
         const min = parseFloat(log.tempoCardioMin || "0") || 0;
-        const km = parseFloat(log.distCardioKm || "0") || 0;
-        totalMinSem += min;
-        totalKmSem += km;
+        const km  = parseFloat(log.distCardioKm   || "0") || 0;
+        totalMinSem += min; totalKmSem += km;
       });
 
       if (totalMinSem > 0 || totalKmSem > 0) {
         let pace = "";
         if (totalMinSem > 0 && totalKmSem > 0) {
-          pace = " · " + (totalMinSem / totalKmSem).toFixed(1) + " min/km";
+          pace = " · " + (totalMinSem/totalKmSem).toFixed(1) + " min/km";
         }
-        semDiv.textContent =
-          totalMinSem.toFixed(0) +
-          " min · " +
-          totalKmSem.toFixed(2) +
-          " km" +
-          pace;
+        semDiv.textContent = totalMinSem.toFixed(0) + " min · " + totalKmSem.toFixed(2) + " km" + pace;
       } else {
         semDiv.textContent = "Nenhum registro de cardio nos últimos 7 dias.";
       }
     }
 
-    /* ========= EXPORT / RESET ========= */
+    /* ---- EXPORT / RESET ---- */
     function exportJson() {
       const data = JSON.stringify(dailyLog, null, 2);
-      const blob = new Blob([data], {
-        type: "application/json;charset=utf-8",
-      });
+      const blob = new Blob([data], {type:"application/json;charset=utf-8"});
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      a.href = url;
-      a.download = "guerra_fit_logs.json";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      a.href = url; a.download = "guerra_fit_logs.json";
+      document.body.appendChild(a); a.click();
+      document.body.removeChild(a); URL.revokeObjectURL(url);
       setStatus("Exportado guerra_fit_logs.json.");
     }
-
     function resetDia() {
       const diaSel = getDiaSelecionado();
       const dataSel = getDataSelecionada();
       if (!diaSel) return;
       const novo = {};
-      Object.keys(dailyLog).forEach((key) => {
-        const [, data] = key.split("::");
+      Object.keys(dailyLog).forEach(key => {
+        const [,data] = key.split("::");
         if (data === dataSel) return;
         novo[key] = dailyLog[key];
       });
@@ -1024,67 +898,31 @@
       setStatus("Dados de " + dataSel + " limpos.");
     }
 
-    /* ========= ALIMENTAÇÃO ========= */
+    /* ---- ALIMENTAÇÃO ---- */
     const shoppingItems = [
-      { id: "frango", label: "Peito de frango (2–3kg)", category: "Proteínas" },
-      { id: "ovos", label: "Ovos (36 unidades)", category: "Proteínas" },
-      {
-        id: "carne",
-        label: "Carne vermelha magra (1–2kg)",
-        category: "Proteínas",
-      },
-      { id: "peixe", label: "Peixe (1kg)", category: "Proteínas" },
-      {
-        id: "iogurte",
-        label: "Iogurte natural/greco s/ açúcar",
-        category: "Proteínas",
-      },
-      { id: "cottage", label: "Cottage / ricota (500g)", category: "Proteínas" },
-
-      { id: "arrozint", label: "Arroz integral (2kg)", category: "Carboidratos" },
-      { id: "batata", label: "Batata doce (2,5kg)", category: "Carboidratos" },
-      { id: "aveia", label: "Aveia em flocos (1kg)", category: "Carboidratos" },
-      {
-        id: "pao",
-        label: "Pão integral 100% (2 pacotes)",
-        category: "Carboidratos",
-      },
-      { id: "banana", label: "Banana (14 unid.)", category: "Carboidratos" },
-      { id: "maca", label: "Maçã (7 unid.)", category: "Carboidratos" },
-
-      {
-        id: "folhas",
-        label: "Folhas verdes (3 pacotes)",
-        category: "Verduras/Legumes",
-      },
-      { id: "brocolis", label: "Brócolis (2 cabeças)", category: "Verduras/Legumes" },
-      { id: "abobrinha", label: "Abobrinha (4 unid.)", category: "Verduras/Legumes" },
-      { id: "cenoura", label: "Cenoura (1kg)", category: "Verduras/Legumes" },
-      { id: "tomate", label: "Tomate (1,5kg)", category: "Verduras/Legumes" },
-
-      {
-        id: "azeite",
-        label: "Azeite extra virgem (500ml)",
-        category: "Gorduras boas",
-      },
-      {
-        id: "castanhas",
-        label: "Castanhas/nozes (600g)",
-        category: "Gorduras boas",
-      },
-      { id: "abacate", label: "Abacate (4 unid.)", category: "Gorduras boas" },
-      {
-        id: "pastaam",
-        label: "Pasta de amendoim (450g)",
-        category: "Gorduras boas",
-      },
-
-      {
-        id: "agua",
-        label: "Água (galões/garrafas p/ semana)",
-        category: "Suporte",
-      },
-      { id: "cafe", label: "Café / chás sem açúcar", category: "Suporte" },
+      { id:"frango",    label:"Peito de frango (2–3kg)",             category:"Proteínas" },
+      { id:"ovos",      label:"Ovos (36 unidades)",                  category:"Proteínas" },
+      { id:"carne",     label:"Carne vermelha magra (1–2kg)",        category:"Proteínas" },
+      { id:"peixe",     label:"Peixe (1kg)",                         category:"Proteínas" },
+      { id:"iogurte",   label:"Iogurte natural/greco s/ açúcar",     category:"Proteínas" },
+      { id:"cottage",   label:"Cottage / ricota (500g)",             category:"Proteínas" },
+      { id:"arrozint",  label:"Arroz integral (2kg)",                category:"Carboidratos" },
+      { id:"batata",    label:"Batata doce (2,5kg)",                 category:"Carboidratos" },
+      { id:"aveia",     label:"Aveia em flocos (1kg)",               category:"Carboidratos" },
+      { id:"pao",       label:"Pão integral 100% (2 pacotes)",       category:"Carboidratos" },
+      { id:"banana",    label:"Banana (14 unid.)",                   category:"Carboidratos" },
+      { id:"maca",      label:"Maçã (7 unid.)",                      category:"Carboidratos" },
+      { id:"folhas",    label:"Folhas verdes (3 pacotes)",           category:"Verduras/Legumes" },
+      { id:"brocolis",  label:"Brócolis (2 cabeças)",                category:"Verduras/Legumes" },
+      { id:"abobrinha", label:"Abobrinha (4 unid.)",                 category:"Verduras/Legumes" },
+      { id:"cenoura",   label:"Cenoura (1kg)",                       category:"Verduras/Legumes" },
+      { id:"tomate",    label:"Tomate (1,5kg)",                      category:"Verduras/Legumes" },
+      { id:"azeite",    label:"Azeite extra virgem (500ml)",         category:"Gorduras boas" },
+      { id:"castanhas", label:"Castanhas/nozes (600g)",              category:"Gorduras boas" },
+      { id:"abacate",   label:"Abacate (4 unid.)",                   category:"Gorduras boas" },
+      { id:"pastaam",   label:"Pasta de amendoim (450g)",            category:"Gorduras boas" },
+      { id:"agua",      label:"Água (galões/garrafas p/ semana)",    category:"Suporte" },
+      { id:"cafe",      label:"Café / chás sem açúcar",              category:"Suporte" }
     ];
 
     function loadShopping() {
@@ -1094,31 +932,26 @@
       try {
         const raw = localStorage.getItem(SHOPPING_KEY);
         state = raw ? JSON.parse(raw) : {};
-      } catch {
-        state = {};
-      }
+      } catch { state = {}; }
       cont.innerHTML = "";
-
       const byCat = {};
-      shoppingItems.forEach((item) => {
+      shoppingItems.forEach(item => {
         if (!byCat[item.category]) byCat[item.category] = [];
         byCat[item.category].push(item);
       });
-
-      Object.keys(byCat).forEach((cat) => {
+      Object.keys(byCat).forEach(cat => {
         const catDiv = document.createElement("div");
         const title = document.createElement("div");
         title.className = "shopping-category-title";
         title.textContent = cat;
         catDiv.appendChild(title);
-
-        byCat[cat].forEach((item) => {
+        byCat[cat].forEach(item => {
           const row = document.createElement("div");
           row.className = "shopping-item";
           const chk = document.createElement("input");
           chk.type = "checkbox";
           chk.checked = !!state[item.id];
-          chk.addEventListener("change", (e) => {
+          chk.addEventListener("change", e => {
             state[item.id] = e.target.checked;
             localStorage.setItem(SHOPPING_KEY, JSON.stringify(state));
           });
@@ -1128,7 +961,6 @@
           row.appendChild(span);
           catDiv.appendChild(row);
         });
-
         cont.appendChild(catDiv);
       });
     }
@@ -1137,74 +969,32 @@
       const info = document.getElementById("alimDiaInfo");
       const cont = document.getElementById("alimDiaContainer");
       if (!info || !cont) return;
-
       const diaSel = getDiaSelecionado() || "dia padrão";
       const dataSel = getDataSelecionada();
-
       info.textContent =
-        "Sugestão simples para " +
-        diaSel +
-        " (" +
-        dataSel +
-        "). Depois refinamos macros e quantidades.";
+        "Sugestão simples para " + diaSel + " (" + dataSel + "). Depois refinamos macros e quantidades.";
 
       let tipoDia = "musculacao";
       if (diaSel === "Sábado" || diaSel === "Domingo") tipoDia = "corrida";
       if (diaSel === "Quinta") tipoDia = "leve";
 
       const blocos = [];
-
       if (tipoDia === "musculacao") {
-        blocos.push({
-          titulo: "Café da manhã",
-          texto:
-            "Ovos mexidos + aveia com fruta (banana/maçã) + café sem açúcar.",
-        });
-        blocos.push({
-          titulo: "Almoço",
-          texto:
-            "Frango/carne magra + arroz integral ou batata doce + salada e legumes.",
-        });
-        blocos.push({
-          titulo: "Lanche pré-treino",
-          texto:
-            "Pão integral + pasta de amendoim OU banana + café. Energia para a musculação.",
-        });
-        blocos.push({
-          titulo: "Jantar",
-          texto:
-            "Peixe ou frango + legumes + salada. Carbo moderado, proteína alta.",
-        });
-        blocos.push({
-          titulo: "Ceia",
-          texto: "Iogurte + castanhas ou cottage. Proteína + gordura boa.",
-        });
+        blocos.push({titulo:"Café da manhã", texto:"Ovos mexidos + aveia com fruta (banana/maçã) + café sem açúcar."});
+        blocos.push({titulo:"Almoço", texto:"Frango/carne magra + arroz integral ou batata doce + salada e legumes."});
+        blocos.push({titulo:"Lanche pré-treino", texto:"Pão integral + pasta de amendoim OU banana + café. Energia para a musculação."});
+        blocos.push({titulo:"Jantar", texto:"Peixe ou frango + legumes + salada. Carbo moderado, proteína alta."});
+        blocos.push({titulo:"Ceia", texto:"Iogurte + castanhas ou cottage. Proteína + gordura boa."});
       } else if (tipoDia === "corrida") {
-        blocos.push({
-          titulo: "Pré-corrida",
-          texto:
-            "Banana + mel OU pão integral com geleia, 30–60min antes de correr.",
-        });
-        blocos.push({
-          titulo: "Pós-corrida",
-          texto:
-            "Iogurte + fruta + aveia. Repor carboidrato e proteína leve, muita água.",
-        });
-        blocos.push({
-          titulo: "Refeições principais",
-          texto:
-            "Frango/peixe + arroz integral/batata + legumes. Muito líquido ao longo do dia.",
-        });
+        blocos.push({titulo:"Pré-corrida", texto:"Banana + mel OU pão integral com geleia, 30–60min antes de correr."});
+        blocos.push({titulo:"Pós-corrida", texto:"Iogurte + fruta + aveia. Repor carboidrato e proteína leve, muita água."});
+        blocos.push({titulo:"Refeições principais", texto:"Frango/peixe + arroz integral/batata + legumes. Muito líquido ao longo do dia."});
       } else {
-        blocos.push({
-          titulo: "Dia leve",
-          texto:
-            "Manter proteína alta, carbo moderado e muitas fibras (saladas e legumes).",
-        });
+        blocos.push({titulo:"Dia leve", texto:"Manter proteína alta, carbo moderado e muitas fibras (saladas e legumes)."});
       }
 
       cont.innerHTML = "";
-      blocos.forEach((b) => {
+      blocos.forEach(b => {
         const div = document.createElement("div");
         div.className = "meal-block";
         const t = document.createElement("div");
@@ -1231,18 +1021,17 @@
           <li>Verduras e legumes em pelo menos 2 refeições ao dia.</li>
           <li>Gorduras boas moderadas (azeite, castanhas, abacate, pasta de amendoim).</li>
           <li>Hidratação alta, com atenção extra nos dias de corrida.</li>
-        </ul>
-      `;
+        </ul>`;
     }
 
-    /* ========= TABS / INIT ========= */
+    /* ---- TABS / INIT ---- */
     function initMainTabs() {
       const buttons = document.querySelectorAll(".top-tab-btn");
       const viewTreino = document.getElementById("view-treino");
       const viewAlim = document.getElementById("view-alimentacao");
-      buttons.forEach((btn) => {
+      buttons.forEach(btn => {
         btn.addEventListener("click", () => {
-          buttons.forEach((b) => b.classList.remove("active"));
+          buttons.forEach(b => b.classList.remove("active"));
           btn.classList.add("active");
           if (btn.dataset.main === "treino") {
             viewTreino.classList.remove("hidden");
@@ -1259,9 +1048,9 @@
       const btns = document.querySelectorAll("[data-tab-treino]");
       const tabDia = document.getElementById("tab-dia");
       const tabCardio = document.getElementById("tab-cardio");
-      btns.forEach((btn) => {
+      btns.forEach(btn => {
         btn.addEventListener("click", () => {
-          btns.forEach((b) => b.classList.remove("active"));
+          btns.forEach(b => b.classList.remove("active"));
           btn.classList.add("active");
           const tab = btn.dataset.tabTreino;
           if (tab === "dia") {
@@ -1280,9 +1069,9 @@
       const d = document.getElementById("alim-dia");
       const s = document.getElementById("alim-semana");
       const c = document.getElementById("alim-compras");
-      btns.forEach((btn) => {
+      btns.forEach(btn => {
         btn.addEventListener("click", () => {
-          btns.forEach((b) => b.classList.remove("active"));
+          btns.forEach(b => b.classList.remove("active"));
           btn.classList.add("active");
           const tab = btn.dataset.tabAlim;
           d.classList.add("hidden");
@@ -1311,16 +1100,14 @@
 
       const csvInput = document.getElementById("csvInput");
       if (csvInput) {
-        csvInput.addEventListener("change", (e) => {
+        csvInput.addEventListener("change", e => {
           const file = e.target.files[0];
           if (!file) return;
           const reader = new FileReader();
-          reader.onload = (ev) => {
+          reader.onload = ev => {
             try {
               baseExercises = parseCSV(ev.target.result);
-              setStatus(
-                "Arquivo carregado com " + baseExercises.length + " linhas."
-              );
+              setStatus("Arquivo carregado com " + baseExercises.length + " linhas.");
               rebuildDiaOptions();
               renderDia();
               renderCardapioDia();
@@ -1340,6 +1127,7 @@
           renderCardapioDia();
         });
       }
+
       if (dataInput) {
         dataInput.addEventListener("change", () => {
           renderDia();
@@ -1349,7 +1137,6 @@
 
       const btnExport = document.getElementById("btnExport");
       if (btnExport) btnExport.addEventListener("click", exportJson);
-
       const btnReset = document.getElementById("btnReset");
       if (btnReset) btnReset.addEventListener("click", resetDia);
     });
