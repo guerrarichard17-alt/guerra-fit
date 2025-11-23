@@ -510,7 +510,7 @@
       const sel = document.getElementById("diaSelect");
       if (!sel) return;
       const dias = Array.from(new Set(baseExercises.map(e => (e.dia || "").trim()))).filter(Boolean);
-      const ordem = ["Terça","Quarta","Quinta","Sexta","Sábado","Domingo","Segunda"];
+      const ordem = ["Segunda","Terça","Quarta","Quinta","Sexta","Sábado","Domingo"];
       dias.sort((a,b) => {
         const ia = ordem.indexOf(a), ib = ordem.indexOf(b);
         if (ia === -1 && ib === -1) return a.localeCompare(b);
@@ -605,16 +605,18 @@
           grupoLower.includes("corrida") ||
           tipoLower.includes("corrida");
 
-        const isCardio =
-          isCorrida ||
-          grupoLower.includes("cardio") ||
-          grupoLower.includes("aquecimento") ||
-          grupoLower.includes("recuperação") ||
-          grupoLower.includes("esteira") ||
-          grupoLower.includes("elíptico") ||
-          grupoLower.includes("eliptico") ||
-          grupoLower.includes("bike") ||
-          tipoLower.includes("cardio");
+       const isCardio =
+  grupoLower.includes("corrida") ||
+  grupoLower.includes("cardio") ||
+  grupoLower.includes("aquecimento") ||
+  grupoLower.includes("recuperação") ||
+  grupoLower.includes("recuperacao") ||
+  grupoLower.includes("esteira") ||
+  grupoLower.includes("elíptico") ||
+  grupoLower.includes("eliptico") ||
+  grupoLower.includes("bike") ||
+  tipoLower.includes("cardio") ||
+  tipoLower.includes("corrida");
 
         const isForca = !isCardio;
 
@@ -1248,3 +1250,4 @@
   </script>
 </body>
 </html>
+
