@@ -2,10 +2,9 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Guerra Fit – Treinos, Corrida e Alimentação</title>
+  <title>Guerra Fit – Treinos, corrida e alimentação</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Tema Apple Fitness-like -->
   <style>
     :root {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
@@ -161,7 +160,7 @@
       color: #ff9f9a;
     }
 
-    /* Cardio / corrida – verde */
+    /* Cardio / corrida / recuperação – verde */
     .card-cardio {
       background: radial-gradient(circle at top left, #022c22, #020617 70%);
       border-color: #34c759;
@@ -330,7 +329,7 @@
 <body>
   <header>
     <h1>Guerra Fit</h1>
-    <small>Treinos, corrida e alimentação — semana iniciando na terça.</small>
+    <small>Treinos, corrida e alimentação — semana iniciando na segunda-feira.</small>
   </header>
 
   <main>
@@ -449,7 +448,7 @@
 
     let baseExercises = [];
     let dailyLog = {};
-    let nutritionEntries = []; // alimentação via CSV
+    let nutritionEntries = [];
 
     function todayISO() {
       const d = new Date();
@@ -470,12 +469,11 @@
       const el = document.getElementById("statusArea");
       if (el) el.textContent = msg;
     }
-
     function cleanText(str) {
       return (str || "").replace(/\uFFFD/g, "-");
     }
 
-    /* ---- CSV TREINO ---- */
+    /* -------- CSV TREINO -------- */
     function parseCSV(text) {
       const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
       if (lines.length < 2) return [];
@@ -532,7 +530,6 @@
       if (dias.includes(hoje)) sel.value = hoje;
     }
 
-    /* ---- LOG ---- */
     function getDiaSelecionado() {
       const sel = document.getElementById("diaSelect");
       return sel && sel.value ? sel.value : "";
@@ -541,6 +538,7 @@
       const inp = document.getElementById("dataInput");
       return inp && inp.value ? inp.value : todayISO();
     }
+
     function keyFor(exId, dateStr) {
       return exId + "::" + dateStr;
     }
@@ -568,7 +566,7 @@
       updateLogField(exId, field, !!checked);
     }
 
-    /* ---- RENDER TREINO ---- */
+    /* -------- RENDER TREINO -------- */
     function renderDia() {
       const container = document.getElementById("diaContainer");
       const info = document.getElementById("diaInfo");
@@ -605,18 +603,17 @@
           grupoLower.includes("corrida") ||
           tipoLower.includes("corrida");
 
-       const isCardio =
-  grupoLower.includes("corrida") ||
-  grupoLower.includes("cardio") ||
-  grupoLower.includes("aquecimento") ||
-  grupoLower.includes("recuperação") ||
-  grupoLower.includes("recuperacao") ||
-  grupoLower.includes("esteira") ||
-  grupoLower.includes("elíptico") ||
-  grupoLower.includes("eliptico") ||
-  grupoLower.includes("bike") ||
-  tipoLower.includes("cardio") ||
-  tipoLower.includes("corrida");
+        const isCardio =
+          isCorrida ||
+          grupoLower.includes("cardio") ||
+          grupoLower.includes("aquecimento") ||
+          grupoLower.includes("recuperação") ||
+          grupoLower.includes("recuperacao") ||
+          grupoLower.includes("esteira") ||
+          grupoLower.includes("elíptico") ||
+          grupoLower.includes("eliptico") ||
+          grupoLower.includes("bike") ||
+          tipoLower.includes("cardio");
 
         const isForca = !isCardio;
 
@@ -797,7 +794,7 @@
       updateCardioSummary();
     }
 
-    /* ---- CARDIO RESUMO ---- */
+    /* -------- CARDIO RESUMO -------- */
     function updateCardioSummary() {
       const diaSel = getDiaSelecionado();
       const dataSel = getDataSelecionada();
@@ -829,6 +826,7 @@
           grupoLower.includes("cardio") ||
           grupoLower.includes("aquecimento") ||
           grupoLower.includes("recuperação") ||
+          grupoLower.includes("recuperacao") ||
           grupoLower.includes("esteira") ||
           grupoLower.includes("elíptico") ||
           grupoLower.includes("eliptico") ||
@@ -873,6 +871,7 @@
           grupoLower.includes("cardio") ||
           grupoLower.includes("aquecimento") ||
           grupoLower.includes("recuperação") ||
+          grupoLower.includes("recuperacao") ||
           grupoLower.includes("esteira") ||
           grupoLower.includes("elíptico") ||
           grupoLower.includes("eliptico") ||
@@ -896,7 +895,7 @@
       }
     }
 
-    /* ---- EXPORT / RESET ---- */
+    /* -------- EXPORT / RESET -------- */
     function exportJson() {
       const data = JSON.stringify(dailyLog, null, 2);
       const blob = new Blob([data], {type:"application/json;charset=utf-8"});
@@ -908,9 +907,7 @@
       setStatus("Exportado guerra_fit_logs.json.");
     }
     function resetDia() {
-      const diaSel = getDiaSelecionado();
       const dataSel = getDataSelecionada();
-      if (!diaSel) return;
       const novo = {};
       Object.keys(dailyLog).forEach(key => {
         const [,data] = key.split("::");
@@ -923,7 +920,7 @@
       setStatus("Dados de " + dataSel + " limpos.");
     }
 
-    /* ---- CSV ALIMENTAÇÃO ---- */
+    /* -------- CSV ALIMENTAÇÃO -------- */
     function parseAlimCSV(text) {
       const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
       if (lines.length < 2) return [];
@@ -957,7 +954,7 @@
       return mapa[d.getDay()];
     }
 
-    /* ---- RENDER ALIMENTAÇÃO ---- */
+    /* -------- ALIMENTAÇÃO: RENDER -------- */
     function renderCardapioDia() {
       const info = document.getElementById("alimDiaInfo");
       const cont = document.getElementById("alimDiaContainer");
@@ -1112,7 +1109,7 @@
       });
     }
 
-    /* ---- TABS / INIT ---- */
+    /* -------- TABS / INIT -------- */
     function initMainTabs() {
       const buttons = document.querySelectorAll(".top-tab-btn");
       const viewTreino = document.getElementById("view-treino");
@@ -1250,4 +1247,3 @@
   </script>
 </body>
 </html>
-
