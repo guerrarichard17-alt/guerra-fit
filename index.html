@@ -163,13 +163,25 @@
     /* Cardio / corrida / recuperação – verde */
     .card-cardio {
       background: radial-gradient(circle at top left, #022c22, #020617 70%);
-      border-color: #34c759;
-      box-shadow: 0 0 0 1px rgba(52, 199, 89, 0.22);
+      border-color: #00ff9d;
+      box-shadow: 0 0 0 1px rgba(0, 255, 157, 0.22);
     }
-    .cardio-title { color: #34c759; }
+    .cardio-title { color: #00ff9d; }
     .badge-cardio {
-      border-color: #34c759;
+      border-color: #00ff9d;
       color: #bbf7d0;
+    }
+
+    /* Aquecimento – azul */
+    .card-warmup {
+      background: radial-gradient(circle at top left, #0b1120, #020617 70%);
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.22);
+    }
+    .warmup-title { color: #60a5fa; }
+    .badge-warmup {
+      border-color: #3b82f6;
+      color: #bfdbfe;
     }
 
     .exercise-header {
@@ -234,8 +246,8 @@
     /* Meta corrida */
     .run-meta {
       border-radius: 12px;
-      border: 1px solid #34c759;
-      background: rgba(22, 163, 74, 0.12);
+      border: 1px solid #00ff9d;
+      background: rgba(16, 185, 129, 0.12);
       padding: 8px;
       margin-top: 4px;
       margin-bottom: 6px;
@@ -422,8 +434,8 @@
 
         <div class="tab-strip">
           <button class="tab-btn active" data-tab-alim="dia">Cardápio do dia</button>
-          <button class="tab-btn" data-tab-alim="semana">Semana</button>
-          <button class="tab-btn" data-tab-alim="compras">Lista de compras</button>
+          <button class="tab-btn" data-tab-alim="semana">Semana (totais por dia)</button>
+          <button class="tab-btn" data-tab-alim="compras">Lista de compras (total da semana)</button>
         </div>
 
         <div id="alim-dia">
@@ -603,10 +615,13 @@
           grupoLower.includes("corrida") ||
           tipoLower.includes("corrida");
 
-        const isCardio =
+        const isWarmup =
+          grupoLower.includes("aquecimento");
+
+        const isCardioBase =
           isCorrida ||
+          isWarmup ||
           grupoLower.includes("cardio") ||
-          grupoLower.includes("aquecimento") ||
           grupoLower.includes("recuperação") ||
           grupoLower.includes("recuperacao") ||
           grupoLower.includes("esteira") ||
@@ -615,12 +630,14 @@
           grupoLower.includes("bike") ||
           tipoLower.includes("cardio");
 
+        const isCardio = isCardioBase;
         const isForca = !isCardio;
 
         const card = document.createElement("div");
         card.className = "exercise-card";
-        if (isCardio) card.classList.add("card-cardio");
-        if (isForca)  card.classList.add("card-strength");
+        if (isWarmup) card.classList.add("card-warmup");
+        else if (isCardio) card.classList.add("card-cardio");
+        if (isForca) card.classList.add("card-strength");
 
         const header = document.createElement("div");
         header.className = "exercise-header";
@@ -628,9 +645,15 @@
         const left = document.createElement("div");
         const title = document.createElement("div");
         title.className = "exercise-title";
-        if (isCardio) title.classList.add("cardio-title");
-        if (isForca)  title.classList.add("strength-title");
-        const icon = isCardio ? "🏃 " : "🏋️ ";
+
+        let icon = "🏋️ ";
+        if (isCardio) icon = "🏃 ";
+        if (isWarmup) icon = "🔥 ";
+
+        if (isWarmup) title.classList.add("warmup-title");
+        else if (isCardio) title.classList.add("cardio-title");
+        else if (isForca) title.classList.add("strength-title");
+
         title.textContent = icon + (ex.exercicio || "");
 
         const sub = document.createElement("div");
@@ -644,8 +667,9 @@
         right.className = "exercise-header-right";
         const pill = document.createElement("div");
         pill.className = "pill";
-        if (isCardio) pill.classList.add("badge-cardio");
-        if (isForca)  pill.classList.add("badge-strength");
+        if (isWarmup) pill.classList.add("badge-warmup");
+        else if (isCardio) pill.classList.add("badge-cardio");
+        else if (isForca) pill.classList.add("badge-strength");
         pill.textContent = cleanText(ex.repsTempo || "") +
           (ex.rpeZona ? " · " + cleanText(ex.rpeZona) : "");
         right.appendChild(pill);
@@ -954,7 +978,7 @@
       return mapa[d.getDay()];
     }
 
-    /* -------- ALIMENTAÇÃO: RENDER -------- */
+    /* -------- ALIMENTAÇÃO: DIA -------- */
     function renderCardapioDia() {
       const info = document.getElementById("alimDiaInfo");
       const cont = document.getElementById("alimDiaContainer");
@@ -1011,6 +1035,7 @@
       });
     }
 
+    /* -------- ALIMENTAÇÃO: SEMANA (TOTAIS POR DIA) -------- */
     function renderCardapioSemana() {
       const cont = document.getElementById("alimSemanaContainer");
       if (!cont) return;
@@ -1020,27 +1045,49 @@
         return;
       }
 
+      // Agrupa por dia e soma quantidades por item+unidade
       const byDay = {};
       nutritionEntries.forEach(n => {
-        const d = n.dia || "Dia";
-        if (!byDay[d]) byDay[d] = {refeicoes:new Set(), itens:0};
-        if (n.refeicao) byDay[d].refeicoes.add(n.refeicao);
-        if (n.item) byDay[d].itens += 1;
+        if (!n.dia || !n.item) return;
+        const dia = (n.dia || "").trim();
+        const item = n.item || "";
+        const unidade = n.unidade || "";
+        const key = item + "||" + unidade;
+        let qtd = parseFloat((n.quantidade || "0").replace(",", ".")) || 0;
+
+        if (!byDay[dia]) byDay[dia] = {};
+        if (!byDay[dia][key]) byDay[dia][key] = {item, unidade, quantidade:0};
+        byDay[dia][key].quantidade += qtd;
       });
 
-      let html = "<div class='help-text' style='margin-bottom:6px;'>Resumo simples dos dias com alimentação cadastrada:</div>";
-      html += "<ul style='padding-left:18px; font-size:13px;'>";
-      Object.keys(byDay).forEach(d => {
-        const info = byDay[d];
-        html += "<li><b>" + d + ":</b> " +
-          info.refeicoes.size + " refeições, " +
-          info.itens + " itens.</li>";
+      const ordem = ["Segunda","Terça","Quarta","Quinta","Sexta","Sábado","Domingo"];
+      const diasOrdenados = Object.keys(byDay).sort((a,b) => {
+        const ia = ordem.indexOf(a), ib = ordem.indexOf(b);
+        if (ia === -1 && ib === -1) return a.localeCompare(b);
+        if (ia === -1) return 1;
+        if (ib === -1) return -1;
+        return ia - ib;
       });
-      html += "</ul>";
+
+      let html = "<div class='help-text' style='margin-bottom:6px;'>Totais de cada alimento por dia (soma de todas as refeições).</div>";
+      diasOrdenados.forEach(dia => {
+        html += `<div class="meal-block">`;
+        html += `<div class="meal-title">${dia}</div>`;
+        html += `<ul style="margin:0; padding-left:18px; font-size:13px;">`;
+        const itens = byDay[dia];
+        Object.keys(itens).forEach(key => {
+          const it = itens[key];
+          const qtdTxt = it.quantidade ? it.quantidade.toFixed(1).replace(".0","") : "";
+          const un = it.unidade ? " " + it.unidade : "";
+          html += `<li>${qtdTxt}${un} ${it.item}</li>`;
+        });
+        html += `</ul></div>`;
+      });
 
       cont.innerHTML = html;
     }
 
+    /* -------- ALIMENTAÇÃO: LISTA DE COMPRAS (SEMANA) -------- */
     function renderShopping() {
       const cont = document.getElementById("shoppingContainer");
       if (!cont) return;
@@ -1192,7 +1239,7 @@
           reader.onload = ev => {
             try {
               baseExercises = parseCSV(ev.target.result);
-              setStatus("Arquivo carregado com " + baseExercises.length + " linhas.");
+              setStatus("Arquivo de treinos carregado com " + baseExercises.length + " linhas.");
               rebuildDiaOptions();
               renderDia();
             } catch (err) {
