@@ -2,1295 +2,843 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Guerra Fit – Treinos, corrida e alimentação</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <style>
+  <title>Guerra Fit 2.0 – DevFit Coach</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" /> <style>
+    /* --- DESIGN SYSTEM & VARS --- */
     :root {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-        "Segoe UI", sans-serif;
-      color-scheme: dark;
+      --bg-app: #09090b; /* Zinco muito escuro */
+      --bg-card: #18181b; /* Zinco escuro */
+      --bg-input: #27272a;
+      --border: #3f3f46;
+      
+      --text-main: #f4f4f5;
+      --text-muted: #a1a1aa;
+      
+      --primary: #22c55e; /* Green 500 - Conclusão/Cardio */
+      --primary-glow: rgba(34, 197, 94, 0.2);
+      
+      --accent-strength: #ef4444; /* Red 500 - Força */
+      --accent-warmup: #3b82f6; /* Blue 500 - Aquecimento */
+      
+      --radius: 12px;
+      --font-stack: 'Inter', system-ui, -apple-system, sans-serif;
     }
-    * { box-sizing: border-box; }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    
     body {
       margin: 0;
-      background: #000000;
-      color: #f9fafb;
+      background: var(--bg-app);
+      color: var(--text-main);
+      font-family: var(--font-stack);
+      font-size: 14px;
+      padding-bottom: 80px; /* Espaço para scroll final */
     }
+
+    /* --- TYPOGRAPHY & HEADER --- */
     header {
-      padding: 14px 16px 10px;
-      border-bottom: 1px solid #1f2937;
-      background: radial-gradient(circle at top left, #111827, #020617 65%);
+      background: rgba(9, 9, 11, 0.95);
+      border-bottom: 1px solid var(--border);
+      padding: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(5px);
     }
     header h1 {
-      margin: 0 0 4px 0;
-      font-size: 20px;
-      font-weight: 700;
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+      text-transform: uppercase;
     }
     header small {
-      color: #9ca3af;
-      font-size: 12px;
-    }
-    main {
-      padding: 10px;
-      max-width: 960px;
-      margin: 0 auto 40px auto;
-    }
-
-    .card {
-      background: #05050a;
-      border-radius: 16px;
-      border: 1px solid #111827;
-      padding: 12px;
-      margin-bottom: 14px;
-    }
-    .row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .col-6 {
-      flex: 1 1 260px;
-      min-width: 0;
-    }
-
-    label {
-      font-size: 12px;
-      margin-bottom: 3px;
+      color: var(--text-muted);
+      font-size: 11px;
       display: block;
-    }
-    input,
-    select,
-    textarea {
-      width: 100%;
-      background: #020617;
-      border-radius: 12px;
-      border: 1px solid #374151;
-      padding: 8px 10px;
-      color: #f9fafb;
-      font-size: 13px;
-    }
-    input[type="file"] {
-      padding: 6px 10px;
-    }
-    textarea {
-      min-height: 60px;
-      resize: vertical;
-    }
-    button {
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid #374151;
-      background: #020617;
-      color: #f9fafb;
-      cursor: pointer;
-      font-size: 13px;
-      white-space: nowrap;
-    }
-    button.primary {
-      background: #0a84ff;
-      border-color: #0a84ff;
-    }
-    .help-text {
-      font-size: 11px;
-      color: #9ca3af;
-    }
-
-    /* Tabs principais */
-    .top-tabs {
-      display: flex;
-      gap: 8px;
-    }
-    .top-tab-btn {
-      flex: 1;
-      padding: 10px 10px;
-      border-radius: 999px;
-      background: #020617;
-      border: 1px solid #374151;
-      color: #e5e7eb;
-      font-size: 14px;
-      font-weight: 500;
-    }
-    .top-tab-btn.active {
-      background: #34c759;
-      border-color: #34c759;
-      color: #000000;
-    }
-
-    /* Tabs internas */
-    .tab-strip {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-    .tab-btn {
-      flex: 1;
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: #020617;
-      border: 1px solid #374151;
-      color: #e5e7eb;
-      font-size: 13px;
-    }
-    .tab-btn.active {
-      background: #0a84ff;
-      border-color: #0a84ff;
-      color: #ffffff;
-    }
-
-    .hidden { display: none; }
-
-    /* Exercícios */
-    .exercise-card {
-      border-radius: 16px;
-      border: 1px solid #111827;
-      padding: 12px;
-      margin-bottom: 10px;
-      background: #020617;
-    }
-
-    /* Força / musculação – vermelho */
-    .card-strength {
-      border-color: #ff3b30;
-      box-shadow: 0 0 0 1px rgba(255, 59, 48, 0.18);
-    }
-    .strength-title { color: #ff453a; }
-    .badge-strength {
-      border-color: #ff3b30;
-      color: #ff9f9a;
-    }
-
-    /* Cardio / corrida / recuperação – verde */
-    .card-cardio {
-      background: radial-gradient(circle at top left, #022c22, #020617 70%);
-      border-color: #00ff9d;
-      box-shadow: 0 0 0 1px rgba(0, 255, 157, 0.22);
-    }
-    .cardio-title { color: #00ff9d; }
-    .badge-cardio {
-      border-color: #00ff9d;
-      color: #bbf7d0;
-    }
-
-    /* Aquecimento – azul */
-    .card-warmup {
-      background: radial-gradient(circle at top left, #0b1120, #020617 70%);
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.22);
-    }
-    .warmup-title { color: #60a5fa; }
-    .badge-warmup {
-      border-color: #3b82f6;
-      color: #bfdbfe;
-    }
-
-    .exercise-header {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 6px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .exercise-title {
-      font-size: 14px;
-      font-weight: 600;
-    }
-    .exercise-sub {
-      font-size: 11px;
-      color: #9ca3af;
-    }
-    .exercise-header-right {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 4px;
-    }
-
-    .pill {
-      padding: 4px 9px;
-      border-radius: 999px;
-      border: 1px solid #374151;
-      font-size: 11px;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      white-space: nowrap;
-    }
-
-    .exercise-fields {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 6px;
-    }
-    @media (max-width: 640px) {
-      .exercise-fields { grid-template-columns: 1fr; }
-    }
-    .field-block {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .bottom-row {
-      margin-top: 8px;
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-      font-size: 11px;
-    }
-
-    /* Meta corrida */
-    .run-meta {
-      border-radius: 12px;
-      border: 1px solid #00ff9d;
-      background: rgba(16, 185, 129, 0.12);
-      padding: 8px;
       margin-top: 4px;
-      margin-bottom: 6px;
     }
-    .run-meta-title {
-      font-size: 12px;
-      font-weight: 600;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: #a7f3d0;
+
+    main {
+      padding: 16px;
+      max-width: 800px;
+      margin: 0 auto;
     }
-    .run-meta-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 6px;
+
+    /* --- GAMIFICATION: PROGRESS BAR --- */
+    .progress-wrapper {
+      margin-top: 12px;
+      background: var(--bg-input);
+      height: 8px;
+      border-radius: 99px;
+      overflow: hidden;
+      position: relative;
     }
-    @media (max-width: 640px) {
-      .run-meta-grid { grid-template-columns: 1fr; }
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 10px var(--primary-glow);
     }
-    .run-meta-item {
+    .progress-text {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-align: right;
+      margin-top: 4px;
+    }
+
+    /* --- CARDS & LAYOUT --- */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .row { display: flex; flex-wrap: wrap; gap: 12px; }
+    .col-6 { flex: 1 1 45%; min-width: 140px; }
+
+    /* --- FORMS & INPUTS (Mobile Friendly) --- */
+    label {
       font-size: 11px;
-      color: #d1fae5;
-    }
-    .run-meta-item b {
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
       display: block;
-      font-size: 11px;
-      color: #86efac;
+      font-weight: 600;
+    }
+    
+    input, select, textarea {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px; /* Touch target maior */
+      color: var(--text-main);
+      font-size: 16px; /* Evita zoom no iOS */
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+    }
+    
+    /* Botões */
+    button {
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: none;
+      background: var(--bg-input);
+      color: var(--text-main);
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    button:active { transform: scale(0.98); }
+    button.primary {
+      background: var(--primary);
+      color: #000;
+      border: none;
+      box-shadow: 0 0 15px var(--primary-glow);
     }
 
-    /* Resumo cardio */
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
+    /* --- NAVIGATION TABS --- */
+    .tab-nav {
+      display: flex;
+      background: var(--bg-input);
+      padding: 4px;
+      border-radius: 10px;
+      margin-bottom: 20px;
     }
-    @media (max-width: 640px) {
-      .summary-grid { grid-template-columns: 1fr; }
-    }
-    .summary-box {
-      border-radius: 12px;
-      border: 1px solid #111827;
+    .tab-nav button {
+      flex: 1;
+      background: transparent;
+      border: none;
       padding: 10px;
-      background: #020617;
-    }
-    .summary-title {
       font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 6px;
+      border-radius: 8px;
+      color: var(--text-muted);
+    }
+    .tab-nav button.active {
+      background: var(--bg-card);
+      color: var(--text-main);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
 
-    /* Alimentação */
-    .meal-block {
-      border-radius: 12px;
-      border: 1px solid #111827;
-      padding: 8px 10px;
-      margin-bottom: 8px;
-      background: #020617;
-      font-size: 13px;
+    /* --- EXERCISE CARDS --- */
+    .exercise-card {
+      background: var(--bg-card);
+      border-left: 4px solid var(--border);
+      padding: 16px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      position: relative;
     }
-    .meal-title {
-      font-weight: 600;
-      margin-bottom: 4px;
+    /* Cores por tipo */
+    .type-strength { border-left-color: var(--accent-strength); }
+    .type-cardio { border-left-color: var(--primary); }
+    .type-warmup { border-left-color: var(--accent-warmup); }
+
+    .ex-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .ex-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .ex-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .pill {
+      background: var(--bg-input);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: bold;
+      border: 1px solid var(--border);
     }
 
-    .shopping-category-title {
-      font-weight: 600;
-      margin: 12px 0 4px 0;
+    /* Inputs Grid */
+    .ex-inputs {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .input-group { display: flex; flex-direction: column; }
+    
+    .carga-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+    }
+    .carga-grid input {
+      padding: 8px 4px;
+      text-align: center;
       font-size: 13px;
     }
-    .shopping-item {
+
+    /* Checkbox Footer */
+    .ex-footer {
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    /* Custom Checkbox Big Target */
+    .check-wrapper {
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      margin-bottom: 3px;
+      gap: 10px;
+      cursor: pointer;
     }
-    #shoppingContainer {
-      padding-top: 4px;
+    .custom-checkbox {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    input[type="checkbox"]:checked + .custom-checkbox {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    input[type="checkbox"]:checked + .custom-checkbox::after {
+      content: '✔';
+      color: #000;
+      font-size: 14px;
+      font-weight: bold;
     }
 
-    #statusArea {
-      margin-top: 6px;
-      font-size: 11px;
-      color: #9ca3af;
+    /* --- UTILS --- */
+    .hidden { display: none !important; }
+    .help-text { font-size: 12px; color: var(--text-muted); margin-top: 8px; text-align: center; }
+    
+    /* Disclaimer Footer */
+    footer.disclaimer {
+      margin-top: 40px;
+      padding: 20px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: #52525b;
+      font-size: 10px;
     }
   </style>
 </head>
 
 <body>
-  <header>
-    <h1>Guerra Fit</h1>
-    <small>Treinos, corrida e alimentação — semana iniciando na segunda-feira.</small>
-  </header>
 
-  <main>
-    <!-- Tabs principais -->
+<header>
+  <h1>Guerra Fit <span style="color:var(--primary)">//</span> Coach</h1>
+  <small>Treino, Dieta & Ciência</small>
+  
+  <div id="progressBarContainer" class="hidden">
+    <div class="progress-wrapper">
+      <div id="dailyProgress" class="progress-fill"></div>
+    </div>
+    <div id="progressText" class="progress-text">0% Concluído</div>
+  </div>
+</header>
+
+<main>
+  <div class="tab-nav">
+    <button class="active" onclick="switchMainTab('treino')">🏋️ Treinos</button>
+    <button onclick="switchMainTab('dieta')">🥗 Dieta</button>
+  </div>
+
+  <div id="view-treino">
+    
     <div class="card">
-      <div class="top-tabs">
-        <button class="top-tab-btn active" data-main="treino">Treinos</button>
-        <button class="top-tab-btn" data-main="alimentacao">Alimentação</button>
+      <div class="row">
+        <div class="col-6">
+          <label>Dia da Semana</label>
+          <select id="diaSelect"></select>
+        </div>
+        <div class="col-6">
+          <label>Data</label>
+          <input type="date" id="dataInput" />
+        </div>
+      </div>
+      
+      <details style="margin-top:12px; color:var(--text-muted); font-size:12px;">
+        <summary style="cursor:pointer; padding:5px;">Opções Avançadas & Upload</summary>
+        <div style="margin-top:10px; padding:10px; border:1px dashed var(--border); border-radius:8px;">
+           <label>Sobrescrever com CSV:</label>
+           <input type="file" id="csvInput" accept=".csv" style="padding:6px; font-size:12px;" />
+           <div style="margin-top:8px; display:flex; gap:10px;">
+             <button onclick="exportJson()" style="font-size:11px;">💾 Backup (JSON)</button>
+             <button onclick="resetDia()" style="font-size:11px; color:#ef4444; border-color:#ef4444;">🗑️ Limpar Hoje</button>
+           </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="tab-nav" style="margin-bottom:10px; font-size:12px;">
+      <button class="active" data-sub="dia" onclick="switchSubTab('treino', 'dia')">Treino do Dia</button>
+      <button data-sub="cardio" onclick="switchSubTab('treino', 'cardio')">Resumo Cardio</button>
+    </div>
+
+    <div id="tab-dia">
+      <div id="diaContainer"></div>
+    </div>
+
+    <div id="tab-cardio" class="hidden">
+      <div class="card" style="border-color: var(--primary);">
+        <h3 style="margin:0 0 10px 0; color:var(--primary)">Cardio Hoje</h3>
+        <div id="cardioDiaResumo" style="font-size:16px; font-weight:bold;"></div>
+      </div>
+      <div class="card">
+        <h3 style="margin:0 0 10px 0; color:var(--text-muted)">Últimos 7 dias</h3>
+        <div id="cardioSemanaResumo" style="font-size:14px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="view-dieta" class="hidden">
+    <div class="card">
+      <h3 style="margin-top:0;">Planejamento Nutricional</h3>
+      <div class="tab-nav" style="margin-bottom:0;">
+        <button class="active" data-sub="menu" onclick="switchSubTab('dieta', 'menu')">Cardápio</button>
+        <button data-sub="shopping" onclick="switchSubTab('dieta', 'shopping')">Lista de Compras</button>
       </div>
     </div>
 
-    <!-- VIEW TREINO -->
-    <div id="view-treino">
-      <div class="card">
-        <div class="row">
-          <div class="col-6">
-            <label>Arquivo de treinos (.csv)</label>
-            <input type="file" id="csvInput" accept=".csv" />
-          </div>
-          <div class="col-6">
-            <label>Dia do treino</label>
-            <select id="diaSelect"></select>
-          </div>
-        </div>
-
-        <div class="row" style="margin-top: 8px;">
-          <div class="col-6">
-            <label>Data</label>
-            <input type="date" id="dataInput" />
-          </div>
-          <div class="col-6">
-            <div class="help-text" style="padding-top: 9px;">
-              Todos os dados (peso, cargas, corrida, RPE) são salvos automaticamente no navegador.
-            </div>
-          </div>
-        </div>
-
-        <div class="row" style="margin-top: 10px;">
-          <div class="col-6">
-            <button id="btnExport" class="primary">Exportar dados (.json)</button>
-          </div>
-          <div class="col-6">
-            <button id="btnReset">Limpar dados deste dia</button>
-          </div>
-        </div>
-
-        <div id="statusArea">Nenhum treino carregado ainda.</div>
-      </div>
-
-      <div class="card">
-        <div class="tab-strip">
-          <button class="tab-btn active" data-tab-treino="dia">Treino do dia</button>
-          <button class="tab-btn" data-tab-treino="cardio">Cardio — dia / semana</button>
-        </div>
-
-        <div id="tab-dia">
-          <div id="diaInfo" class="help-text" style="margin-bottom: 6px;"></div>
-          <div id="diaContainer"></div>
-        </div>
-
-        <div id="tab-cardio" class="hidden">
-          <div class="summary-grid">
-            <div class="summary-box">
-              <div class="summary-title">Cardio do dia</div>
-              <div id="cardioDiaResumo" class="help-text"></div>
-            </div>
-            <div class="summary-box">
-              <div class="summary-title">Cardio últimos 7 dias</div>
-              <div id="cardioSemanaResumo" class="help-text"></div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div id="diet-menu">
+      <div id="menuContainer"></div>
     </div>
 
-    <!-- VIEW ALIMENTAÇÃO -->
-    <div id="view-alimentacao" class="hidden">
+    <div id="diet-shopping" class="hidden">
       <div class="card">
-        <div class="row" style="margin-bottom:10px;">
-          <div class="col-6">
-            <label>Arquivo de alimentação (.csv)</label>
-            <input type="file" id="alimCsvInput" accept=".csv" />
-          </div>
-          <div class="col-6">
-            <div class="help-text" style="padding-top: 9px;">
-              Formato: Dia;Refeição;Item;Quantidade;Unidade;Grupo.
-            </div>
-          </div>
-        </div>
-
-        <div class="tab-strip">
-          <button class="tab-btn active" data-tab-alim="dia">Cardápio do dia</button>
-          <button class="tab-btn" data-tab-alim="semana">Semana (totais por dia)</button>
-          <button class="tab-btn" data-tab-alim="compras">Lista de compras (total da semana)</button>
-        </div>
-
-        <div id="alim-dia">
-          <div id="alimDiaInfo" class="help-text" style="margin-bottom: 6px;"></div>
-          <div id="alimDiaContainer"></div>
-        </div>
-
-        <div id="alim-semana" class="hidden">
-          <div id="alimSemanaContainer"></div>
-        </div>
-
-        <div id="alim-compras" class="hidden">
-          <div id="shoppingContainer"></div>
-        </div>
+        <div id="shoppingContainer"></div>
       </div>
     </div>
-  </main>
+  </div>
 
-  <script>
-    const STORAGE_KEY = "guerra_fit_logs_v3";
-    const SHOPPING_KEY = "guerra_fit_shopping_v3";
+</main>
 
-    let baseExercises = [];
-    let dailyLog = {};
-    let nutritionEntries = [];
+<footer class="disclaimer">
+  <strong>AVISO LEGAL:</strong> Este aplicativo serve apenas para registro de dados. Consulte um profissional de educação física e nutricionista antes de iniciar qualquer rotina.
+</footer>
 
-    function todayISO() {
-      const d = new Date();
-      const off = d.getTimezoneOffset();
-      const local = new Date(d.getTime() - off * 60000);
-      return local.toISOString().slice(0, 10);
-    }
-    function loadDailyLog() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        dailyLog = raw ? JSON.parse(raw) : {};
-      } catch { dailyLog = {}; }
-    }
-    function saveDailyLog() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(dailyLog));
-    }
-    function setStatus(msg) {
-      const el = document.getElementById("statusArea");
-      if (el) el.textContent = msg;
-    }
-    function cleanText(str) {
-      return (str || "").replace(/\uFFFD/g, "-");
-    }
+<script>
+  // =========================================================
+  // 1. BASE DE DADOS INTERNA (JSON - "HARDCODED")
+  // EDITE AQUI PARA MUDAR SEU TREINO PADRÃO
+  // =========================================================
+  const DEFAULT_TREINOS = [
+    // --- TREINO A: PEITO, OMBRO, TRÍCEPS ---
+    { dia: "Segunda", grupo: "Peito", exercicio: "Supino Reto (Halter ou Barra)", series: "4", repsTempo: "8-10", rpeZona: "8-9", tipo: "Força", obs: "Foco na descida controlada" },
+    { dia: "Segunda", grupo: "Peito", exercicio: "Supino Inclinado", series: "3", repsTempo: "10-12", rpeZona: "8", tipo: "Força" },
+    { dia: "Segunda", grupo: "Ombro", exercicio: "Elevação Lateral", series: "4", repsTempo: "12-15", rpeZona: "Falha", tipo: "Hipertrofia" },
+    { dia: "Segunda", grupo: "Tríceps", exercicio: "Tríceps Corda", series: "4", repsTempo: "10-12", rpeZona: "9", tipo: "Força" },
+    { dia: "Segunda", grupo: "Cardio", exercicio: "Esteira", series: "1", repsTempo: "20 min", rpeZona: "Zona 2", tipo: "Cardio" },
+    
+    // --- TREINO B: COSTAS, BÍCEPS ---
+    { dia: "Terça", grupo: "Costas", exercicio: "Puxada Alta (Pulley)", series: "4", repsTempo: "10", rpeZona: "9", tipo: "Força" },
+    { dia: "Terça", grupo: "Costas", exercicio: "Remada Curvada", series: "4", repsTempo: "8-10", rpeZona: "9", tipo: "Força" },
+    { dia: "Terça", grupo: "Bíceps", exercicio: "Rosca Direta", series: "4", repsTempo: "10-12", rpeZona: "Falha", tipo: "Hipertrofia" },
+    { dia: "Terça", grupo: "Cardio", exercicio: "Corrida Rua", series: "1", repsTempo: "5km", rpeZona: "Moderado", tipo: "Corrida" },
 
-    /* -------- CSV TREINO -------- */
-    function parseCSV(text) {
-      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
-      if (lines.length < 2) return [];
-      let delimiter = ";";
-      if (lines[0].includes(",") && !lines[0].includes(";")) delimiter = ",";
-      const headers = lines[0].split(delimiter).map(h => h.trim());
-      function getVal(cells, name) {
-        const idx = headers.indexOf(name);
-        return idx === -1 ? "" : cleanText((cells[idx] || "").trim());
-      }
-      const out = [];
-      for (let i = 1; i < lines.length; i++) {
-        const cells = lines[i].split(delimiter);
-        const row = {
-          dia:        getVal(cells, "Dia"),
-          grupo:      getVal(cells, "Grupo"),
-          exercicio:  getVal(cells, "Exercício"),
-          tipo:       getVal(cells, "Tipo"),
-          series:     getVal(cells, "Séries"),
-          repsTempo:  getVal(cells, "Reps/Tempo"),
-          rpeZona:    getVal(cells, "RPE/Zona"),
-          aquecimento:getVal(cells, "Aquecimento?"),
-          midia:      getVal(cells, "Link vídeo")
-        };
-        if (Object.values(row).every(v => !v)) continue;
-        out.push(row);
-      }
-      return out;
-    }
+    // --- EXEMPLO RESTO DA SEMANA ---
+    { dia: "Quarta", grupo: "Pernas", exercicio: "Agachamento Livre", series: "4", repsTempo: "6-8", rpeZona: "9", tipo: "Força" },
+    { dia: "Quinta", grupo: "Descanso", exercicio: "Alongamento / Mobilidade", series: "1", repsTempo: "20 min", rpeZona: "Leve", tipo: "Recuperação" },
+    { dia: "Sexta", grupo: "FullBody", exercicio: "Levantamento Terra", series: "3", repsTempo: "5", rpeZona: "9.5", tipo: "Força" }
+  ];
 
-    function rebuildDiaOptions() {
-      const sel = document.getElementById("diaSelect");
-      if (!sel) return;
-      const dias = Array.from(new Set(baseExercises.map(e => (e.dia || "").trim()))).filter(Boolean);
-      const ordem = ["Segunda","Terça","Quarta","Quinta","Sexta","Sábado","Domingo"];
-      dias.sort((a,b) => {
-        const ia = ordem.indexOf(a), ib = ordem.indexOf(b);
-        if (ia === -1 && ib === -1) return a.localeCompare(b);
-        if (ia === -1) return 1;
-        if (ib === -1) return -1;
-        return ia - ib;
-      });
-      sel.innerHTML = "";
-      const opt0 = document.createElement("option");
-      opt0.value = ""; opt0.textContent = "Selecione o dia";
-      sel.appendChild(opt0);
-      dias.forEach(d => {
-        const o = document.createElement("option");
-        o.value = d; o.textContent = d;
-        sel.appendChild(o);
-      });
-      const mapa = {0:"Domingo",1:"Segunda",2:"Terça",3:"Quarta",4:"Quinta",5:"Sexta",6:"Sábado"};
-      const hoje = mapa[new Date().getDay()];
-      if (dias.includes(hoje)) sel.value = hoje;
-    }
+  const DEFAULT_DIETA = [
+    { dia: "Segunda", refeicao: "Café da Manhã", item: "Ovos Mexidos", quantidade: "3", unidade: "uni", grupo: "Proteína" },
+    { dia: "Segunda", refeicao: "Café da Manhã", item: "Pão Integral", quantidade: "2", unidade: "fatias", grupo: "Carbo" },
+    { dia: "Segunda", refeicao: "Almoço", item: "Frango Grelhado", quantidade: "150", unidade: "g", grupo: "Proteína" },
+    { dia: "Segunda", refeicao: "Almoço", item: "Arroz Branco", quantidade: "200", unidade: "g", grupo: "Carbo" },
+    { dia: "Segunda", refeicao: "Jantar", item: "Carne Moída", quantidade: "150", unidade: "g", grupo: "Proteína" },
+    // Adicione mais dias e refeições aqui seguindo o padrão
+  ];
 
-    function getDiaSelecionado() {
-      const sel = document.getElementById("diaSelect");
-      return sel && sel.value ? sel.value : "";
-    }
-    function getDataSelecionada() {
-      const inp = document.getElementById("dataInput");
-      return inp && inp.value ? inp.value : todayISO();
-    }
+  // =========================================================
+  // 2. SISTEMA (LÓGICA)
+  // =========================================================
+  const STORAGE_KEY = "guerra_fit_logs_v4";
+  const SHOPPING_KEY = "guerra_fit_shopping_v4";
 
-    function keyFor(exId, dateStr) {
-      return exId + "::" + dateStr;
-    }
-    function getLog(exId, dateStr) {
-      const key = keyFor(exId, dateStr);
-      if (!dailyLog[key]) {
-        dailyLog[key] = {
-          peso: "", rpePercebido: "",
-          carga1: "", carga2: "", carga3: "", carga4: "",
-          tempoCardioMin: "", distCardioKm: "", cardioTipo: "",
-          obs: "", concluido: false
-        };
-      }
-      return dailyLog[key];
-    }
-    function updateLogField(exId, field, value) {
-      const date = getDataSelecionada();
-      const log = getLog(exId, date);
-      log[field] = value;
-      dailyLog[keyFor(exId, date)] = log;
-      saveDailyLog();
-      updateCardioSummary();
-    }
-    function updateLogCheckbox(exId, field, checked) {
-      updateLogField(exId, field, !!checked);
-    }
+  let baseExercises = [];
+  let nutritionEntries = [];
+  let dailyLog = {};
 
-    /* -------- RENDER TREINO -------- */
-    function renderDia() {
-      const container = document.getElementById("diaContainer");
-      const info = document.getElementById("diaInfo");
-      if (!container || !info) return;
-      container.innerHTML = "";
+  // Utilitários de Data
+  function todayISO() {
+    const d = new Date();
+    const off = d.getTimezoneOffset();
+    const local = new Date(d.getTime() - off * 60000);
+    return local.toISOString().slice(0, 10);
+  }
+  
+  function getDiaSemana(dateString) {
+    const d = new Date(dateString);
+    const dias = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+    return dias[d.getUTCDay()]; // Use UTC to avoid timezone shift issues on pure dates
+  }
 
-      if (!baseExercises.length) {
-        info.textContent = "Carregue um arquivo de treinos (.csv) para começar.";
-        return;
-      }
+  // Init Data
+  function initData() {
+    // 1. Tenta carregar Logs
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      dailyLog = raw ? JSON.parse(raw) : {};
+    } catch { dailyLog = {}; }
 
-      const diaSel = getDiaSelecionado();
-      const dataSel = getDataSelecionada();
-      if (!diaSel) {
-        info.textContent = "Selecione o dia do treino.";
-        return;
-      }
+    // 2. Carrega Treinos (Prioridade: CSV se o usuário tivesse carregado antes? Não, aqui vamos de JSON padrão para simplificar, upload é sessão atual)
+    // Se quiser persistir CSV, precisaria salvar o CSV string no localStorage.
+    // Vamos usar a Híbrida: Carrega Default. Se upload, substitui.
+    baseExercises = [...DEFAULT_TREINOS];
+    nutritionEntries = [...DEFAULT_DIETA];
 
-      info.textContent = "Treino de " + diaSel + " em " + dataSel + ".";
-      const listaDia = baseExercises.filter(e => (e.dia || "").trim() === diaSel);
-      if (!listaDia.length) {
-        container.innerHTML = "<div class='help-text'>Nenhum exercício configurado para este dia.</div>";
-        return;
-      }
-
-      listaDia.forEach((ex, idx) => {
-        const exId = "ex_" + idx + "_" + diaSel;
-        const log = getLog(exId, dataSel);
-
-        const grupoLower = (ex.grupo || "").toLowerCase();
-        const tipoLower  = (ex.tipo  || "").toLowerCase();
-
-        const isCorrida =
-          grupoLower.includes("corrida") ||
-          tipoLower.includes("corrida");
-
-        const isWarmup =
-          grupoLower.includes("aquecimento");
-
-        const isCardioBase =
-          isCorrida ||
-          isWarmup ||
-          grupoLower.includes("cardio") ||
-          grupoLower.includes("recuperação") ||
-          grupoLower.includes("recuperacao") ||
-          grupoLower.includes("esteira") ||
-          grupoLower.includes("elíptico") ||
-          grupoLower.includes("eliptico") ||
-          grupoLower.includes("bike") ||
-          tipoLower.includes("cardio");
-
-        const isCardio = isCardioBase;
-        const isForca = !isCardio;
-
-        const card = document.createElement("div");
-        card.className = "exercise-card";
-        if (isWarmup) card.classList.add("card-warmup");
-        else if (isCardio) card.classList.add("card-cardio");
-        if (isForca) card.classList.add("card-strength");
-
-        const header = document.createElement("div");
-        header.className = "exercise-header";
-
-        const left = document.createElement("div");
-        const title = document.createElement("div");
-        title.className = "exercise-title";
-
-        let icon = "🏋️ ";
-        if (isCardio) icon = "🏃 ";
-        if (isWarmup) icon = "🔥 ";
-
-        if (isWarmup) title.classList.add("warmup-title");
-        else if (isCardio) title.classList.add("cardio-title");
-        else if (isForca) title.classList.add("strength-title");
-
-        title.textContent = icon + (ex.exercicio || "");
-
-        const sub = document.createElement("div");
-        sub.className = "exercise-sub";
-        sub.textContent = (ex.grupo || "") + (ex.tipo ? " • " + ex.tipo : "");
-
-        left.appendChild(title);
-        left.appendChild(sub);
-
-        const right = document.createElement("div");
-        right.className = "exercise-header-right";
-        const pill = document.createElement("div");
-        pill.className = "pill";
-        if (isWarmup) pill.classList.add("badge-warmup");
-        else if (isCardio) pill.classList.add("badge-cardio");
-        else if (isForca) pill.classList.add("badge-strength");
-        pill.textContent = cleanText(ex.repsTempo || "") +
-          (ex.rpeZona ? " · " + cleanText(ex.rpeZona) : "");
-        right.appendChild(pill);
-
-        header.appendChild(left);
-        header.appendChild(right);
-        card.appendChild(header);
-
-        if (isCorrida) {
-          const meta = document.createElement("div");
-          meta.className = "run-meta";
-          const tempo = cleanText(ex.repsTempo || "");
-          const zona  = cleanText(ex.rpeZona || "");
-          meta.innerHTML = `
-            <div class="run-meta-title">
-              <span>🏃</span><span>Meta da corrida</span>
-            </div>
-            <div class="run-meta-grid">
-              <div class="run-meta-item">
-                <b>Tempo alvo</b>
-                <span>${tempo || "—"}</span>
-              </div>
-              <div class="run-meta-item">
-                <b>Distância / descrição</b>
-                <span>${tempo || "Conforme plano"}</span>
-              </div>
-              <div class="run-meta-item">
-                <b>Intensidade</b>
-                <span>${zona || "—"}</span>
-              </div>
-            </div>`;
-          card.appendChild(meta);
+    // Setup inicial
+    const dataInput = document.getElementById("dataInput");
+    dataInput.value = todayISO();
+    
+    rebuildDiaOptions();
+    
+    // Auto-seleciona dia da semana
+    const hojeNome = getDiaSemana(dataInput.value);
+    const sel = document.getElementById("diaSelect");
+    // Tenta achar o dia de hoje nas opções
+    for(let i=0; i<sel.options.length; i++) {
+        if(sel.options[i].value === hojeNome) {
+            sel.selectedIndex = i;
+            break;
         }
-
-        const fields = document.createElement("div");
-        fields.className = "exercise-fields";
-
-        const fbPeso = document.createElement("div");
-        fbPeso.className = "field-block";
-        fbPeso.innerHTML = `
-          <label>Peso corporal (kg)</label>
-          <input type="number" step="0.1" value="${log.peso || ""}" />`;
-        fbPeso.querySelector("input").addEventListener("change", e =>
-          updateLogField(exId, "peso", e.target.value)
-        );
-        fields.appendChild(fbPeso);
-
-        const fbRPE = document.createElement("div");
-        fbRPE.className = "field-block";
-        fbRPE.innerHTML = `
-          <label>RPE percebido (1–10)</label>
-          <input type="number" step="0.5" min="1" max="10" value="${log.rpePercebido || ""}" />`;
-        fbRPE.querySelector("input").addEventListener("change", e =>
-          updateLogField(exId, "rpePercebido", e.target.value)
-        );
-        fields.appendChild(fbRPE);
-
-        if (!isCardio || (isCardio && !isCorrida)) {
-          const fbCarga = document.createElement("div");
-          fbCarga.className = "field-block";
-          fbCarga.innerHTML = `<label>Cargas (S1–S4) – kg</label>`;
-          const wrap = document.createElement("div");
-          wrap.style.display = "grid";
-          wrap.style.gridTemplateColumns = "repeat(4, minmax(0, 1fr))";
-          wrap.style.gap = "4px";
-          ["carga1","carga2","carga3","carga4"].forEach((field,i) => {
-            const inp = document.createElement("input");
-            inp.type = "number";
-            inp.step = "0.5";
-            inp.placeholder = "S" + (i+1);
-            inp.value = log[field] || "";
-            inp.addEventListener("change", e => updateLogField(exId, field, e.target.value));
-            wrap.appendChild(inp);
-          });
-          fbCarga.appendChild(wrap);
-          fields.appendChild(fbCarga);
-        }
-
-        if (isCorrida) {
-          const fbTipo = document.createElement("div");
-          fbTipo.className = "field-block";
-          fbTipo.innerHTML = `
-            <label>Tipo de corrida</label>
-            <select>
-              <option value="">Selecione</option>
-              <option value="Esteira">Esteira</option>
-              <option value="Rua">Rua / Outdoor</option>
-            </select>`;
-          fbTipo.querySelector("select").value = log.cardioTipo || "";
-          fbTipo.querySelector("select").addEventListener("change", e =>
-            updateLogField(exId, "cardioTipo", e.target.value)
-          );
-          fields.appendChild(fbTipo);
-
-          const fbTempo = document.createElement("div");
-          fbTempo.className = "field-block";
-          fbTempo.innerHTML = `
-            <label>Tempo realizado (min)</label>
-            <input type="number" step="1" value="${log.tempoCardioMin || ""}" />`;
-          fbTempo.querySelector("input").addEventListener("change", e =>
-            updateLogField(exId, "tempoCardioMin", e.target.value)
-          );
-          fields.appendChild(fbTempo);
-
-          const fbDist = document.createElement("div");
-          fbDist.className = "field-block";
-          fbDist.innerHTML = `
-            <label>Distância realizada (km)</label>
-            <input type="number" step="0.1" value="${log.distCardioKm || ""}" />`;
-          fbDist.querySelector("input").addEventListener("change", e =>
-            updateLogField(exId, "distCardioKm", e.target.value)
-          );
-          fields.appendChild(fbDist);
-        }
-
-        const fbObs = document.createElement("div");
-        fbObs.className = "field-block";
-        fbObs.innerHTML = `<label>Observações</label><textarea>${log.obs || ""}</textarea>`;
-        fbObs.querySelector("textarea").addEventListener("change", e =>
-          updateLogField(exId, "obs", e.target.value)
-        );
-        fields.appendChild(fbObs);
-
-        card.appendChild(fields);
-
-        const bottom = document.createElement("div");
-        bottom.className = "bottom-row";
-        const lblChk = document.createElement("label");
-        lblChk.innerHTML = `<input type="checkbox" ${log.concluido ? "checked" : ""}/> Exercício concluído`;
-        lblChk.querySelector("input").addEventListener("change", e =>
-          updateLogCheckbox(exId, "concluido", e.target.checked)
-        );
-        bottom.appendChild(lblChk);
-
-        if (ex.midia) {
-          const btn = document.createElement("button");
-          btn.textContent = "Vídeo / imagem";
-          btn.addEventListener("click", () => window.open(ex.midia, "_blank"));
-          bottom.appendChild(btn);
-        }
-
-        card.appendChild(bottom);
-        container.appendChild(card);
-      });
-
-      updateCardioSummary();
     }
+    
+    renderApp();
+  }
 
-    /* -------- CARDIO RESUMO -------- */
-    function updateCardioSummary() {
-      const diaSel = getDiaSelecionado();
-      const dataSel = getDataSelecionada();
-      const diaDiv = document.getElementById("cardioDiaResumo");
-      const semDiv = document.getElementById("cardioSemanaResumo");
-      if (!diaDiv || !semDiv) return;
+  function saveLog() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(dailyLog));
+    updateProgressBar();
+    updateCardioSummary();
+  }
 
-      if (!baseExercises.length || !diaSel) {
-        diaDiv.textContent = "Nenhum treino selecionado.";
-        semDiv.textContent = "Nenhum dado disponível.";
-        return;
-      }
+  // --- RENDERING CORE ---
+  function renderApp() {
+    renderDia();
+    renderDieta();
+    updateProgressBar();
+  }
 
-      let totalMinDia = 0, totalKmDia = 0;
-      Object.keys(dailyLog).forEach(key => {
-        const [exId, data] = key.split("::");
-        if (data !== dataSel) return;
-        const log = dailyLog[key];
-        const match = exId.match(/^ex_(\d+)_/);
-        if (!match) return;
-        const idx = parseInt(match[1],10);
-        const exList = baseExercises.filter(e => (e.dia || "").trim() === diaSel);
-        const ex = exList[idx];
-        if (!ex) return;
-        const grupoLower = (ex.grupo || "").toLowerCase();
-        const tipoLower  = (ex.tipo  || "").toLowerCase();
-        const isCardio =
-          grupoLower.includes("corrida") ||
-          grupoLower.includes("cardio") ||
-          grupoLower.includes("aquecimento") ||
-          grupoLower.includes("recuperação") ||
-          grupoLower.includes("recuperacao") ||
-          grupoLower.includes("esteira") ||
-          grupoLower.includes("elíptico") ||
-          grupoLower.includes("eliptico") ||
-          grupoLower.includes("bike") ||
-          tipoLower.includes("cardio") ||
-          tipoLower.includes("corrida");
-        if (!isCardio) return;
-        const min = parseFloat(log.tempoCardioMin || "0") || 0;
-        const km  = parseFloat(log.distCardioKm   || "0") || 0;
-        totalMinDia += min; totalKmDia += km;
-      });
+  // --- RENDER TREINO ---
+  function rebuildDiaOptions() {
+    const sel = document.getElementById("diaSelect");
+    sel.innerHTML = "";
+    
+    // Pega dias únicos do objeto baseExercises
+    const diasUnicos = [...new Set(baseExercises.map(e => e.dia))];
+    
+    // Ordem customizada
+    const ordem = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
+    diasUnicos.sort((a,b) => ordem.indexOf(a) - ordem.indexOf(b));
 
-      if (totalMinDia > 0 || totalKmDia > 0) {
-        let pace = "";
-        if (totalMinDia > 0 && totalKmDia > 0) {
-          pace = " · " + (totalMinDia/totalKmDia).toFixed(1) + " min/km";
-        }
-        diaDiv.textContent = totalMinDia.toFixed(0) + " min · " + totalKmDia.toFixed(2) + " km" + pace;
-      } else {
-        diaDiv.textContent = "Nenhum registro de cardio para esta data.";
-      }
-
-      let totalMinSem = 0, totalKmSem = 0;
-      const baseDate = new Date(dataSel);
-      Object.keys(dailyLog).forEach(key => {
-        const [exId, data] = key.split("::");
-        const d = new Date(data);
-        const diff = (baseDate - d)/(1000*60*60*24);
-        if (diff < 0 || diff > 7) return;
-        const log = dailyLog[key];
-        const match = exId.match(/^ex_(\d+)_([^:]+)$/);
-        if (!match) return;
-        const idx = parseInt(match[1],10);
-        const diaEx = match[2];
-        const exList = baseExercises.filter(e => (e.dia || "").trim() === diaEx);
-        const ex = exList[idx];
-        if (!ex) return;
-        const grupoLower = (ex.grupo || "").toLowerCase();
-        const tipoLower  = (ex.tipo  || "").toLowerCase();
-        const isCardio =
-          grupoLower.includes("corrida") ||
-          grupoLower.includes("cardio") ||
-          grupoLower.includes("aquecimento") ||
-          grupoLower.includes("recuperação") ||
-          grupoLower.includes("recuperacao") ||
-          grupoLower.includes("esteira") ||
-          grupoLower.includes("elíptico") ||
-          grupoLower.includes("eliptico") ||
-          grupoLower.includes("bike") ||
-          tipoLower.includes("cardio") ||
-          tipoLower.includes("corrida");
-        if (!isCardio) return;
-        const min = parseFloat(log.tempoCardioMin || "0") || 0;
-        const km  = parseFloat(log.distCardioKm   || "0") || 0;
-        totalMinSem += min; totalKmSem += km;
-      });
-
-      if (totalMinSem > 0 || totalKmSem > 0) {
-        let pace = "";
-        if (totalMinSem > 0 && totalKmSem > 0) {
-          pace = " · " + (totalMinSem/totalKmSem).toFixed(1) + " min/km";
-        }
-        semDiv.textContent = totalMinSem.toFixed(0) + " min · " + totalKmSem.toFixed(2) + " km" + pace;
-      } else {
-        semDiv.textContent = "Nenhum registro de cardio nos últimos 7 dias.";
-      }
-    }
-
-    /* -------- EXPORT / RESET -------- */
-    function exportJson() {
-      const data = JSON.stringify(dailyLog, null, 2);
-      const blob = new Blob([data], {type:"application/json;charset=utf-8"});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url; a.download = "guerra_fit_logs.json";
-      document.body.appendChild(a); a.click();
-      document.body.removeChild(a); URL.revokeObjectURL(url);
-      setStatus("Exportado guerra_fit_logs.json.");
-    }
-    function resetDia() {
-      const dataSel = getDataSelecionada();
-      const novo = {};
-      Object.keys(dailyLog).forEach(key => {
-        const [,data] = key.split("::");
-        if (data === dataSel) return;
-        novo[key] = dailyLog[key];
-      });
-      dailyLog = novo;
-      saveDailyLog();
-      renderDia();
-      setStatus("Dados de " + dataSel + " limpos.");
-    }
-
-    /* -------- CSV ALIMENTAÇÃO -------- */
-    function parseAlimCSV(text) {
-      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
-      if (lines.length < 2) return [];
-      let delimiter = ";";
-      if (lines[0].includes(",") && !lines[0].includes(";")) delimiter = ",";
-      const headers = lines[0].split(delimiter).map(h => h.trim());
-      function getVal(cells, name) {
-        const idx = headers.indexOf(name);
-        return idx === -1 ? "" : (cells[idx] || "").trim();
-      }
-      const out = [];
-      for (let i = 1; i < lines.length; i++) {
-        const cells = lines[i].split(delimiter);
-        const row = {
-          dia:       getVal(cells, "Dia"),
-          refeicao:  getVal(cells, "Refeição"),
-          item:      getVal(cells, "Item"),
-          quantidade:getVal(cells, "Quantidade"),
-          unidade:   getVal(cells, "Unidade"),
-          grupo:     getVal(cells, "Grupo")
-        };
-        if (!row.dia && !row.item) continue;
-        out.push(row);
-      }
-      return out;
-    }
-
-    function diaFromDate(iso) {
-      const d = new Date(iso);
-      const mapa = {0:"Domingo",1:"Segunda",2:"Terça",3:"Quarta",4:"Quinta",5:"Sexta",6:"Sábado"};
-      return mapa[d.getDay()];
-    }
-
-    /* -------- ALIMENTAÇÃO: DIA -------- */
-    function renderCardapioDia() {
-      const info = document.getElementById("alimDiaInfo");
-      const cont = document.getElementById("alimDiaContainer");
-      if (!info || !cont) return;
-      const dataSel = getDataSelecionada();
-      const diaSel = getDiaSelecionado() || diaFromDate(dataSel);
-
-      if (!nutritionEntries.length) {
-        info.textContent = "Carregue um arquivo de alimentação (.csv) para ver o cardápio do dia.";
-        cont.innerHTML = "";
-        return;
-      }
-
-      info.textContent = "Cardápio de " + diaSel + " (" + dataSel + ").";
-      const diaItens = nutritionEntries.filter(n => (n.dia || "").trim() === diaSel);
-      cont.innerHTML = "";
-
-      if (!diaItens.length) {
-        cont.innerHTML = "<div class='help-text'>Nenhum item de alimentação cadastrado para este dia.</div>";
-        return;
-      }
-
-      const byMeal = {};
-      diaItens.forEach(n => {
-        const ref = n.refeicao || "Refeição";
-        if (!byMeal[ref]) byMeal[ref] = [];
-        byMeal[ref].push(n);
-      });
-
-      Object.keys(byMeal).forEach(ref => {
-        const div = document.createElement("div");
-        div.className = "meal-block";
-
-        const t = document.createElement("div");
-        t.className = "meal-title";
-        t.textContent = ref;
-        div.appendChild(t);
-
-        const ul = document.createElement("ul");
-        ul.style.margin = "0";
-        ul.style.paddingLeft = "18px";
-        ul.style.fontSize = "13px";
-
-        byMeal[ref].forEach(n => {
-          const li = document.createElement("li");
-          const qtd = n.quantidade ? n.quantidade : "";
-          const un  = n.unidade ? " " + n.unidade : "";
-          li.textContent = (qtd ? qtd + un + " " : "") + n.item;
-          ul.appendChild(li);
-        });
-
-        div.appendChild(ul);
-        cont.appendChild(div);
-      });
-    }
-
-    /* -------- ALIMENTAÇÃO: SEMANA (TOTAIS POR DIA) -------- */
-    function renderCardapioSemana() {
-      const cont = document.getElementById("alimSemanaContainer");
-      if (!cont) return;
-
-      if (!nutritionEntries.length) {
-        cont.innerHTML = "<div class='help-text'>Carregue um arquivo de alimentação (.csv) para ver o resumo da semana.</div>";
-        return;
-      }
-
-      // Agrupa por dia e soma quantidades por item+unidade
-      const byDay = {};
-      nutritionEntries.forEach(n => {
-        if (!n.dia || !n.item) return;
-        const dia = (n.dia || "").trim();
-        const item = n.item || "";
-        const unidade = n.unidade || "";
-        const key = item + "||" + unidade;
-        let qtd = parseFloat((n.quantidade || "0").replace(",", ".")) || 0;
-
-        if (!byDay[dia]) byDay[dia] = {};
-        if (!byDay[dia][key]) byDay[dia][key] = {item, unidade, quantidade:0};
-        byDay[dia][key].quantidade += qtd;
-      });
-
-      const ordem = ["Segunda","Terça","Quarta","Quinta","Sexta","Sábado","Domingo"];
-      const diasOrdenados = Object.keys(byDay).sort((a,b) => {
-        const ia = ordem.indexOf(a), ib = ordem.indexOf(b);
-        if (ia === -1 && ib === -1) return a.localeCompare(b);
-        if (ia === -1) return 1;
-        if (ib === -1) return -1;
-        return ia - ib;
-      });
-
-      let html = "<div class='help-text' style='margin-bottom:6px;'>Totais de cada alimento por dia (soma de todas as refeições).</div>";
-      diasOrdenados.forEach(dia => {
-        html += `<div class="meal-block">`;
-        html += `<div class="meal-title">${dia}</div>`;
-        html += `<ul style="margin:0; padding-left:18px; font-size:13px;">`;
-        const itens = byDay[dia];
-        Object.keys(itens).forEach(key => {
-          const it = itens[key];
-          const qtdTxt = it.quantidade ? it.quantidade.toFixed(1).replace(".0","") : "";
-          const un = it.unidade ? " " + it.unidade : "";
-          html += `<li>${qtdTxt}${un} ${it.item}</li>`;
-        });
-        html += `</ul></div>`;
-      });
-
-      cont.innerHTML = html;
-    }
-
-    /* -------- ALIMENTAÇÃO: LISTA DE COMPRAS (SEMANA) -------- */
-    function renderShopping() {
-      const cont = document.getElementById("shoppingContainer");
-      if (!cont) return;
-      cont.innerHTML = "";
-
-      let state = {};
-      try {
-        const raw = localStorage.getItem(SHOPPING_KEY);
-        state = raw ? JSON.parse(raw) : {};
-      } catch { state = {}; }
-
-      if (!nutritionEntries.length) {
-        cont.innerHTML = "<div class='help-text'>Carregue um arquivo de alimentação (.csv) para gerar a lista de compras.</div>";
-        return;
-      }
-
-      const agg = {};
-      nutritionEntries.forEach(n => {
-        if (!n.item) return;
-        const unidade = n.unidade || "";
-        const key = (n.item + "|" + unidade).toLowerCase();
-        const grupo = n.grupo || "Outros";
-        let qtd = parseFloat((n.quantidade || "0").replace(",", ".")) || 0;
-        if (!agg[key]) {
-          agg[key] = {item:n.item, unidade:unidade, grupo:grupo, quantidade:0};
-        }
-        agg[key].quantidade += qtd;
-      });
-
-      const byCat = {};
-      Object.keys(agg).forEach(key => {
-        const it = agg[key];
-        if (!byCat[it.grupo]) byCat[it.grupo] = [];
-        byCat[it.grupo].push({key, ...it});
-      });
-
-      Object.keys(byCat).forEach(cat => {
-        const catDiv = document.createElement("div");
-        const title = document.createElement("div");
-        title.className = "shopping-category-title";
-        title.textContent = cat;
-        catDiv.appendChild(title);
-
-        byCat[cat].forEach(it => {
-          const row = document.createElement("div");
-          row.className = "shopping-item";
-          const chk = document.createElement("input");
-          chk.type = "checkbox";
-          chk.checked = !!state[it.key];
-          chk.addEventListener("change", e => {
-            state[it.key] = e.target.checked;
-            localStorage.setItem(SHOPPING_KEY, JSON.stringify(state));
-          });
-
-          const span = document.createElement("span");
-          const qtdTxt = it.quantidade ? it.quantidade.toFixed(1).replace(".0","") : "";
-          const un = it.unidade ? " " + it.unidade : "";
-          span.textContent = (qtdTxt ? qtdTxt + un + " " : "") + it.item;
-
-          row.appendChild(chk);
-          row.appendChild(span);
-          catDiv.appendChild(row);
-        });
-
-        cont.appendChild(catDiv);
-      });
-    }
-
-    /* -------- TABS / INIT -------- */
-    function initMainTabs() {
-      const buttons = document.querySelectorAll(".top-tab-btn");
-      const viewTreino = document.getElementById("view-treino");
-      const viewAlim = document.getElementById("view-alimentacao");
-      buttons.forEach(btn => {
-        btn.addEventListener("click", () => {
-          buttons.forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-          if (btn.dataset.main === "treino") {
-            viewTreino.classList.remove("hidden");
-            viewAlim.classList.add("hidden");
-          } else {
-            viewTreino.classList.add("hidden");
-            viewAlim.classList.remove("hidden");
-          }
-        });
-      });
-    }
-
-    function initTreinoTabs() {
-      const btns = document.querySelectorAll("[data-tab-treino]");
-      const tabDia = document.getElementById("tab-dia");
-      const tabCardio = document.getElementById("tab-cardio");
-      btns.forEach(btn => {
-        btn.addEventListener("click", () => {
-          btns.forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-          const tab = btn.dataset.tabTreino;
-          if (tab === "dia") {
-            tabDia.classList.remove("hidden");
-            tabCardio.classList.add("hidden");
-          } else {
-            tabDia.classList.add("hidden");
-            tabCardio.classList.remove("hidden");
-          }
-        });
-      });
-    }
-
-    function initAlimTabs() {
-      const btns = document.querySelectorAll("[data-tab-alim]");
-      const d = document.getElementById("alim-dia");
-      const s = document.getElementById("alim-semana");
-      const c = document.getElementById("alim-compras");
-      btns.forEach(btn => {
-        btn.addEventListener("click", () => {
-          btns.forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-          const tab = btn.dataset.tabAlim;
-          d.classList.add("hidden");
-          s.classList.add("hidden");
-          c.classList.add("hidden");
-          if (tab === "dia")    d.classList.remove("hidden");
-          if (tab === "semana") s.classList.remove("hidden");
-          if (tab === "compras")c.classList.remove("hidden");
-        });
-      });
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      loadDailyLog();
-
-      const dataInput = document.getElementById("dataInput");
-      if (dataInput && !dataInput.value) dataInput.value = todayISO();
-
-      initMainTabs();
-      initTreinoTabs();
-      initAlimTabs();
-
-      renderCardapioDia();
-      renderCardapioSemana();
-      renderShopping();
-
-      const csvInput = document.getElementById("csvInput");
-      if (csvInput) {
-        csvInput.addEventListener("change", e => {
-          const file = e.target.files[0];
-          if (!file) return;
-          const reader = new FileReader();
-          reader.onload = ev => {
-            try {
-              baseExercises = parseCSV(ev.target.result);
-              setStatus("Arquivo de treinos carregado com " + baseExercises.length + " linhas.");
-              rebuildDiaOptions();
-              renderDia();
-            } catch (err) {
-              console.error(err);
-              setStatus("Erro ao ler arquivo de treinos.");
-            }
-          };
-          reader.readAsText(file, "utf-8");
-        });
-      }
-
-      const alimCsvInput = document.getElementById("alimCsvInput");
-      if (alimCsvInput) {
-        alimCsvInput.addEventListener("change", e => {
-          const file = e.target.files[0];
-          if (!file) return;
-          const reader = new FileReader();
-          reader.onload = ev => {
-            try {
-              nutritionEntries = parseAlimCSV(ev.target.result);
-              renderCardapioDia();
-              renderCardapioSemana();
-              renderShopping();
-            } catch (err) {
-              console.error(err);
-            }
-          };
-          reader.readAsText(file, "utf-8");
-        });
-      }
-
-      const diaSelect = document.getElementById("diaSelect");
-      if (diaSelect) {
-        diaSelect.addEventListener("change", () => {
-          renderDia();
-          renderCardapioDia();
-        });
-      }
-
-      if (dataInput) {
-        dataInput.addEventListener("change", () => {
-          renderDia();
-          renderCardapioDia();
-        });
-      }
-
-      const btnExport = document.getElementById("btnExport");
-      if (btnExport) btnExport.addEventListener("click", exportJson);
-      const btnReset = document.getElementById("btnReset");
-      if (btnReset) btnReset.addEventListener("click", resetDia);
+    diasUnicos.forEach(d => {
+      const opt = document.createElement("option");
+      opt.value = d;
+      opt.textContent = d;
+      sel.appendChild(opt);
     });
-  </script>
+  }
+
+  function renderDia() {
+    const container = document.getElementById("diaContainer");
+    const diaSel = document.getElementById("diaSelect").value;
+    const dataSel = document.getElementById("dataInput").value;
+    
+    container.innerHTML = "";
+
+    const treinosDoDia = baseExercises.filter(e => e.dia === diaSel);
+    
+    if (treinosDoDia.length === 0) {
+      container.innerHTML = `<div class="help-text">🌴 Descanso ou sem treino cadastrado.</div>`;
+      document.getElementById("progressBarContainer").classList.add("hidden");
+      return;
+    }
+    
+    document.getElementById("progressBarContainer").classList.remove("hidden");
+
+    treinosDoDia.forEach((ex, idx) => {
+      const exId = `ex_${idx}_${diaSel}`; // ID único baseado na posição e dia
+      const key = `${exId}::${dataSel}`; // Chave do Log: ID + Data
+      
+      // Inicializa log se não existir
+      if (!dailyLog[key]) dailyLog[key] = { concluido: false };
+      const log = dailyLog[key];
+
+      // Determina tipo para cor
+      const isCardio = (ex.tipo || "").toLowerCase().includes("cardio") || (ex.tipo || "").toLowerCase().includes("corrida");
+      const isWarmup = (ex.tipo || "").toLowerCase().includes("aquecimento");
+      let typeClass = "type-strength";
+      if(isCardio) typeClass = "type-cardio";
+      if(isWarmup) typeClass = "type-warmup";
+
+      // HTML do Card
+      const card = document.createElement("div");
+      card.className = `exercise-card ${typeClass}`;
+      
+      // Header
+      let html = `
+        <div class="ex-header">
+          <div>
+            <div class="ex-title">${ex.exercicio}</div>
+            <div class="ex-meta">${ex.grupo} • ${ex.tipo || "Geral"}</div>
+          </div>
+          <div class="pill">${ex.repsTempo}</div>
+        </div>
+      `;
+
+      // Inputs
+      html += `<div class="ex-inputs">`;
+      
+      // Peso Corporal
+      html += `
+        <div class="input-group">
+          <label>Peso (kg)</label>
+          <input type="number" step="0.1" value="${log.peso || ''}" onchange="updateLog('${key}', 'peso', this.value)">
+        </div>
+      `;
+      
+      // RPE (ou Distancia se cardio)
+      if (isCardio) {
+        html += `
+          <div class="input-group">
+            <label>Distância (km)</label>
+            <input type="number" step="0.1" value="${log.distCardioKm || ''}" onchange="updateLog('${key}', 'distCardioKm', this.value)">
+          </div>
+        `;
+      } else {
+        html += `
+          <div class="input-group">
+            <label>RPE (1-10)</label>
+            <input type="number" step="0.5" value="${log.rpe || ''}" onchange="updateLog('${key}', 'rpe', this.value)">
+          </div>
+        `;
+      }
+      html += `</div>`; // fecha grid inputs principais
+
+      // Cargas (se não for só cardio)
+      if (!isCardio && !isWarmup) {
+         html += `<label>Cargas (kg) por série</label><div class="carga-grid">`;
+         for(let i=1; i<=4; i++) {
+           html += `<input type="number" placeholder="S${i}" value="${log['carga'+i] || ''}" onchange="updateLog('${key}', 'carga${i}', this.value)">`;
+         }
+         html += `</div>`;
+      }
+      
+      // Observações (Textarea pequena)
+      html += `
+        <div style="margin-top:10px;">
+           <input type="text" placeholder="Observações..." value="${log.obs || ''}" style="font-size:12px; padding:8px;" onchange="updateLog('${key}', 'obs', this.value)">
+        </div>
+      `;
+
+      // Footer Checkbox
+      html += `
+        <div class="ex-footer">
+          <label class="check-wrapper">
+             <input type="checkbox" class="hidden" ${log.concluido ? 'checked' : ''} onchange="updateLog('${key}', 'concluido', this.checked)">
+             <div class="custom-checkbox"></div>
+             <span style="font-size:13px; font-weight:600; color:${log.concluido ? 'var(--primary)' : 'var(--text-muted)'}">
+               ${log.concluido ? 'CONCLUÍDO' : 'MARCAR COMO FEITO'}
+             </span>
+          </label>
+        </div>
+      `;
+
+      card.innerHTML = html;
+      container.appendChild(card);
+    });
+    
+    updateCardioSummary(); // Atualiza resumo cardio
+  }
+
+  // --- LÓGICA DE UPDATE ---
+  window.updateLog = function(key, field, value) {
+    if (!dailyLog[key]) dailyLog[key] = {};
+    dailyLog[key][field] = value;
+    saveLog();
+    
+    // Se mudou checkbox, re-renderiza textos visuais se necessário ou apenas a barra
+    if (field === 'concluido') {
+       renderDia(); // Re-render para atualizar a cor do texto "Concluído"
+    }
+  };
+
+  function updateProgressBar() {
+    const diaSel = document.getElementById("diaSelect").value;
+    const dataSel = document.getElementById("dataInput").value;
+    
+    // Conta total de exercicios do dia
+    const totalEx = baseExercises.filter(e => e.dia === diaSel).length;
+    if (totalEx === 0) return;
+
+    // Conta concluidos
+    let concluidos = 0;
+    baseExercises.filter(e => e.dia === diaSel).forEach((ex, idx) => {
+       const key = `ex_${idx}_${diaSel}::${dataSel}`;
+       if (dailyLog[key] && dailyLog[key].concluido) concluidos++;
+    });
+
+    const pct = Math.round((concluidos / totalEx) * 100);
+    const bar = document.getElementById("dailyProgress");
+    const txt = document.getElementById("progressText");
+    
+    bar.style.width = pct + "%";
+    txt.textContent = `${pct}% Concluído (${concluidos}/${totalEx})`;
+    
+    // Feedback visual extra
+    if(pct === 100) {
+      bar.style.boxShadow = "0 0 15px #fff";
+      txt.textContent = "🏆 TREINO FINALIZADO! BOM TRABALHO.";
+      txt.style.color = "var(--primary)";
+    }
+  }
+
+  function updateCardioSummary() {
+      // Simplificado para essa versão
+      const div = document.getElementById("cardioDiaResumo");
+      const diaSel = document.getElementById("diaSelect").value;
+      const dataSel = document.getElementById("dataInput").value;
+      
+      let kmTotal = 0;
+      
+      baseExercises.forEach((ex, idx) => {
+          if (ex.dia !== diaSel) return;
+          const key = `ex_${idx}_${diaSel}::${dataSel}`;
+          if (dailyLog[key] && dailyLog[key].distCardioKm) {
+              kmTotal += parseFloat(dailyLog[key].distCardioKm);
+          }
+      });
+      
+      if(kmTotal > 0) div.textContent = `${kmTotal.toFixed(2)} km`;
+      else div.textContent = "Sem registro de distância.";
+  }
+
+  // --- DIETA ---
+  function renderDieta() {
+    const container = document.getElementById("menuContainer");
+    const shoppingContainer = document.getElementById("shoppingContainer");
+    
+    // Lógica simplificada: Mostra dieta inteira ou filtra por dia (vamos mostrar tudo agrupado por dia para scrollar)
+    // Mas o usuário pediu "Cardápio do Dia".
+    
+    const dataSel = document.getElementById("dataInput").value;
+    const diaNome = getDiaSemana(dataSel); // ex: Segunda
+    
+    // 1. Menu do Dia
+    const itensDia = nutritionEntries.filter(i => i.dia === diaNome);
+    
+    if(itensDia.length === 0) {
+        container.innerHTML = `<div class="help-text">Sem dieta cadastrada para ${diaNome}.</div>`;
+    } else {
+        let html = "";
+        // Agrupa por refeição
+        const refeicoes = [...new Set(itensDia.map(i => i.refeicao))];
+        
+        refeicoes.forEach(ref => {
+            html += `<div class="card" style="padding:12px;">`;
+            html += `<h4 style="margin:0 0 8px 0; color:var(--primary)">${ref}</h4>`;
+            html += `<ul style="margin:0; padding-left:20px; font-size:13px; color:var(--text-muted)">`;
+            
+            itensDia.filter(i => i.refeicao === ref).forEach(item => {
+                html += `<li><b>${item.quantidade}${item.unidade}</b> ${item.item}</li>`;
+            });
+            
+            html += `</ul></div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    // 2. Shopping List (Todos os dias)
+    // Agrupa itens iguais
+    let shoppingList = {};
+    nutritionEntries.forEach(entry => {
+        const key = entry.item;
+        if(!shoppingList[key]) shoppingList[key] = { qtd: 0, un: entry.unidade };
+        shoppingList[key].qtd += parseFloat(entry.quantidade);
+    });
+
+    let shopHtml = "<h4 style='margin-top:0'>Lista da Semana</h4><ul style='list-style:none; padding:0'>";
+    for (const [nome, dados] of Object.entries(shoppingList)) {
+        shopHtml += `
+            <li style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border);">
+               <span>${nome}</span>
+               <span style="color:var(--primary)">${dados.qtd} ${dados.un}</span>
+            </li>
+        `;
+    }
+    shopHtml += "</ul>";
+    shoppingContainer.innerHTML = shopHtml;
+  }
+
+  // --- NAVEGAÇÃO ---
+  window.switchMainTab = function(tabName) {
+     // Botoes
+     document.querySelectorAll('.tab-nav button').forEach(b => b.classList.remove('active'));
+     event.target.classList.add('active'); // O botão clicado
+     
+     // Views
+     document.getElementById('view-treino').classList.add('hidden');
+     document.getElementById('view-dieta').classList.add('hidden');
+     
+     document.getElementById(`view-${tabName}`).classList.remove('hidden');
+  }
+
+  window.switchSubTab = function(context, subName) {
+      // Contexto: treino ou dieta
+      if(context === 'treino') {
+          const btns = document.querySelectorAll('#view-treino .tab-nav button');
+          btns.forEach(b => b.classList.remove('active'));
+          event.target.classList.add('active');
+          
+          document.getElementById('tab-dia').classList.add('hidden');
+          document.getElementById('tab-cardio').classList.add('hidden');
+          document.getElementById(`tab-${subName}`).classList.remove('hidden');
+      } else {
+           const btns = document.querySelectorAll('#view-dieta .tab-nav button');
+          btns.forEach(b => b.classList.remove('active'));
+          event.target.classList.add('active');
+          
+          document.getElementById('diet-menu').classList.add('hidden');
+          document.getElementById('diet-shopping').classList.add('hidden');
+          
+          if(subName === 'menu') document.getElementById('diet-menu').classList.remove('hidden');
+          else document.getElementById('diet-shopping').classList.remove('hidden');
+      }
+  }
+  
+  // --- UPLOAD CSV HANDLER (LEGACY SUPPORT) ---
+  document.getElementById('csvInput').addEventListener('change', function(e) {
+     const file = e.target.files[0];
+     if(!file) return;
+     const reader = new FileReader();
+     reader.onload = function(ev) {
+        const text = ev.target.result;
+        // Parser simples de CSV para JSON
+        const lines = text.split('\n');
+        const headers = lines[0].split(';').map(h => h.trim()); // Assume ponto e virgula
+        
+        // Se a primeira linha não tiver headers esperados, tente virgula
+        // (Simplificação: vamos assumir que o usuário manteve o padrão)
+        
+        const newExercises = [];
+        for(let i=1; i<lines.length; i++) {
+           const row = lines[i].split(';');
+           if(row.length < 3) continue;
+           
+           // Mapeia colunas do CSV antigo para o novo Obj
+           // CSV: Dia;Grupo;Exercício;Tipo;Séries;Reps/Tempo;RPE/Zona
+           newExercises.push({
+               dia: row[0],
+               grupo: row[1],
+               exercicio: row[2],
+               tipo: row[3],
+               series: row[4],
+               repsTempo: row[5],
+               rpeZona: row[6]
+           });
+        }
+        
+        baseExercises = newExercises;
+        rebuildDiaOptions();
+        renderDia();
+        alert("Treino importado com sucesso! (Isso substitui o padrão temporariamente)");
+     };
+     reader.readAsText(file);
+  });
+
+  // Export JSON
+  window.exportJson = function() {
+    const dataStr = JSON.stringify(dailyLog, null, 2);
+    const blob = new Blob([dataStr], {type: "application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = "treino_backup.json";
+    a.click();
+  }
+  
+  window.resetDia = function() {
+      if(!confirm("Tem certeza que quer apagar tudo de hoje?")) return;
+      const diaSel = document.getElementById("dataInput").value;
+      
+      // Filtra chaves que contêm a data
+      Object.keys(dailyLog).forEach(k => {
+          if(k.includes(diaSel)) delete dailyLog[k];
+      });
+      saveLog();
+      renderDia();
+  }
+
+  // --- EVENTOS GLOBAIS ---
+  document.getElementById("diaSelect").addEventListener("change", () => { renderApp(); });
+  document.getElementById("dataInput").addEventListener("change", () => { renderApp(); });
+
+  // INICIALIZA
+  document.addEventListener("DOMContentLoaded", initData);
+
+</script>
 </body>
 </html>
