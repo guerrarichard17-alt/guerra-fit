@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Guerra Fit Coach – Protocolo Hipertrofia</title>
+  <title>Guerra Fit Coach – Pro V4</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
 
   <style>
@@ -34,7 +34,7 @@
       color: var(--text-main);
       font-family: var(--font-stack);
       font-size: 14px;
-      padding-bottom: 80px; /* Espaço para não cobrir conteúdo no final */
+      padding-bottom: 80px;
     }
 
     /* --- HEADER & PROGRESSO --- */
@@ -64,7 +64,6 @@
       margin-top: 4px;
     }
 
-    /* Barra de Progresso */
     .progress-container {
       margin-top: 12px;
       background: var(--bg-input);
@@ -100,7 +99,7 @@
       border-radius: 10px;
       margin-bottom: 20px;
       position: sticky;
-      top: 85px; /* Ajuste conforme altura do header */
+      top: 85px;
       z-index: 90;
     }
     .main-tabs button {
@@ -167,8 +166,7 @@
     }
     .exercise-card:active { transform: scale(0.99); }
 
-    /* Cores de Borda por Tipo */
-    .type-strength { border-left-color: var(--accent-strength); } /* Vermelho */
+    .type-strength { border-left-color: var(--accent-strength); }
     .type-warmup { 
       border-left-color: var(--accent-warmup); 
       background: linear-gradient(90deg, rgba(59, 130, 246, 0.05) 0%, var(--bg-card) 100%);
@@ -204,7 +202,6 @@
     }
     .badge-warmup { color: var(--accent-warmup); border-color: var(--accent-warmup); }
 
-    /* Inputs Area */
     .ex-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -230,14 +227,6 @@
     }
     input:focus { outline: 1px solid var(--primary); border-color: var(--primary); }
 
-    .series-row {
-      display: flex;
-      gap: 4px;
-      margin-top: 4px;
-    }
-    .series-row input { text-align: center; padding: 8px 2px; }
-
-    /* Checkbox & Footer */
     .ex-footer {
       border-top: 1px solid var(--border);
       padding-top: 10px;
@@ -282,16 +271,20 @@
       color: var(--primary);
     }
 
-    /* --- SHOPPING LIST SPECIFIC --- */
+    /* --- SHOPPING LIST --- */
     .shop-item {
       display: flex;
       align-items: center;
       padding: 12px 0;
       border-bottom: 1px solid var(--bg-input);
+      cursor: pointer;
     }
     .shop-item.done .shop-name {
       text-decoration: line-through;
       color: var(--text-muted);
+      opacity: 0.5;
+    }
+    .shop-item.done .shop-qty {
       opacity: 0.5;
     }
 
@@ -314,8 +307,8 @@
 
   <header>
     <h1>
-      <span style="font-size:24px;">🐺</span> 
-      GUERRA FIT <span style="color:var(--primary); font-size:12px; margin-left:4px;">PRO APP</span>
+      <span style="font-size:24px;">🧬</span> 
+      GUERRA FIT <span style="color:var(--primary); font-size:12px; margin-left:4px;">PRO V4</span>
     </h1>
     <small>93kg | 1,87m | Hipertrofia & Praticidade</small>
 
@@ -334,7 +327,6 @@
     </nav>
 
     <section id="view-treino">
-      
       <div class="card">
         <div class="ex-grid">
           <div class="input-wrapper">
@@ -357,15 +349,13 @@
       </div>
 
       <div id="treinoContainer"></div>
-
     </section>
 
     <section id="view-dieta" class="hidden">
-      
       <div class="card" style="padding:10px;">
          <h4 style="margin:0 0 5px 0; color:var(--primary)">Estratégia Meal Prep</h4>
          <p style="margin:0; font-size:11px; color:var(--text-muted)">
-           Cozinhar Domingo para a semana. Alimentos fáceis de congelar.
+           Marmitas de Seg à Sex. Fim de semana ajustado.
          </p>
       </div>
 
@@ -376,193 +366,123 @@
       </div>
 
       <div id="dietaContainer"></div>
-
     </section>
-
   </main>
 
   <footer>
     <strong>DEV FIT COACH</strong><br>
-    Lembre-se: Treino às 07:00 exige alimentação às 04:30.
+    Constância é o segredo da hipertrofia.
   </footer>
 
   <script>
     // =================================================================
-    // 1. BANCO DE DADOS: TREINOS (Hipertrofia Prática - 50min)
+    // 1. BANCO DE DADOS: TREINOS (V3.0 Validada)
     // =================================================================
     const DEFAULT_TREINOS = [
-      // --- SEGUNDA: PUSH (Peito, Ombro, Tríceps) ---
-      { 
-        dia: "Segunda", grupo: "Aquecimento", exercicio: "Manguito + Rotação de Ombros", 
-        series: "2", reps: "15-20", tipo: "Aquecimento", obs: "Leve. Aqueça a articulação antes de pegar peso." 
-      },
-      { 
-        dia: "Segunda", grupo: "Peito", exercicio: "Supino Inclinado (Halter ou Máquina)", 
-        series: "4", reps: "8-10", tipo: "Força", obs: "Foco no peitoral superior. Descanso 2 min." 
-      },
-      { 
-        dia: "Segunda", grupo: "Peito", exercicio: "Supino Reto / Peck Deck", 
-        series: "3", reps: "10-12", tipo: "Hipertrofia", obs: "Cadência controlada na descida." 
-      },
-      { 
-        dia: "Segunda", grupo: "Ombro", exercicio: "Elevação Lateral", 
-        series: "4", reps: "15", tipo: "Metabólico", obs: "Cotovelos levemente flexionados. Não roube." 
-      },
-      { 
-        dia: "Segunda", grupo: "Tríceps", exercicio: "Tríceps Polia (Corda ou Barra)", 
-        series: "4", reps: "10-12", tipo: "Hipertrofia", obs: "Estenda todo o braço." 
-      },
+      // --- SEGUNDA: PUSH ---
+      { dia: "Segunda", grupo: "Aquecimento", exercicio: "Manguito + Rotação", series: "2", reps: "15", tipo: "Aquecimento", obs: "Prepare os ombros." },
+      { dia: "Segunda", grupo: "Peito", exercicio: "Supino Inclinado (Halter)", series: "4", reps: "8-10", tipo: "Força", obs: "Banco 30º. Foco clavicular." },
+      { dia: "Segunda", grupo: "Peito", exercicio: "Supino Reto Máquina/Barra", series: "3", reps: "10-12", tipo: "Hipertrofia", obs: "Carga controlada." },
+      { dia: "Segunda", grupo: "Ombro", exercicio: "Elevação Lateral", series: "4", reps: "15", tipo: "Metabólico", obs: "Até a falha." },
+      { dia: "Segunda", grupo: "Tríceps", exercicio: "Tríceps Corda/Polia", series: "4", reps: "10-12", tipo: "Hipertrofia", obs: "Extensão total." },
 
-      // --- TERÇA: PULL (Costas, Trapézio, Bíceps) ---
-      { 
-        dia: "Terça", grupo: "Aquecimento", exercicio: "Retração Escapular no Pulley", 
-        series: "2", reps: "15", tipo: "Aquecimento", obs: "Ative as costas antes de puxar carga." 
-      },
-      { 
-        dia: "Terça", grupo: "Costas", exercicio: "Levantamento Terra (Rack ou Completo)", 
-        series: "3", reps: "5-6", tipo: "Força", obs: "Carga alta. Base de força. Cuidado com a lombar." 
-      },
-      { 
-        dia: "Terça", grupo: "Costas", exercicio: "Puxada Alta (Aberta)", 
-        series: "4", reps: "8-10", tipo: "Hipertrofia", obs: "Puxe até o peito." 
-      },
-      { 
-        dia: "Terça", grupo: "Costas", exercicio: "Remada Curvada (Máquina ou Barra)", 
-        series: "3", reps: "12", tipo: "Hipertrofia", obs: "Esmague as costas no final." 
-      },
-      { 
-        dia: "Terça", grupo: "Bíceps", exercicio: "Rosca Direta (Barra ou Halter)", 
-        series: "4", reps: "8-12", tipo: "Hipertrofia", obs: "Sem balançar o tronco." 
-      },
+      // --- TERÇA: PULL ---
+      { dia: "Terça", grupo: "Aquecimento", exercicio: "Retração Escapular", series: "2", reps: "15", tipo: "Aquecimento", obs: "Ative as costas." },
+      { dia: "Terça", grupo: "Costas", exercicio: "Levantamento Terra (Rack Pull)", series: "3", reps: "5-6", tipo: "Força", obs: "Carga pesada." },
+      { dia: "Terça", grupo: "Costas", exercicio: "Puxada Alta (Aberta)", series: "4", reps: "8-10", tipo: "Hipertrofia", obs: "Amplitude máxima." },
+      { dia: "Terça", grupo: "Costas", exercicio: "Remada Curvada", series: "3", reps: "12", tipo: "Hipertrofia", obs: "Tronco estável." },
+      { dia: "Terça", grupo: "Bíceps", exercicio: "Rosca Direta", series: "4", reps: "8-12", tipo: "Hipertrofia", obs: "Sem roubar." },
 
-      // --- QUARTA: LEGS 1 (Foco Quadríceps) ---
-      { 
-        dia: "Quarta", grupo: "Aquecimento", exercicio: "Agachamento Peso do Corpo + Mobilidade Quadril", 
-        series: "2", reps: "15", tipo: "Aquecimento", obs: "Solte o quadril." 
-      },
-      { 
-        dia: "Quarta", grupo: "Quadríceps", exercicio: "Agachamento Livre", 
-        series: "4", reps: "6-8", tipo: "Força", obs: "Rei dos exercícios. Amplitude máxima." 
-      },
-      { 
-        dia: "Quarta", grupo: "Quadríceps", exercicio: "Leg Press 45", 
-        series: "4", reps: "10-12", tipo: "Hipertrofia", obs: "Não tranque o joelho na subida." 
-      },
-      { 
-        dia: "Quarta", grupo: "Quadríceps", exercicio: "Cadeira Extensora", 
-        series: "3", reps: "15", tipo: "Metabólico", obs: "Segure 1s em cima (pico de contração)." 
-      },
-      { 
-        dia: "Quarta", grupo: "Panturrilha", exercicio: "Gêmeos Sentado ou em Pé", 
-        series: "4", reps: "15-20", tipo: "Resistência", obs: "Amplitude total." 
-      },
+      // --- QUARTA: LEGS 1 ---
+      { dia: "Quarta", grupo: "Aquecimento", exercicio: "Mobilidade de Quadril", series: "2", reps: "15", tipo: "Aquecimento", obs: "Solte o quadril." },
+      { dia: "Quarta", grupo: "Quadríceps", exercicio: "Agachamento Livre", series: "4", reps: "6-8", tipo: "Força", obs: "Amplitude máxima." },
+      { dia: "Quarta", grupo: "Quadríceps", exercicio: "Leg Press 45", series: "4", reps: "10-12", tipo: "Hipertrofia", obs: "Pés largura ombros." },
+      { dia: "Quarta", grupo: "Quadríceps", exercicio: "Cadeira Extensora", series: "3", reps: "15", tipo: "Metabólico", obs: "Isometria 1s em cima." },
+      { dia: "Quarta", grupo: "Panturrilha", exercicio: "Gêmeos Sentado", series: "4", reps: "15-20", tipo: "Resistência", obs: "Queimação total." },
 
-      // --- QUINTA: DESCANSO ATIVO ---
-      { 
-        dia: "Quinta", grupo: "Recuperação", exercicio: "Mobilidade Geral / Alongamento", 
-        series: "1", reps: "20 min", tipo: "Aquecimento", obs: "Foque em alongar peitoral e flexores de quadril." 
-      },
-      { 
-        dia: "Quinta", grupo: "Cardio", exercicio: "Caminhada Leve (Zona 1)", 
-        series: "1", reps: "30-40 min", tipo: "Cardio", obs: "Apenas para circulação sanguínea. Sem impacto." 
-      },
+      // --- QUINTA: OFF ---
+      { dia: "Quinta", grupo: "Recuperação", exercicio: "Alongamento Geral", series: "1", reps: "20 min", tipo: "Aquecimento", obs: "Foco em lombar e pernas." },
+      { dia: "Quinta", grupo: "Cardio", exercicio: "Caminhada Leve", series: "1", reps: "40 min", tipo: "Cardio", obs: "Zona 1 apenas." },
 
-      // --- SEXTA: UPPER BODY (Peito + Costas) ---
-      { 
-        dia: "Sexta", grupo: "Aquecimento", exercicio: "Giro de Braços + Flexão de Braço (Chão)", 
-        series: "2", reps: "15", tipo: "Aquecimento", obs: "Prepare o corpo todo." 
-      },
-      { 
-        dia: "Sexta", grupo: "Peito/Costas", exercicio: "Supino Inclinado Máquina", 
-        series: "3", reps: "10-12", tipo: "Hipertrofia", obs: "Super-série se possível." 
-      },
-      { 
-        dia: "Sexta", grupo: "Peito/Costas", exercicio: "Puxada Triângulo (Fechada)", 
-        series: "3", reps: "10-12", tipo: "Hipertrofia", obs: "Foco no miolo das costas." 
-      },
-      { 
-        dia: "Sexta", grupo: "Ombros", exercicio: "Desenvolvimento Máquina", 
-        series: "3", reps: "10-12", tipo: "Hipertrofia", obs: "Carga moderada." 
-      },
-      { 
-        dia: "Sexta", grupo: "Braços", exercicio: "Rosca Martelo + Tríceps Corda", 
-        series: "3", reps: "12+12", tipo: "Metabólico", obs: "Bi-set para economizar tempo." 
-      },
+      // --- SEXTA: UPPER BODY ---
+      { dia: "Sexta", grupo: "Aquecimento", exercicio: "Flexão de Braço", series: "2", reps: "15", tipo: "Aquecimento", obs: "Aquecimento geral." },
+      { dia: "Sexta", grupo: "Peito/Costas", exercicio: "Supino Inclinado Máquina", series: "3", reps: "10-12", tipo: "Hipertrofia", obs: "Foco no peito." },
+      { dia: "Sexta", grupo: "Peito/Costas", exercicio: "Puxada Triângulo", series: "3", reps: "10-12", tipo: "Hipertrofia", obs: "Foco no miolo costas." },
+      { dia: "Sexta", grupo: "Ombros", exercicio: "Desenvolvimento Máquina", series: "3", reps: "10-12", tipo: "Hipertrofia", obs: "Ombros." },
+      { dia: "Sexta", grupo: "Braços", exercicio: "Rosca Martelo + Tríceps", series: "3", reps: "12+12", tipo: "Metabólico", obs: "Bi-set." },
 
-      // --- SÁBADO: LEGS 2 (Posterior e Glúteo) ---
-      { 
-        dia: "Sábado", grupo: "Aquecimento", exercicio: "Elevação Pélvica (Solo) sem peso", 
-        series: "2", reps: "20", tipo: "Aquecimento", obs: "Acorde o glúteo." 
-      },
-      { 
-        dia: "Sábado", grupo: "Posterior", exercicio: "Stiff (Barra ou Halter)", 
-        series: "4", reps: "8-10", tipo: "Força", obs: "Coluna reta. Sinta alongar o posterior." 
-      },
-      { 
-        dia: "Sábado", grupo: "Posterior", exercicio: "Mesa Flexora", 
-        series: "4", reps: "12-15", tipo: "Hipertrofia", obs: "Até a falha." 
-      },
-      { 
-        dia: "Sábado", grupo: "Pernas Geral", exercicio: "Afundo / Passada", 
-        series: "3", reps: "12 passadas", tipo: "Metabólico", obs: "Finalizador." 
-      },
+      // --- SÁBADO: LEGS 2 ---
+      { dia: "Sábado", grupo: "Aquecimento", exercicio: "Elevação Pélvica (Solo)", series: "2", reps: "20", tipo: "Aquecimento", obs: "Ative glúteos." },
+      { dia: "Sábado", grupo: "Posterior", exercicio: "Stiff", series: "4", reps: "8-10", tipo: "Força", obs: "Alongue bem o posterior." },
+      { dia: "Sábado", grupo: "Posterior", exercicio: "Mesa Flexora", series: "4", reps: "12-15", tipo: "Hipertrofia", obs: "Até a falha." },
+      { dia: "Sábado", grupo: "Pernas Geral", exercicio: "Afundo/Passada", series: "3", reps: "12 cada", tipo: "Metabólico", obs: "Finalizador." },
 
       // --- DOMINGO: OFF ---
-      { 
-        dia: "Domingo", grupo: "Descanso", exercicio: "Descanso Total", 
-        series: "-", reps: "-", tipo: "Recuperação", obs: "Prepare as marmitas da semana!" 
-      }
+      { dia: "Domingo", grupo: "Descanso", exercicio: "Descanso Total", series: "-", reps: "-", tipo: "Recuperação", obs: "Dia de Meal Prep." }
     ];
 
     // =================================================================
-    // 2. BANCO DE DADOS: DIETA (Meal Prep + 04:30h Start)
+    // 2. BANCO DE DADOS: DIETA COMPLETA (Seg-Dom)
     // =================================================================
     const DEFAULT_DIETA = [
-      // PADRÃO DIÁRIO (Seg-Sex)
-      { dia: "Segunda", refeicao: "1. Desjejum (04:30)", item: "Overnight Oats (Aveia+Whey+Leite)", qtd: 1, un: "pote", grupo: "Prático" },
-      { dia: "Segunda", refeicao: "1. Desjejum (04:30)", item: "Banana", qtd: 1, un: "un", grupo: "Carbo" },
-      { dia: "Terça",   refeicao: "1. Desjejum (04:30)", item: "Ovos Mexidos", qtd: 4, un: "un", grupo: "Proteína" },
-      { dia: "Terça",   refeicao: "1. Desjejum (04:30)", item: "Pão Integral", qtd: 2, un: "fatias", grupo: "Carbo" },
-      { dia: "Quarta",  refeicao: "1. Desjejum (04:30)", item: "Overnight Oats (Aveia+Whey+Leite)", qtd: 1, un: "pote", grupo: "Prático" },
-      { dia: "Quinta",  refeicao: "1. Desjejum (04:30)", item: "Ovos Mexidos", qtd: 4, un: "un", grupo: "Proteína" },
-      { dia: "Quinta",  refeicao: "1. Desjejum (04:30)", item: "Pão Integral", qtd: 2, un: "fatias", grupo: "Carbo" },
-      { dia: "Sexta",   refeicao: "1. Desjejum (04:30)", item: "Vitamina (Whey+Banana+Aveia)", qtd: 1, un: "copo", grupo: "Líquido" },
+      // --- SEGUNDA A SEXTA (ROTINA MARMITA) ---
+      // Desjejum 04:30
+      { dia: "Segunda", refeicao: "1. Pré-Treino (04:30)", item: "Overnight Oats (Aveia 60g+Whey+Leite)", qtd: 1, un: "pote", grupo: "Seg-Sex Manhã" },
+      { dia: "Segunda", refeicao: "1. Pré-Treino (04:30)", item: "Banana", qtd: 1, un: "un", grupo: "Seg-Sex Manhã" },
+      { dia: "Terça",   refeicao: "1. Pré-Treino (04:30)", item: "Ovos Mexidos (4 ovos)", qtd: 1, un: "prato", grupo: "Seg-Sex Manhã" },
+      { dia: "Terça",   refeicao: "1. Pré-Treino (04:30)", item: "Pão Integral", qtd: 2, un: "fatias", grupo: "Seg-Sex Manhã" },
+      { dia: "Quarta",  refeicao: "1. Pré-Treino (04:30)", item: "Overnight Oats (Aveia 60g+Whey+Leite)", qtd: 1, un: "pote", grupo: "Seg-Sex Manhã" },
+      { dia: "Quinta",  refeicao: "1. Pré-Treino (04:30)", item: "Ovos Mexidos (4 ovos)", qtd: 1, un: "prato", grupo: "Seg-Sex Manhã" },
+      { dia: "Quinta",  refeicao: "1. Pré-Treino (04:30)", item: "Pão Integral", qtd: 2, un: "fatias", grupo: "Seg-Sex Manhã" },
+      { dia: "Sexta",   refeicao: "1. Pré-Treino (04:30)", item: "Vitamina (Whey+Banana+Aveia 50g)", qtd: 1, un: "copo", grupo: "Seg-Sex Manhã" },
 
-      // PÓS TREINO (Trabalho)
-      { dia: "Segunda", refeicao: "2. Pós-Treino (08:30)", item: "Iogurte Natural + Whey", qtd: 1, un: "dose", grupo: "Proteína" },
-      { dia: "Terça",   refeicao: "2. Pós-Treino (08:30)", item: "Iogurte Natural + Whey", qtd: 1, un: "dose", grupo: "Proteína" },
-      { dia: "Quarta",  refeicao: "2. Pós-Treino (08:30)", item: "Iogurte Natural + Whey", qtd: 1, un: "dose", grupo: "Proteína" },
-      { dia: "Quinta",  refeicao: "2. Pós-Treino (08:30)", item: "Barra Proteína", qtd: 1, un: "un", grupo: "Prático" },
-      { dia: "Sexta",   refeicao: "2. Pós-Treino (08:30)", item: "Iogurte Natural + Whey", qtd: 1, un: "dose", grupo: "Proteína" },
+      // Pós-Treino (Trabalho)
+      { dia: "Segunda", refeicao: "2. Pós-Treino (08:30)", item: "Iogurte Natural + Whey", qtd: 1, un: "dose", grupo: "Seg-Sex Pós" },
+      { dia: "Terça",   refeicao: "2. Pós-Treino (08:30)", item: "Iogurte Natural + Whey", qtd: 1, un: "dose", grupo: "Seg-Sex Pós" },
+      { dia: "Quarta",  refeicao: "2. Pós-Treino (08:30)", item: "Iogurte Natural + Whey", qtd: 1, un: "dose", grupo: "Seg-Sex Pós" },
+      { dia: "Quinta",  refeicao: "2. Pós-Treino (08:30)", item: "Barra Proteína + Fruta", qtd: 1, un: "kit", grupo: "Seg-Sex Pós" },
+      { dia: "Sexta",   refeicao: "2. Pós-Treino (08:30)", item: "Iogurte Natural + Whey", qtd: 1, un: "dose", grupo: "Seg-Sex Pós" },
 
-      // ALMOÇO (Marmitas Congeladas)
-      { dia: "Segunda", refeicao: "3. Almoço", item: "Patinho Moído refogado", qtd: 200, un: "g", grupo: "Proteína" },
-      { dia: "Segunda", refeicao: "3. Almoço", item: "Arroz Branco", qtd: 250, un: "g", grupo: "Carbo" },
-      { dia: "Terça",   refeicao: "3. Almoço", item: "Frango em Cubos (Molho)", qtd: 200, un: "g", grupo: "Proteína" },
-      { dia: "Terça",   refeicao: "3. Almoço", item: "Purê Batata/Mandioca", qtd: 250, un: "g", grupo: "Carbo" },
-      { dia: "Quarta",  refeicao: "3. Almoço", item: "Patinho Moído", qtd: 200, un: "g", grupo: "Proteína" },
-      { dia: "Quarta",  refeicao: "3. Almoço", item: "Macarrão Integral", qtd: 200, un: "g", grupo: "Carbo" },
-      { dia: "Quinta",  refeicao: "3. Almoço", item: "Frango Desfiado", qtd: 200, un: "g", grupo: "Proteína" },
-      { dia: "Quinta",  refeicao: "3. Almoço", item: "Arroz com Legumes", qtd: 250, un: "g", grupo: "Carbo" },
-      { dia: "Sexta",   refeicao: "3. Almoço", item: "Peixe (Tilápia) ou Carne", qtd: 200, un: "g", grupo: "Proteína" },
-      { dia: "Sexta",   refeicao: "3. Almoço", item: "Batata Assada", qtd: 250, un: "g", grupo: "Carbo" },
+      // Almoço (Marmitas)
+      { dia: "Segunda", refeicao: "3. Almoço (Marmita)", item: "Patinho Moído", qtd: 200, un: "g", grupo: "Proteína Carne" },
+      { dia: "Segunda", refeicao: "3. Almoço (Marmita)", item: "Arroz Branco/Parbolizado", qtd: 280, un: "g", grupo: "Carbo Arroz" },
+      { dia: "Terça",   refeicao: "3. Almoço (Marmita)", item: "Frango Cubos (Molho)", qtd: 200, un: "g", grupo: "Proteína Frango" },
+      { dia: "Terça",   refeicao: "3. Almoço (Marmita)", item: "Purê Batata/Mandioca", qtd: 280, un: "g", grupo: "Carbo Purê" },
+      { dia: "Quarta",  refeicao: "3. Almoço (Marmita)", item: "Patinho Moído", qtd: 200, un: "g", grupo: "Proteína Carne" },
+      { dia: "Quarta",  refeicao: "3. Almoço (Marmita)", item: "Macarrão Integral", qtd: 250, un: "g", grupo: "Carbo Massa" },
+      { dia: "Quinta",  refeicao: "3. Almoço (Marmita)", item: "Frango Desfiado", qtd: 200, un: "g", grupo: "Proteína Frango" },
+      { dia: "Quinta",  refeicao: "3. Almoço (Marmita)", item: "Arroz com Legumes", qtd: 280, un: "g", grupo: "Carbo Arroz" },
+      { dia: "Sexta",   refeicao: "3. Almoço (Marmita)", item: "Peixe (Tilápia) ou Carne", qtd: 200, un: "g", grupo: "Proteína Peixe" },
+      { dia: "Sexta",   refeicao: "3. Almoço (Marmita)", item: "Batata Assada/Doce", qtd: 280, un: "g", grupo: "Carbo Batata" },
 
-      // JANTAR
-      { dia: "Segunda", refeicao: "4. Jantar", item: "Omelete (3 ovos)", qtd: 1, un: "un", grupo: "Jantar Leve" },
-      { dia: "Terça",   refeicao: "4. Jantar", item: "Carne Moída (Marmita)", qtd: 150, un: "g", grupo: "Proteína" },
-      { dia: "Quarta",  refeicao: "4. Jantar", item: "Frango Cubos", qtd: 150, un: "g", grupo: "Proteína" },
-      { dia: "Quinta",  refeicao: "4. Jantar", item: "Ovos Cozidos", qtd: 4, un: "un", grupo: "Jantar Leve" },
-      { dia: "Sexta",   refeicao: "4. Jantar", item: "Livre (Controlado)", qtd: 1, un: "ref", grupo: "Social" },
-      
-      // FDS
-      { dia: "Sábado", refeicao: "Almoço", item: "Churrasco / Carne", qtd: 300, un: "g", grupo: "Proteína" },
-      { dia: "Domingo", refeicao: "Geral", item: "Refeição Livre", qtd: 1, un: "un", grupo: "Social" }
+      // Jantar (Leve)
+      { dia: "Segunda", refeicao: "4. Jantar", item: "Omelete (3 ovos + Queijo)", qtd: 1, un: "un", grupo: "Jantar Ovos" },
+      { dia: "Terça",   refeicao: "4. Jantar", item: "Carne Moída (Marmita)", qtd: 150, un: "g", grupo: "Proteína Carne" },
+      { dia: "Quarta",  refeicao: "4. Jantar", item: "Frango Cubos + Salada", qtd: 150, un: "g", grupo: "Proteína Frango" },
+      { dia: "Quinta",  refeicao: "4. Jantar", item: "Ovos Cozidos (4 un)", qtd: 4, un: "un", grupo: "Jantar Ovos" },
+      { dia: "Sexta",   refeicao: "4. Jantar", item: "Wrap (Rap10 Integral + Frango)", qtd: 2, un: "un", grupo: "Jantar Especial" },
+
+      // --- SÁBADO (DIA DE TREINO DE PERNA - HIGH CARB) ---
+      { dia: "Sábado", refeicao: "1. Pré-Treino", item: "Pão Francês + Ovos Mexidos (3)", qtd: 1, un: "un", grupo: "FDS Café" },
+      { dia: "Sábado", refeicao: "1. Pré-Treino", item: "Mamão + Aveia", qtd: 1, un: "fatia", grupo: "FDS Café" },
+      { dia: "Sábado", refeicao: "2. Almoço (Livre)", item: "Feijoada Light ou Churrasco", qtd: 1, un: "prato", grupo: "FDS Almoço" },
+      { dia: "Sábado", refeicao: "2. Almoço (Livre)", item: "Arroz Branco + Vinagrete", qtd: 1, un: "prato", grupo: "FDS Almoço" },
+      { dia: "Sábado", refeicao: "3. Lanche", item: "Iogurte + Fruta", qtd: 1, un: "pote", grupo: "FDS Lanche" },
+      { dia: "Sábado", refeicao: "4. Jantar (Social)", item: "Hambúrguer Caseiro (Patinho)", qtd: 2, un: "un", grupo: "FDS Jantar" },
+
+      // --- DOMINGO (DESCANSO - RECOVERY/LOW CARB) ---
+      { dia: "Domingo", refeicao: "1. Café Tardio", item: "Crepioca (2 ovos + 2 col goma)", qtd: 1, un: "un", grupo: "FDS Café" },
+      { dia: "Domingo", refeicao: "1. Café Tardio", item: "Café Preto + Fruta", qtd: 1, un: "dose", grupo: "FDS Café" },
+      { dia: "Domingo", refeicao: "2. Almoço Família", item: "Assado (Carne ou Frango)", qtd: 250, un: "g", grupo: "FDS Almoço" },
+      { dia: "Domingo", refeicao: "2. Almoço Família", item: "Legumes Assados + Salada", qtd: 1, un: "prato", grupo: "FDS Almoço" },
+      { dia: "Domingo", refeicao: "3. Lanche Tarde", item: "Whey Protein + Água", qtd: 1, un: "dose", grupo: "Suplemento" },
+      { dia: "Domingo", refeicao: "4. Jantar Leve", item: "Sopa de Legumes c/ Frango", qtd: 1, un: "prato", grupo: "FDS Jantar" }
     ];
 
     // =================================================================
     // 3. APP LOGIC
     // =================================================================
-    const STORAGE_KEY = "guerra_fit_logs_final";
+    const STORAGE_KEY = "guerra_fit_logs_v4_final";
     let dailyLog = {};
 
     function init() {
@@ -603,7 +523,7 @@
       
       const diaSel = document.getElementById("diaSelect").value;
       const dataSel = document.getElementById("dataInput").value;
-      const filtro = document.querySelector(".sub-tabs button.active").id; // sub-treino-todo ou warmup
+      const filtro = document.querySelector(".sub-tabs button.active").id; 
 
       // Filtra Exercicios do Dia
       let exercicios = DEFAULT_TREINOS.filter(e => e.dia === diaSel);
@@ -617,19 +537,16 @@
       document.getElementById("progressArea").classList.remove("hidden");
 
       exercicios.forEach((ex, idx) => {
-        // Filtro visual (Aquecimento vs Todo)
         const isWarmup = ex.tipo === "Aquecimento";
         if(filtro === "sub-treino-warmup" && !isWarmup) return;
 
         const key = `ex_${diaSel}_${idx}::${dataSel}`;
         const log = dailyLog[key] || {};
 
-        // Define Classe CSS do Card
-        let typeClass = "type-strength"; // Padrão
+        let typeClass = "type-strength";
         if(isWarmup) typeClass = "type-warmup";
         if(ex.tipo === "Cardio" || ex.tipo === "Metabólico") typeClass = "type-cardio";
 
-        // HTML Card
         const div = document.createElement("div");
         div.className = `exercise-card ${typeClass}`;
         div.innerHTML = `
@@ -642,7 +559,7 @@
           </div>
 
           <div style="font-size:12px; color:var(--text-main); margin-bottom:8px;">
-             <strong>Meta:</strong> ${ex.series} Séries x ${ex.reps} | <em>"${ex.obs}"</em>
+             <strong>Meta:</strong> ${ex.series} x ${ex.reps} | <em>"${ex.obs}"</em>
           </div>
 
           <div class="ex-grid">
@@ -674,10 +591,7 @@
       if(!dailyLog[key]) dailyLog[key] = {};
       dailyLog[key][field] = val;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(dailyLog));
-      
-      if(field === 'done') {
-        renderTreino(); // Re-render para atualizar texto/cor
-      }
+      if(field === 'done') renderTreino();
     }
 
     function updateProgress() {
@@ -699,7 +613,6 @@
 
     // --- RENDER DIETA ---
     function renderDieta(modo) {
-      // Atualiza botões
       document.querySelectorAll(".sub-tabs button").forEach(b => b.classList.remove("active"));
       if(modo === 'hoje') document.getElementById("sub-dieta-hoje").classList.add("active");
       if(modo === 'semana') document.getElementById("sub-dieta-semana").classList.add("active");
@@ -711,10 +624,8 @@
       // 1. MODO HOJE
       if(modo === 'hoje') {
          const dataInput = document.getElementById("dataInput").value;
-         // Descobre dia da semana da data inputada
          const d = new Date(dataInput);
          const diaSemanaMap = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
-         // Ajuste timezone simples
          const userDia = diaSemanaMap[new Date(d.getTime() + d.getTimezoneOffset()*60000).getDay()];
 
          const itens = DEFAULT_DIETA.filter(i => i.dia === userDia);
@@ -724,13 +635,11 @@
             return;
          }
          
-         // Agrupa por refeição
          const refs = [...new Set(itens.map(i => i.refeicao))];
          refs.forEach(refNome => {
             const div = document.createElement("div");
             div.className = "card";
             let html = `<h4 style="margin:0 0 10px 0; color:var(--primary); font-size:14px;">${refNome}</h4>`;
-            
             itens.filter(i => i.refeicao === refNome).forEach(alimento => {
                html += `
                  <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--bg-input); padding:6px 0;">
@@ -744,13 +653,14 @@
          });
       }
 
-      // 2. MODO SEMANA (Resumo Almoço/Jantar)
+      // 2. MODO SEMANA
       if(modo === 'semana') {
-         const dias = ["Segunda","Terça","Quarta","Quinta","Sexta"];
+         const dias = ["Segunda","Terça","Quarta","Quinta","Sexta","Sábado","Domingo"];
          dias.forEach(dia => {
             const itensDia = DEFAULT_DIETA.filter(i => i.dia === dia);
-            const almoco = itensDia.find(i => i.refeicao.includes("Almoço"))?.item || "-";
-            const jantar = itensDia.find(i => i.refeicao.includes("Jantar"))?.item || "-";
+            // Pega almoço e jantar para resumo
+            const almoco = itensDia.find(i => i.refeicao.toLowerCase().includes("almoço"))?.item || "Variado";
+            const jantar = itensDia.find(i => i.refeicao.toLowerCase().includes("jantar"))?.item || "Variado";
 
             const div = document.createElement("div");
             div.className = "card";
@@ -765,12 +675,12 @@
          });
       }
 
-      // 3. MODO COMPRAS (Checklist)
+      // 3. MODO COMPRAS
       if(modo === 'compras') {
-         // Agrega itens
          let lista = {};
          DEFAULT_DIETA.forEach(d => {
             const nome = d.item;
+            // Somar apenas se for numérico
             if(!lista[nome]) lista[nome] = { qtd: 0, un: d.un, grupo: d.grupo };
             lista[nome].qtd += (typeof d.qtd === 'number' ? d.qtd : 0);
          });
@@ -779,17 +689,15 @@
          div.className = "card";
          div.innerHTML = `<h4 style="margin-top:0;">Lista de Supermercado</h4>`;
          
-         // Ordena alfabético
          Object.keys(lista).sort().forEach((nome, idx) => {
              const it = lista[nome];
-             const idCheck = `shop_${idx}`;
              div.innerHTML += `
                <label class="shop-item" onclick="this.classList.toggle('done')">
                   <div style="flex:1">
                      <div class="shop-name" style="font-weight:600">${nome}</div>
-                     <div style="font-size:11px; color:var(--text-muted)">${it.grupo}</div>
+                     <div class="shop-qty" style="font-weight:bold; color:var(--primary)">${it.qtd > 0 ? parseFloat(it.qtd.toFixed(1)) : ''} ${it.un}</div>
                   </div>
-                  <div style="font-weight:bold; color:var(--primary)">${it.qtd > 0 ? it.qtd : ''} ${it.un}</div>
+                  <div style="font-size:20px; color:var(--text-muted)">+</div>
                </label>
              `;
          });
@@ -797,12 +705,10 @@
       }
     }
 
-    // --- NAVEGAÇÃO GERAL ---
     function setTab(tab) {
       document.getElementById("btn-treino").classList.remove("active");
       document.getElementById("btn-dieta").classList.remove("active");
       document.getElementById(`btn-${tab}`).classList.add("active");
-
       document.getElementById("view-treino").classList.add("hidden");
       document.getElementById("view-dieta").classList.add("hidden");
       document.getElementById(`view-${tab}`).classList.remove("hidden");
@@ -815,7 +721,6 @@
        renderTreino();
     }
 
-    // INIT
     document.addEventListener("DOMContentLoaded", init);
 
   </script>
