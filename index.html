@@ -1,364 +1,642 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevFit App - 5 Days Protocol</title>
-    <style>
-        /* CSS RESET & VARIABLES */
-        :root {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --text-primary: #ffffff;
-            --text-secondary: #b0b0b0;
-            --accent: #00e676; /* Neon Green */
-            --danger: #ff5252;
-            --nav-height: 60px;
-        }
+  <meta charset="UTF-8" />
+  <title>Guerra Fit – Hybrid Athlete Protocol</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
-        
-        body { background-color: var(--bg-color); color: var(--text-primary); padding-bottom: 80px; }
+  <style>
+    /* --- DESIGN SYSTEM (Black Ops / Military Theme) --- */
+    :root {
+      --bg-app: #000000;       
+      --bg-card: #111111;      
+      --bg-input: #222222;     
+      --border: #333333;       
+      
+      --text-main: #e5e5e5;
+      --text-muted: #888888;
+      
+      --primary: #f59e0b;      /* Amber/Gold (Energia) */
+      --primary-glow: rgba(245, 158, 11, 0.2);
+      
+      --accent-strength: #dc2626; /* Red */
+      --accent-crossfit: #3b82f6; /* Blue */
+      
+      --radius: 8px;
+      --font-stack: 'Inter', system-ui, sans-serif;
+    }
 
-        /* HEADER */
-        header {
-            padding: 20px;
-            text-align: center;
-            background: var(--card-bg);
-            border-bottom: 1px solid #333;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        h1 { font-size: 1.5rem; letter-spacing: 1px; }
-        h1 span { color: var(--accent); }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    
+    body {
+      margin: 0;
+      background: var(--bg-app);
+      color: var(--text-main);
+      font-family: var(--font-stack);
+      font-size: 14px;
+      padding-bottom: 90px;
+    }
 
-        /* NAVIGATION TABS */
-        .tabs {
-            display: flex;
-            overflow-x: auto;
-            background: var(--card-bg);
-            padding: 10px 5px;
-            gap: 10px;
-            position: sticky;
-            top: 71px; /* Height of header approx */
-            z-index: 99;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-        .tab-btn {
-            background: transparent;
-            border: 1px solid var(--text-secondary);
-            color: var(--text-secondary);
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: 0.3s;
-        }
-        .tab-btn.active {
-            background: var(--accent);
-            color: #000;
-            border-color: var(--accent);
-            font-weight: bold;
-        }
+    /* HEADER */
+    header {
+      background: rgba(0, 0, 0, 0.95);
+      border-bottom: 1px solid var(--border);
+      padding: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      text-transform: uppercase;
+      color: var(--primary);
+    }
+    header small {
+      color: var(--text-muted);
+      font-size: 11px;
+      display: block;
+      margin-top: 4px;
+    }
 
-        /* CONTENT SECTIONS */
-        .section { display: none; padding: 15px; animation: fadeIn 0.3s ease; }
-        .section.active { display: block; }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    /* PROGRESS BAR */
+    .progress-container {
+      margin-top: 12px;
+      background: var(--bg-input);
+      height: 8px;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.4s ease;
+      box-shadow: 0 0 10px var(--primary-glow);
+    }
+    .progress-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-align: right;
+      margin-top: 4px;
+    }
 
-        /* CARDS (EXERCISES/DIET) */
-        .card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-left: 4px solid var(--accent);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+    main {
+      padding: 16px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
 
-        .card-info { flex: 1; }
-        .card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; display: block; }
-        .card-details { font-size: 0.85rem; color: var(--text-secondary); }
-        .highlight { color: var(--accent); font-weight: bold; }
+    /* TABS */
+    .main-tabs {
+      display: flex;
+      background: var(--bg-input);
+      padding: 4px;
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      position: sticky;
+      top: 85px;
+      z-index: 90;
+    }
+    .main-tabs button {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .main-tabs button.active {
+      background: var(--bg-card);
+      color: var(--primary);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
 
-        /* CHECKBOX CUSTOMIZATION */
-        .checkbox-wrapper {
-            position: relative;
-            width: 40px;
-            height: 40px;
-            margin-left: 15px;
-        }
-        .custom-checkbox {
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-            appearance: none;
-            border: 2px solid var(--text-secondary);
-            border-radius: 50%;
-            transition: 0.2s;
-            background: transparent;
-        }
-        .custom-checkbox:checked {
-            background: var(--accent);
-            border-color: var(--accent);
-        }
-        .custom-checkbox:checked::after {
-            content: '✓';
-            position: absolute;
-            color: #000;
-            font-size: 24px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
+    .sub-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 15px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .sub-tabs button {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      white-space: nowrap;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .sub-tabs button.active {
+      background: var(--primary);
+      color: #000;
+      border-color: var(--primary);
+    }
 
-        /* DIET TABLE */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { text-align: left; padding: 10px; border-bottom: 1px solid #333; }
-        th { color: var(--accent); }
+    /* CARDS */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 16px;
+    }
 
-        /* UTILS */
-        .btn-reset {
-            width: 100%;
-            padding: 15px;
-            background: #2a2a2a;
-            color: var(--danger);
-            border: 1px solid var(--danger);
-            border-radius: 8px;
-            margin-top: 20px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        footer {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 0.7rem;
-            color: #555;
-            padding: 20px;
-        }
+    /* EXERCISE ITEM */
+    .exercise-card {
+      background: var(--bg-card);
+      border-left: 3px solid var(--border);
+      padding: 14px;
+      margin-bottom: 12px;
+      border-radius: 4px;
+      position: relative;
+    }
+    .type-strength { border-left-color: var(--accent-strength); }
+    .type-crossfit { border-left-color: var(--accent-crossfit); }
+    .type-warmup { border-left-color: #666; }
 
-    </style>
+    .ex-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .ex-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .ex-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .badge {
+      background: var(--bg-input);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 9px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .badge.cf { color: var(--accent-crossfit); border: 1px solid var(--accent-crossfit); }
+
+    .ex-inputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .input-group label {
+      display: block;
+      font-size: 9px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    input, select {
+      width: 100%;
+      background: #000;
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    input:focus { border-color: var(--primary); outline: none; }
+
+    /* CHECKBOX */
+    .ex-footer {
+      margin-top: 12px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+    .check-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+    .box {
+      width: 20px; height: 20px;
+      border: 2px solid #444;
+      display: flex; align-items: center; justify-content: center;
+    }
+    input[type="checkbox"]:checked + .box {
+      background: var(--primary); border-color: var(--primary);
+    }
+    input[type="checkbox"]:checked + .box::after {
+      content: '✓'; color: #000; font-weight: bold; font-size: 12px;
+    }
+    
+    /* DIET & SHOPPING */
+    .diet-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 13px;
+    }
+    .shop-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--bg-input);
+      cursor: pointer;
+    }
+    .shop-item.done { opacity: 0.4; text-decoration: line-through; }
+
+    .hidden { display: none !important; }
+    
+    /* WARNING BOX */
+    .warning-box {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid var(--accent-crossfit);
+      color: #93c5fd;
+      padding: 10px;
+      font-size: 11px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+  </style>
 </head>
+
 <body>
 
-    <header>
-        <h1>Dev<span>Fit</span> Coach</h1>
-    </header>
+  <header>
+    <h1>GUERRA <span style="color:#fff">HYBRID</span></h1>
+    <small>Bodybuilding (AM) + CrossFit (PM)</small>
 
-    <nav class="tabs" id="navTabs">
-        </nav>
+    <div id="progressArea" class="hidden">
+      <div class="progress-container">
+        <div id="progressBar" class="progress-fill"></div>
+      </div>
+      <div id="progressLabel" class="progress-label">0%</div>
+    </div>
+  </header>
 
-    <main id="appContent">
-        </main>
+  <main>
+    <nav class="main-tabs">
+      <button class="active" onclick="switchMain('treino')" id="tab-treino">TREINO</button>
+      <button onclick="switchMain('dieta')" id="tab-dieta">DIETA</button>
+    </nav>
 
-    <footer>
-        <p>⚠️ <strong>Disclaimer:</strong> Consulte um médico antes de iniciar. Este app é demonstrativo.</p>
-        <p>DevFit v1.0 | LocalStorage Enabled</p>
-    </footer>
+    <section id="view-treino">
+      <div class="card">
+        <div class="ex-inputs" style="margin:0; grid-template-columns: 2fr 1fr;">
+          <div class="input-group">
+            <label>Dia da Semana</label>
+            <select id="diaSelect" onchange="renderApp()"></select>
+          </div>
+          <div class="input-group">
+            <label>Data</label>
+            <input type="date" id="dataInput" onchange="renderApp()">
+          </div>
+        </div>
+      </div>
 
-    <script>
-        // --- DATA STRUCTURE (JSON-like) ---
-        const appData = {
-            days: [
-                {
-                    id: 'day1',
-                    title: 'Dia 1: Peito & Tríceps',
-                    exercises: [
-                        { name: 'Supino Reto (Halter ou Barra)', sets: '4x 8-10', rest: '90s', technique: 'Carga progressiva' },
-                        { name: 'Supino Inclinado (Halter)', sets: '3x 10-12', rest: '60s', technique: 'Controle na descida' },
-                        { name: 'Crucifixo Máquina (Peck Deck)', sets: '3x 15', rest: '45s', technique: 'Falha Concêntrica' },
-                        { name: 'Tríceps Testa (Barra W)', sets: '4x 10-12', rest: '60s', technique: 'Cotovelos fechados' },
-                        { name: 'Tríceps Corda (Polia)', sets: '3x 15-20', rest: '45s', technique: 'Drop-set na última' }
-                    ]
-                },
-                {
-                    id: 'day2',
-                    title: 'Dia 2: Costas & Bíceps',
-                    exercises: [
-                        { name: 'Puxada Alta (Polia)', sets: '4x 10-12', rest: '60s', technique: 'Segure 1s embaixo' },
-                        { name: 'Remada Curvada (Barra)', sets: '4x 8-10', rest: '90s', technique: 'Coluna estável' },
-                        { name: 'Remada Serrote (Unilateral)', sets: '3x 12', rest: '60s', technique: 'Amplitude máxima' },
-                        { name: 'Rosca Direta (Barra)', sets: '4x 10', rest: '60s', technique: 'Sem balanço' },
-                        { name: 'Rosca Martelo', sets: '3x 12-15', rest: '45s', technique: 'Foco no braquial' }
-                    ]
-                },
-                {
-                    id: 'day3',
-                    title: 'Dia 3: Pernas (Quads)',
-                    exercises: [
-                        { name: 'Agachamento Livre (ou Smith)', sets: '4x 8-10', rest: '120s', technique: 'Profundidade máxima' },
-                        { name: 'Leg Press 45°', sets: '4x 12-15', rest: '90s', technique: 'Não trancar joelhos' },
-                        { name: 'Cadeira Extensora', sets: '3x 15-20', rest: '60s', technique: 'Isometria 2s no topo' },
-                        { name: 'Panturrilha em Pé', sets: '5x 15', rest: '45s', technique: 'Movimento lento' }
-                    ]
-                },
-                {
-                    id: 'day4',
-                    title: 'Dia 4: Ombros',
-                    exercises: [
-                        { name: 'Desenvolvimento (Halteres)', sets: '4x 10', rest: '90s', technique: 'Carga moderada' },
-                        { name: 'Elevação Lateral', sets: '4x 15', rest: '45s', technique: 'Cotovelos levemente flexionados' },
-                        { name: 'Elevação Frontal', sets: '3x 12', rest: '45s', technique: 'Pegada neutra' },
-                        { name: 'Encolhimento (Trapézio)', sets: '4x 15', rest: '60s', technique: 'Pausa no topo' }
-                    ]
-                },
-                {
-                    id: 'day5',
-                    title: 'Dia 5: Posterior/Abs',
-                    exercises: [
-                        { name: 'Stiff (Barra ou Halter)', sets: '4x 10-12', rest: '90s', technique: 'Coluna reta' },
-                        { name: 'Mesa Flexora', sets: '4x 12-15', rest: '60s', technique: 'Não levantar quadril' },
-                        { name: 'Elevação Pélvica', sets: '3x 12', rest: '90s', technique: 'Contrair glúteo' },
-                        { name: 'Prancha Abdominal', sets: '3x Falha', rest: '60s', technique: 'Abdômen travado' },
-                        { name: 'Abdominal Supra', sets: '3x 20', rest: '45s', technique: 'Expirar na subida' }
-                    ]
-                }
-            ],
-            diet: {
-                id: 'diet',
-                title: 'Dieta Base (Hipertrofia)',
-                summary: 'Baseado em 2500kcal (Ajuste conforme peso)',
-                meals: [
-                    { time: 'Café', food: '3 Ovos + 2 Fatias Pão Integral + Fruta', macros: 'P:20g C:30g G:15g' },
-                    { time: 'Almoço', food: '150g Frango/Carne + 200g Arroz + Vegetais', macros: 'P:35g C:50g G:10g' },
-                    { time: 'Pré-Treino', food: 'Iogurte Natural + Aveia + Mel', macros: 'P:10g C:40g G:5g' },
-                    { time: 'Pós-Treino', food: 'Whey Protein (ou 4 claras) + Banana', macros: 'P:25g C:25g G:1g' },
-                    { time: 'Jantar', food: '150g Peixe/Frango + 100g Batata + Salada', macros: 'P:30g C:25g G:8g' }
-                ]
-            }
-        };
+      <div id="crossfitWarning" class="warning-box hidden">
+        <span style="font-size:18px">💡</span>
+        <div>
+          <strong>Alerta Híbrido:</strong> Se hoje tiver WOD pesado de perna à noite, reduza 20% das cargas do treino da manhã para não lesionar.
+        </div>
+      </div>
 
-        // --- RENDER LOGIC ---
-        const navContainer = document.getElementById('navTabs');
-        const contentContainer = document.getElementById('appContent');
+      <div class="sub-tabs">
+        <button class="active" onclick="filterTreino('all')" id="sub-all">Todo</button>
+        <button onclick="filterTreino('musc')" id="sub-musc">Musculação</button>
+        <button onclick="filterTreino('cf')" id="sub-cf">CrossFit</button>
+      </div>
 
-        function init() {
-            // Render Days
-            appData.days.forEach((day, index) => {
-                createTab(day.id, day.title.split(':')[0], index === 0);
-                createWorkoutSection(day, index === 0);
-            });
+      <div id="treinoList"></div>
+    </section>
 
-            // Render Diet
-            createTab(appData.diet.id, 'Dieta', false);
-            createDietSection(appData.diet, false);
+    <section id="view-dieta" class="hidden">
+      <div class="card">
+        <h4 style="margin:0 0 5px 0; color:var(--primary)">Combustível Híbrido</h4>
+        <p style="font-size:11px; color:var(--text-muted); margin:0;">
+          Você precisa de +500kcal nos dias de treino duplo. Não pule o lanche da tarde.
+        </p>
+      </div>
 
-            // Setup Listeners
-            setupTabs();
-            loadProgress();
-        }
+      <div class="sub-tabs">
+        <button class="active" onclick="renderDieta('hoje')" id="sub-diet-hoje">Hoje</button>
+        <button onclick="renderDieta('semana')" id="sub-diet-semana">Semana</button>
+        <button onclick="renderDieta('shop')" id="sub-diet-shop">Mercado</button>
+      </div>
 
-        function createTab(id, label, isActive) {
-            const btn = document.createElement('button');
-            btn.className = `tab-btn ${isActive ? 'active' : ''}`;
-            btn.innerText = label;
-            btn.dataset.target = id;
-            navContainer.appendChild(btn);
-        }
+      <div id="dietaList"></div>
+    </section>
 
-        function createWorkoutSection(dayData, isActive) {
-            const section = document.createElement('div');
-            section.className = `section ${isActive ? 'active' : ''}`;
-            section.id = dayData.id;
+  </main>
 
-            let html = `<h2>${dayData.title}</h2><br>`;
+  <script>
+    // =========================================================
+    // PROTOCOLO HÍBRIDO (MUSCULAÇÃO MANHÃ + CROSSFIT NOITE)
+    // =========================================================
+    const DEFAULT_TREINOS = [
+      // --- SEGUNDA: PEITO & OMBRO (Preserva perna e costas para WODs comuns de Seg) ---
+      { dia: "Segunda", cat: "musc", exercicio: "Aquecimento: Manguito", series: "2x15", obs: "Essencial." },
+      { dia: "Segunda", cat: "musc", exercicio: "Supino Inclinado (Halter)", series: "4x8-10", obs: "Foco Superior." },
+      { dia: "Segunda", cat: "musc", exercicio: "Supino Reto Máquina", series: "3x10-12", obs: "Carga Controlada." },
+      { dia: "Segunda", cat: "musc", exercicio: "Desenvolvimento Militar", series: "4x8-10", obs: "Ombros fortes." },
+      { dia: "Segunda", cat: "musc", exercicio: "Elevação Lateral", series: "4x15", obs: "Falha." },
+      { dia: "Segunda", cat: "cf", exercicio: "CrossFit (Noite)", series: "WOD", obs: "Se o WOD tiver muito 'Push', pegue leve de manhã." },
+
+      // --- TERÇA: COSTAS (ESPESSURA) (Rack Pull preserva perna) ---
+      { dia: "Terça", cat: "musc", exercicio: "Rack Pull (Terra Parcial)", series: "3x5-6", obs: "Foco Costas. Barra no joelho." },
+      { dia: "Terça", cat: "musc", exercicio: "Puxada Alta", series: "4x10", obs: "Aberto." },
+      { dia: "Terça", cat: "musc", exercicio: "Remada Curvada", series: "3x12", obs: "Esmaga." },
+      { dia: "Terça", cat: "musc", exercicio: "Crucifixo Inverso", series: "3x15", obs: "Posterior de Ombro." },
+      { dia: "Terça", cat: "cf", exercicio: "CrossFit (Noite)", series: "WOD", obs: "Foco metabólico." },
+
+      // --- QUARTA: PERNAS (Power) ---
+      // *Cuidado extremo se tiver CF a noite*
+      { dia: "Quarta", cat: "musc", exercicio: "Mobilidade Quadril", series: "5 min", obs: "Soltar." },
+      { dia: "Quarta", cat: "musc", exercicio: "Agachamento Livre", series: "4x6-8", obs: "Se tiver WOD de perna a noite, reduza carga 30%." },
+      { dia: "Quarta", cat: "musc", exercicio: "Leg Press 45", series: "3x12", obs: "Amplitude." },
+      { dia: "Quarta", cat: "musc", exercicio: "Cadeira Extensora", series: "3x15", obs: "Pump." },
+      { dia: "Quarta", cat: "cf", exercicio: "CrossFit (Noite)", series: "WOD", obs: "Se fez perna pesado de manhã, escale o WOD." },
+
+      // --- QUINTA: BRAÇOS (Recuperação Ativa do Tronco) ---
+      // Antigo "Descanso", agora Braços para aguentar "Todo dia"
+      { dia: "Quinta", cat: "musc", exercicio: "Rosca Direta", series: "4x10", obs: "Bíceps." },
+      { dia: "Quinta", cat: "musc", exercicio: "Tríceps Testa", series: "4x10", obs: "Tríceps." },
+      { dia: "Quinta", cat: "musc", exercicio: "Rosca Martelo", series: "3x12", obs: "Braquial." },
+      { dia: "Quinta", cat: "musc", exercicio: "Tríceps Corda", series: "3x12", obs: "Esmaga." },
+      { dia: "Quinta", cat: "cf", exercicio: "CrossFit (Noite)", series: "WOD", obs: "Dia bom para cardio longo (Endurance)." },
+
+      // --- SEXTA: UPPER COMPLETO (Pump) ---
+      { dia: "Sexta", cat: "musc", exercicio: "Supino Máquina", series: "3x12", obs: "Peito." },
+      { dia: "Sexta", cat: "musc", exercicio: "Puxada Triângulo", series: "3x12", obs: "Costas." },
+      { dia: "Sexta", cat: "musc", exercicio: "Elev. Lateral + Frontal", series: "3x12", obs: "Ombros." },
+      { dia: "Sexta", cat: "cf", exercicio: "CrossFit (Noite)", series: "WOD", obs: "Sexta geralmente é pesado. Coma bem." },
+
+      // --- SÁBADO: POSTERIOR DE COXA (Stiff) ---
+      { dia: "Sábado", cat: "musc", exercicio: "Stiff", series: "4x10", obs: "Posterior e Glúteo." },
+      { dia: "Sábado", cat: "musc", exercicio: "Mesa Flexora", series: "4x12", obs: "Isolado." },
+      { dia: "Sábado", cat: "musc", exercicio: "Panturrilhas", series: "5x15", obs: "Semana toda esquecida." },
+      { dia: "Sábado", cat: "cf", exercicio: "Aulão de Sábado", series: "Team WOD", obs: "Diversão." },
+
+      // --- DOMINGO: REST ---
+      { dia: "Domingo", cat: "musc", exercicio: "Descanso Total", series: "-", obs: "Obrigatório para SNC." }
+    ];
+
+    const DEFAULT_DIETA = [
+      // REFEIÇÃO 1 (04:30) - PRÉ TREINO MUSCULAÇÃO
+      { dia: "Segunda", refeicao: "1. Pré-Musculação (04:30)", item: "Overnight Oats (60g Aveia + Whey)", qtd: 1, un: "pote", grupo: "Manhã" },
+      { dia: "Segunda", refeicao: "1. Pré-Musculação (04:30)", item: "Banana", qtd: 1, un: "un", grupo: "Manhã" },
+      // (Replique a lógica de dias da semana se quiser variar)
+      { dia: "Terça", refeicao: "1. Pré-Musculação (04:30)", item: "Ovos Mexidos (4) + Pão", qtd: 1, un: "kit", grupo: "Manhã" },
+      { dia: "Quarta", refeicao: "1. Pré-Musculação (04:30)", item: "Overnight Oats", qtd: 1, un: "pote", grupo: "Manhã" },
+      { dia: "Quinta", refeicao: "1. Pré-Musculação (04:30)", item: "Ovos Mexidos + Pão", qtd: 1, un: "kit", grupo: "Manhã" },
+      { dia: "Sexta", refeicao: "1. Pré-Musculação (04:30)", item: "Vitamina Whey + Aveia", qtd: 1, un: "copo", grupo: "Manhã" },
+
+      // REFEIÇÃO 2 (08:30) - PÓS TREINO
+      { dia: "Segunda", refeicao: "2. Pós-Musculação (08:30)", item: "Iogurte + Whey + Fruta", qtd: 1, un: "kit", grupo: "Manhã" },
+      { dia: "Terça", refeicao: "2. Pós-Musculação (08:30)", item: "Iogurte + Whey + Fruta", qtd: 1, un: "kit", grupo: "Manhã" },
+      { dia: "Quarta", refeicao: "2. Pós-Musculação (08:30)", item: "Iogurte + Whey + Fruta", qtd: 1, un: "kit", grupo: "Manhã" },
+      { dia: "Quinta", refeicao: "2. Pós-Musculação (08:30)", item: "Sanduíche Pasta Amendoim", qtd: 1, un: "un", grupo: "Manhã" },
+      { dia: "Sexta", refeicao: "2. Pós-Musculação (08:30)", item: "Iogurte + Whey + Fruta", qtd: 1, un: "kit", grupo: "Manhã" },
+
+      // REFEIÇÃO 3 (12:30) - ALMOÇO REFORÇADO
+      { dia: "Segunda", refeicao: "3. Almoço", item: "Carne/Frango (200g) + Arroz (300g)", qtd: 1, un: "marmita", grupo: "Almoço" },
+      { dia: "Segunda", refeicao: "3. Almoço", item: "Vegetais", qtd: 1, un: "porção", grupo: "Almoço" },
+      // ... (Pode simplificar visualização na lista) ...
+
+      // REFEIÇÃO 4 (17:30) - PRÉ CROSSFIT (NOVA E CRUCIAL)
+      { dia: "Segunda", refeicao: "4. Pré-CrossFit (17:30)", item: "Pão com Doce de Leite ou Banana", qtd: 2, un: "fatias", grupo: "Tarde" },
+      { dia: "Segunda", refeicao: "4. Pré-CrossFit (17:30)", item: "Whey Protein (se não for jantar logo)", qtd: 1, un: "dose", grupo: "Tarde" },
+      { dia: "Terça", refeicao: "4. Pré-CrossFit (17:30)", item: "Banana + Aveia + Mel", qtd: 1, un: "bowl", grupo: "Tarde" },
+      { dia: "Quarta", refeicao: "4. Pré-CrossFit (17:30)", item: "Pão + Atum/Frango", qtd: 1, un: "sanduiche", grupo: "Tarde" },
+      { dia: "Quinta", refeicao: "4. Pré-CrossFit (17:30)", item: "Barra de Proteína", qtd: 1, un: "un", grupo: "Tarde" },
+      { dia: "Sexta", refeicao: "4. Pré-CrossFit (17:30)", item: "Açaí (sem exagero)", qtd: 300, un: "ml", grupo: "Tarde" },
+
+      // REFEIÇÃO 5 (21:00) - JANTAR PÓS-WAR
+      { dia: "Segunda", refeicao: "5. Jantar", item: "Omelete Grande + Salada", qtd: 1, un: "prato", grupo: "Noite" },
+      { dia: "Terça", refeicao: "5. Jantar", item: "Frango + Batata", qtd: 1, un: "prato", grupo: "Noite" },
+      { dia: "Quarta", refeicao: "5. Jantar", item: "Carne Moída + Arroz", qtd: 1, un: "prato", grupo: "Noite" },
+      { dia: "Quinta", refeicao: "5. Jantar", item: "Ovos Cozidos + Salada", qtd: 1, un: "prato", grupo: "Noite" },
+      { dia: "Sexta", refeicao: "5. Jantar", item: "Livre (Coma bem!)", qtd: 1, un: "prato", grupo: "Noite" },
+      
+      // SÁBADO E DOMINGO
+      { dia: "Sábado", refeicao: "Geral", item: "High Carb (Pão, Macarrão, Carne)", qtd: 1, un: "dia", grupo: "FDS" },
+      { dia: "Domingo", refeicao: "Geral", item: "Descanso / Churrasco / Família", qtd: 1, un: "dia", grupo: "FDS" }
+    ];
+
+    // LÓGICA DO APP
+    const STORAGE_KEY = "guerra_fit_v5";
+    let logs = {};
+
+    function init() {
+      try {
+        logs = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+      } catch { logs = {}; }
+
+      // Data Hoje
+      const hoje = new Date();
+      const localISO = new Date(hoje.getTime() - (hoje.getTimezoneOffset() * 60000)).toISOString().slice(0, 10);
+      document.getElementById("dataInput").value = localISO;
+
+      // Select Dias
+      const dias = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
+      const sel = document.getElementById("diaSelect");
+      dias.forEach(d => {
+        const opt = document.createElement("option");
+        opt.value = d; opt.textContent = d; sel.appendChild(opt);
+      });
+      sel.value = dias[hoje.getDay() === 0 ? 6 : hoje.getDay() - 1]; // Ajuste Domingo=0
+
+      renderApp();
+    }
+
+    function renderApp() {
+      renderTreino();
+      renderDieta('hoje');
+    }
+
+    function renderTreino() {
+      const dia = document.getElementById("diaSelect").value;
+      const data = document.getElementById("dataInput").value;
+      const container = document.getElementById("treinoList");
+      const filtro = document.querySelector("#view-treino .sub-tabs .active").id;
+
+      container.innerHTML = "";
+
+      // Mostra aviso de conflito Musc/Crossfit
+      const aviso = document.getElementById("crossfitWarning");
+      aviso.classList.remove("hidden");
+      if(dia === "Domingo") aviso.classList.add("hidden");
+
+      const treinos = DEFAULT_TREINOS.filter(t => t.dia === dia);
+      
+      if(treinos.length === 0) {
+         container.innerHTML = `<div class="card text-center" style="color:#666">Descanso.</div>`;
+         return;
+      }
+
+      let total = 0, done = 0;
+
+      treinos.forEach((t, i) => {
+        // Filtros
+        if(filtro === "sub-musc" && t.cat !== "musc") return;
+        if(filtro === "sub-cf" && t.cat !== "cf") return;
+
+        const key = `${data}_${dia}_${i}`;
+        const state = logs[key] || {};
+        
+        total++;
+        if(state.done) done++;
+
+        const typeClass = t.cat === 'musc' ? 'type-strength' : 'type-crossfit';
+        const badgeHtml = t.cat === 'cf' ? '<span class="badge cf">CROSSFIT</span>' : '<span class="badge">BODYBUILDING</span>';
+
+        container.innerHTML += `
+          <div class="exercise-card ${typeClass}">
+            <div class="ex-header">
+              <div>
+                <div class="ex-title">${t.exercicio}</div>
+                <div class="ex-meta">${t.series} • ${t.obs}</div>
+              </div>
+              ${badgeHtml}
+            </div>
             
-            dayData.exercises.forEach((ex, idx) => {
-                const uniqueId = `${dayData.id}_ex_${idx}`;
-                html += `
-                    <div class="card">
-                        <div class="card-info">
-                            <span class="card-title">${ex.name}</span>
-                            <div class="card-details">
-                                <span class="highlight">${ex.sets}</span> | ${ex.rest} <br>
-                                <em>Dica: ${ex.technique}</em>
-                            </div>
-                        </div>
-                        <div class="checkbox-wrapper">
-                            <input type="checkbox" class="custom-checkbox trackable" id="${uniqueId}">
-                        </div>
-                    </div>
-                `;
-            });
-            section.innerHTML = html;
-            contentContainer.appendChild(section);
-        }
+            <div class="ex-inputs">
+               <div class="input-group">
+                 <label>Carga/Tempo</label>
+                 <input type="text" value="${state.val1 || ''}" onchange="save('${key}', 'val1', this.value)">
+               </div>
+               <div class="input-group">
+                 <label>Intensidade</label>
+                 <input type="text" value="${state.val2 || ''}" onchange="save('${key}', 'val2', this.value)">
+               </div>
+            </div>
 
-        function createDietSection(dietData, isActive) {
-            const section = document.createElement('div');
-            section.className = `section ${isActive ? 'active' : ''}`;
-            section.id = dietData.id;
+            <div class="ex-footer">
+               <label class="check-btn">
+                  <input type="checkbox" class="hidden" ${state.done ? 'checked' : ''} onchange="save('${key}', 'done', this.checked)">
+                  <div class="box"></div>
+                  <span style="font-weight:700; font-size:12px; color:${state.done ? 'var(--primary)' : '#666'}">
+                    ${state.done ? 'CONCLUÍDO' : 'MARCAR FEITO'}
+                  </span>
+               </label>
+            </div>
+          </div>
+        `;
+      });
 
-            let html = `<h2>${dietData.title}</h2><p>${dietData.summary}</p>`;
-            html += `<table><thead><tr><th>Refeição</th><th>Alimento</th></tr></thead><tbody>`;
-            
-            dietData.meals.forEach(meal => {
-                html += `
-                    <tr>
-                        <td><strong>${meal.time}</strong><br><small style="color:var(--accent)">${meal.macros}</small></td>
-                        <td>${meal.food}</td>
-                    </tr>
-                `;
-            });
-            
-            html += `</tbody></table>`;
-            
-            // Add Reset Button in Diet Section (or Create a settings tab)
-            html += `<button class="btn-reset" onclick="resetProgress()">♻️ Resetar Progresso da Semana</button>`;
-            
-            section.innerHTML = html;
-            contentContainer.appendChild(section);
-        }
+      // Progress Bar
+      const pct = total === 0 ? 0 : Math.round((done/total)*100);
+      document.getElementById("progressArea").classList.remove("hidden");
+      document.getElementById("progressBar").style.width = pct + "%";
+      document.getElementById("progressLabel").textContent = pct + "%";
+    }
 
-        // --- INTERACTIVITY ---
-        function setupTabs() {
-            const tabs = document.querySelectorAll('.tab-btn');
-            const sections = document.querySelectorAll('.section');
+    function renderDieta(mode) {
+      const container = document.getElementById("dietaList");
+      container.innerHTML = "";
+      
+      // Update Tabs Styles
+      document.querySelectorAll("#view-dieta .sub-tabs button").forEach(b => b.classList.remove("active"));
+      if(mode === 'hoje') document.getElementById("sub-diet-hoje").classList.add("active");
+      if(mode === 'semana') document.getElementById("sub-diet-semana").classList.add("active");
+      if(mode === 'shop') document.getElementById("sub-diet-shop").classList.add("active");
 
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    // Remove active class from all
-                    tabs.forEach(t => t.classList.remove('active'));
-                    sections.forEach(s => s.classList.remove('active'));
+      if(mode === 'hoje') {
+         const dia = document.getElementById("diaSelect").value;
+         const itens = DEFAULT_DIETA.filter(d => d.dia === dia || d.dia === "Todos"); // Simplificação
+         
+         // Agrupar se não achar especifico, mostra mensagem
+         if(itens.length === 0) {
+            // Fallback para dia genérico se não tiver config
+            const fallback = DEFAULT_DIETA.filter(d => d.dia === (dia.includes("Sáb") ? "Sábado" : "Segunda"));
+            renderDietaList(container, fallback);
+         } else {
+            renderDietaList(container, itens);
+         }
+      } 
+      else if (mode === 'semana') {
+          // Visão Macro
+          container.innerHTML = `<div class="card"><div style="font-size:12px; line-height:1.6">
+            <strong>Seg:</strong> Peito/Ombro + CF<br>
+            <strong>Ter:</strong> Costas + CF<br>
+            <strong>Qua:</strong> Perna + CF (Cuidado!)<br>
+            <strong>Qui:</strong> Braços + CF (Cardio)<br>
+            <strong>Sex:</strong> Upper + CF<br>
+            <strong>Sáb:</strong> Posterior + Team WOD<br>
+            <strong>Dom:</strong> OFF
+          </div></div>`;
+      }
+      else if (mode === 'shop') {
+          // Lista de Compras Simples
+          const list = {};
+          DEFAULT_DIETA.forEach(d => {
+             const k = d.item;
+             if(!list[k]) list[k] = 0;
+             list[k]++;
+          });
+          
+          let html = `<div class="card">`;
+          Object.keys(list).sort().forEach(item => {
+             html += `<div class="shop-item" onclick="this.classList.toggle('done')">
+               <div style="flex:1">${item}</div>
+               <div style="color:var(--primary)">+</div>
+             </div>`;
+          });
+          html += `</div>`;
+          container.innerHTML = html;
+      }
+    }
 
-                    // Add to current
-                    tab.classList.add('active');
-                    document.getElementById(tab.dataset.target).classList.add('active');
-                });
-            });
-        }
+    function renderDietaList(container, lista) {
+       const grupos = [...new Set(lista.map(i => i.refeicao))];
+       grupos.forEach(g => {
+          let html = `<div class="card" style="padding:12px">
+            <h4 style="margin:0 0 8px 0; font-size:13px; color:var(--primary)">${g}</h4>`;
+          lista.filter(i => i.refeicao === g).forEach(item => {
+             html += `<div class="diet-row">
+               <span>${item.item}</span>
+               <strong>${item.qtd} ${item.un}</strong>
+             </div>`;
+          });
+          html += `</div>`;
+          container.innerHTML += html;
+       });
+    }
 
-        // --- LOCAL STORAGE LOGIC ---
-        function loadProgress() {
-            const checkboxes = document.querySelectorAll('.trackable');
-            checkboxes.forEach(box => {
-                const savedState = localStorage.getItem(box.id);
-                if (savedState === 'true') {
-                    box.checked = true;
-                }
-                
-                // Add change listener
-                box.addEventListener('change', (e) => {
-                    localStorage.setItem(e.target.id, e.target.checked);
-                });
-            });
-        }
+    function switchMain(tab) {
+      document.getElementById("view-treino").classList.add("hidden");
+      document.getElementById("view-dieta").classList.add("hidden");
+      document.getElementById("tab-treino").classList.remove("active");
+      document.getElementById("tab-dieta").classList.remove("active");
+      
+      document.getElementById("view-" + tab).classList.remove("hidden");
+      document.getElementById("tab-" + tab).classList.add("active");
+    }
 
-        function resetProgress() {
-            if(confirm("Tem certeza que deseja limpar todo o progresso?")) {
-                localStorage.clear();
-                location.reload();
-            }
-        }
+    function filterTreino(filter) {
+       document.querySelectorAll("#view-treino .sub-tabs button").forEach(b => b.classList.remove("active"));
+       document.getElementById("sub-" + filter).classList.add("active");
+       renderTreino();
+    }
 
-        // Run App
-        init();
+    function save(key, field, val) {
+      if(!logs[key]) logs[key] = {};
+      logs[key][field] = val;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(logs));
+      if(field === 'done') renderTreino();
+    }
 
-    </script>
+    // Init
+    init();
+  </script>
 </body>
 </html>
-
