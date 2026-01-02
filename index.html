@@ -2,28 +2,27 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Guerra Fit – Hybrid Athlete Protocol</title>
+  <title>Guerra Fit – Pro Coach V7</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
 
   <style>
-    /* --- DESIGN SYSTEM (Black Ops / Military Theme) --- */
+    /* --- DESIGN SYSTEM (Dark & Gold - Elite) --- */
     :root {
-      --bg-app: #000000;       
-      --bg-card: #111111;      
-      --bg-input: #222222;     
-      --border: #333333;       
+      --bg-app: #050505;       
+      --bg-card: #121212;      
+      --bg-input: #1e1e1e;     
+      --border: #333;       
       
-      --text-main: #e5e5e5;
-      --text-muted: #888888;
+      --text-main: #e0e0e0;
+      --text-muted: #808080;
       
-      --primary: #f59e0b;      /* Amber/Gold (Energia) */
-      --primary-glow: rgba(245, 158, 11, 0.2);
+      --primary: #fbbf24;      /* Gold */
       
-      --accent-strength: #dc2626; /* Red */
-      --accent-crossfit: #3b82f6; /* Blue */
+      --accent-strength: #ef4444; /* Red */
+      --accent-cf: #3b82f6;       /* Blue */
       
       --radius: 8px;
-      --font-stack: 'Inter', system-ui, sans-serif;
+      --font: 'Inter', system-ui, sans-serif;
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -32,14 +31,14 @@
       margin: 0;
       background: var(--bg-app);
       color: var(--text-main);
-      font-family: var(--font-stack);
+      font-family: var(--font);
       font-size: 14px;
       padding-bottom: 90px;
     }
 
     /* HEADER */
     header {
-      background: rgba(0, 0, 0, 0.95);
+      background: rgba(5, 5, 5, 0.98);
       border-bottom: 1px solid var(--border);
       padding: 16px;
       position: sticky;
@@ -49,7 +48,7 @@
     header h1 {
       margin: 0;
       font-size: 18px;
-      font-weight: 900;
+      font-weight: 800;
       letter-spacing: -0.5px;
       text-transform: uppercase;
       color: var(--primary);
@@ -61,11 +60,11 @@
       margin-top: 4px;
     }
 
-    /* PROGRESS BAR */
-    .progress-container {
+    /* PROGRESS */
+    .progress-track {
       margin-top: 12px;
       background: var(--bg-input);
-      height: 8px;
+      height: 6px;
       border-radius: 99px;
       overflow: hidden;
     }
@@ -74,23 +73,15 @@
       background: var(--primary);
       width: 0%;
       transition: width 0.4s ease;
-      box-shadow: 0 0 10px var(--primary-glow);
     }
-    .progress-label {
-      font-size: 10px;
-      color: var(--text-muted);
-      text-align: right;
-      margin-top: 4px;
+    .progress-text {
+      font-size: 10px; color: var(--text-muted); text-align: right; margin-top: 4px;
     }
 
-    main {
-      padding: 16px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
+    main { padding: 16px; max-width: 800px; margin: 0 auto; }
 
-    /* TABS */
-    .main-tabs {
+    /* NAVIGATION */
+    .nav-tabs {
       display: flex;
       background: var(--bg-input);
       padding: 4px;
@@ -100,7 +91,7 @@
       top: 85px;
       z-index: 90;
     }
-    .main-tabs button {
+    .nav-tabs button {
       flex: 1;
       background: transparent;
       border: none;
@@ -108,23 +99,19 @@
       font-size: 13px;
       font-weight: 700;
       color: var(--text-muted);
-      cursor: pointer;
     }
-    .main-tabs button.active {
+    .nav-tabs button.active {
       background: var(--bg-card);
       color: var(--primary);
       border: 1px solid var(--border);
       border-radius: 4px;
     }
 
-    .sub-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 15px;
-      overflow-x: auto;
-      padding-bottom: 4px;
+    /* FILTERS */
+    .filter-scroll {
+      display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 4px;
     }
-    .sub-tabs button {
+    .filter-btn {
       background: var(--bg-card);
       border: 1px solid var(--border);
       color: var(--text-muted);
@@ -132,13 +119,10 @@
       border-radius: 20px;
       font-size: 11px;
       white-space: nowrap;
-      text-transform: uppercase;
       font-weight: 600;
     }
-    .sub-tabs button.active {
-      background: var(--primary);
-      color: #000;
-      border-color: var(--primary);
+    .filter-btn.active {
+      background: var(--primary); color: #000; border-color: var(--primary);
     }
 
     /* CARDS */
@@ -147,313 +131,261 @@
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 16px;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
 
-    /* EXERCISE ITEM */
-    .exercise-card {
+    /* EXERCISE STYLE */
+    .ex-card {
       background: var(--bg-card);
       border-left: 3px solid var(--border);
       padding: 14px;
       margin-bottom: 12px;
       border-radius: 4px;
-      position: relative;
     }
-    .type-strength { border-left-color: var(--accent-strength); }
-    .type-crossfit { border-left-color: var(--accent-crossfit); }
-    .type-warmup { border-left-color: #666; }
+    .st-musc { border-left-color: var(--accent-strength); }
+    .st-cf { border-left-color: var(--accent-cf); }
 
-    .ex-header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 8px;
-    }
-    .ex-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-    .ex-meta {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
+    .ex-head { display: flex; justify-content: space-between; margin-bottom: 8px; align-items: flex-start; }
+    .ex-name { font-size: 15px; font-weight: 700; color: #fff; line-height: 1.3; }
+    .ex-info { font-size: 11px; color: var(--text-muted); margin-top: 2px;}
+    
     .badge {
-      background: var(--bg-input);
-      padding: 2px 6px;
-      border-radius: 3px;
-      font-size: 9px;
-      font-weight: bold;
-      text-transform: uppercase;
+      padding: 2px 6px; border-radius: 3px; font-size: 9px; font-weight: bold; text-transform: uppercase;
+      border: 1px solid #333; display: inline-block;
     }
-    .badge.cf { color: var(--accent-crossfit); border: 1px solid var(--accent-crossfit); }
 
-    .ex-inputs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .input-group label {
-      display: block;
-      font-size: 9px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      margin-bottom: 3px;
-    }
-    input, select {
-      width: 100%;
-      background: #000;
-      border: 1px solid var(--border);
-      color: #fff;
-      padding: 10px;
+    /* VIDEO BUTTON */
+    .video-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 8px;
+      padding: 6px 10px;
+      background: #222;
+      border: 1px solid #444;
       border-radius: 4px;
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .video-btn:hover { background: #333; }
+
+    .ex-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 8px; margin-top: 10px; }
+    .inp-group label { display: block; font-size: 9px; color: #666; text-transform: uppercase; margin-bottom: 2px; }
+    input, select {
+      width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 4px;
     }
     input:focus { border-color: var(--primary); outline: none; }
 
     /* CHECKBOX */
-    .ex-footer {
-      margin-top: 12px;
-      padding-top: 8px;
-      border-top: 1px solid var(--border);
-    }
-    .check-btn {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-    }
-    .box {
-      width: 20px; height: 20px;
-      border: 2px solid #444;
-      display: flex; align-items: center; justify-content: center;
-    }
-    input[type="checkbox"]:checked + .box {
-      background: var(--primary); border-color: var(--primary);
-    }
-    input[type="checkbox"]:checked + .box::after {
-      content: '✓'; color: #000; font-weight: bold; font-size: 12px;
-    }
-    
-    /* DIET & SHOPPING */
-    .diet-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px 0;
-      border-bottom: 1px dashed var(--border);
-      font-size: 13px;
-    }
-    .shop-item {
-      display: flex;
-      align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--bg-input);
-      cursor: pointer;
-    }
-    .shop-item.done { opacity: 0.4; text-decoration: line-through; }
+    .chk-area { margin-top: 10px; padding-top: 10px; border-top: 1px solid #222; }
+    .chk-label { display: flex; align-items: center; gap: 10px; }
+    .box { width: 22px; height: 22px; border: 2px solid #444; display: flex; align-items: center; justify-content: center; border-radius: 4px; }
+    input[type="checkbox"]:checked + .box { background: var(--primary); border-color: var(--primary); }
+    input[type="checkbox"]:checked + .box::after { content: '✓'; color: #000; font-weight: 800; }
 
-    .hidden { display: none !important; }
-    
-    /* WARNING BOX */
-    .warning-box {
-      background: rgba(59, 130, 246, 0.1);
-      border: 1px solid var(--accent-crossfit);
-      color: #93c5fd;
-      padding: 10px;
-      font-size: 11px;
-      border-radius: 6px;
-      margin-bottom: 15px;
-      display: flex;
-      gap: 8px;
-      align-items: center;
+    /* DIET LIST */
+    .diet-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0; border-bottom: 1px solid #222;
     }
+    .diet-grp { font-size: 10px; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; }
+    
+    .hidden { display: none !important; }
   </style>
 </head>
 
 <body>
 
   <header>
-    <h1>GUERRA <span style="color:#fff">HYBRID</span></h1>
-    <small>Bodybuilding (AM) + CrossFit (PM)</small>
+    <h1>GUERRA <span style="color:#fff">PRO V7</span></h1>
+    <small>Treino + Vídeos de Técnica</small>
 
     <div id="progressArea" class="hidden">
-      <div class="progress-container">
+      <div class="progress-track">
         <div id="progressBar" class="progress-fill"></div>
       </div>
-      <div id="progressLabel" class="progress-label">0%</div>
+      <div id="progressText" class="progress-text">0%</div>
     </div>
   </header>
 
   <main>
-    <nav class="main-tabs">
-      <button class="active" onclick="switchMain('treino')" id="tab-treino">TREINO</button>
-      <button onclick="switchMain('dieta')" id="tab-dieta">DIETA</button>
+    <nav class="nav-tabs">
+      <button class="active" onclick="setView('treino')" id="nav-treino">TREINO</button>
+      <button onclick="setView('dieta')" id="nav-dieta">DIETA</button>
     </nav>
 
     <section id="view-treino">
       <div class="card">
-        <div class="ex-inputs" style="margin:0; grid-template-columns: 2fr 1fr;">
-          <div class="input-group">
-            <label>Dia da Semana</label>
+        <div class="ex-grid" style="margin:0; grid-template-columns: 2fr 1fr;">
+          <div class="inp-group">
+            <label>Dia</label>
             <select id="diaSelect" onchange="renderApp()"></select>
           </div>
-          <div class="input-group">
+          <div class="inp-group">
             <label>Data</label>
             <input type="date" id="dataInput" onchange="renderApp()">
           </div>
         </div>
       </div>
 
-      <div id="crossfitWarning" class="warning-box hidden">
-        <span style="font-size:18px">💡</span>
-        <div>
-          <strong>Alerta Híbrido:</strong> Se hoje tiver WOD pesado de perna à noite, reduza 20% das cargas do treino da manhã para não lesionar.
-        </div>
-      </div>
-
-      <div class="sub-tabs">
-        <button class="active" onclick="filterTreino('all')" id="sub-all">Todo</button>
-        <button onclick="filterTreino('musc')" id="sub-musc">Musculação</button>
-        <button onclick="filterTreino('cf')" id="sub-cf">CrossFit</button>
+      <div class="filter-scroll">
+        <button class="filter-btn active" onclick="filterT('all')" id="fil-all">TUDO</button>
+        <button class="filter-btn" onclick="filterT('musc')" id="fil-musc">MUSCULAÇÃO</button>
+        <button class="filter-btn" onclick="filterT('cf')" id="fil-cf">CROSSFIT</button>
       </div>
 
       <div id="treinoList"></div>
     </section>
 
     <section id="view-dieta" class="hidden">
-      <div class="card">
-        <h4 style="margin:0 0 5px 0; color:var(--primary)">Combustível Híbrido</h4>
-        <p style="font-size:11px; color:var(--text-muted); margin:0;">
-          Você precisa de +500kcal nos dias de treino duplo. Não pule o lanche da tarde.
+      <div class="card" style="border-left: 3px solid var(--primary);">
+        <h4 style="margin:0 0 5px 0; color:#fff">Almoço & Jantar Garantidos</h4>
+        <p style="font-size:11px; color:#888; margin:0;">
+          A lista agora exibe todas as refeições do dia selecionado.
         </p>
       </div>
 
-      <div class="sub-tabs">
-        <button class="active" onclick="renderDieta('hoje')" id="sub-diet-hoje">Hoje</button>
-        <button onclick="renderDieta('semana')" id="sub-diet-semana">Semana</button>
-        <button onclick="renderDieta('shop')" id="sub-diet-shop">Mercado</button>
+      <div class="filter-scroll">
+        <button class="filter-btn active" onclick="renderDieta('hoje')" id="fil-diet-hoje">HOJE</button>
+        <button class="filter-btn" onclick="renderDieta('semana')" id="fil-diet-semana">SEMANA</button>
+        <button class="filter-btn" onclick="renderDieta('shop')" id="fil-diet-shop">COMPRAS</button>
       </div>
 
       <div id="dietaList"></div>
     </section>
-
   </main>
 
   <script>
     // =========================================================
-    // PROTOCOLO HÍBRIDO (MUSCULAÇÃO MANHÃ + CROSSFIT NOITE)
+    // 1. TREINOS COMPLETOS + LINKS DE VÍDEO (YOUTUBE QUERY)
     // =========================================================
-    const DEFAULT_TREINOS = [
-      // --- SEGUNDA: PEITO & OMBRO (Preserva perna e costas para WODs comuns de Seg) ---
-      { dia: "Segunda", cat: "musc", exercicio: "Aquecimento: Manguito", series: "2x15", obs: "Essencial." },
-      { dia: "Segunda", cat: "musc", exercicio: "Supino Inclinado (Halter)", series: "4x8-10", obs: "Foco Superior." },
-      { dia: "Segunda", cat: "musc", exercicio: "Supino Reto Máquina", series: "3x10-12", obs: "Carga Controlada." },
-      { dia: "Segunda", cat: "musc", exercicio: "Desenvolvimento Militar", series: "4x8-10", obs: "Ombros fortes." },
-      { dia: "Segunda", cat: "musc", exercicio: "Elevação Lateral", series: "4x15", obs: "Falha." },
-      { dia: "Segunda", cat: "cf", exercicio: "CrossFit (Noite)", series: "WOD", obs: "Se o WOD tiver muito 'Push', pegue leve de manhã." },
+    // Eu uso buscas automáticas para garantir que o link nunca quebre
+    // e mostre as melhores opções (Twin, Cariani, etc)
+    
+    const DB_TREINOS = [
+      // --- SEGUNDA: PEITO & OMBRO LATERAL ---
+      { dia: "Segunda", tipo: "musc", nome: "Aquecimento: Manguito", serie: "2x15", obs: "Preparo.", link: "aquecimento manguito rotador externo" },
+      { dia: "Segunda", tipo: "musc", nome: "Supino Inclinado (Halter)", serie: "4x8-12", obs: "Foco Superior. Pesado.", link: "execucao supino inclinado halter" },
+      { dia: "Segunda", tipo: "musc", nome: "Supino Reto (Máquina)", serie: "3x10-12", obs: "Carga Constante.", link: "execucao supino reto maquina articulada" },
+      { dia: "Segunda", tipo: "musc", nome: "Crucifixo Máquina (Peck Deck)", serie: "3x12-15", obs: "Pico de contração (Isometria 1s).", link: "execucao peck deck voador" },
+      { dia: "Segunda", tipo: "musc", nome: "Crossover Polia Alta", serie: "3x15", obs: "Foco parte inferior.", link: "execucao crossover polia alta" },
+      { dia: "Segunda", tipo: "musc", nome: "Desenvolvimento Militar", serie: "4x8-10", obs: "Ombro Geral.", link: "execucao desenvolvimento militar halter" },
+      { dia: "Segunda", tipo: "musc", nome: "Elevação Lateral (Halter)", serie: "4x12-15", obs: "Drop-set na última.", link: "execucao elevacao lateral correta" },
+      { dia: "Segunda", tipo: "cf", nome: "CrossFit (Noite)", serie: "WOD", obs: "Cardio/Técnica (Carga Leve).", link: "crossfit treino metabolico" },
 
-      // --- TERÇA: COSTAS (ESPESSURA) (Rack Pull preserva perna) ---
-      { dia: "Terça", cat: "musc", exercicio: "Rack Pull (Terra Parcial)", series: "3x5-6", obs: "Foco Costas. Barra no joelho." },
-      { dia: "Terça", cat: "musc", exercicio: "Puxada Alta", series: "4x10", obs: "Aberto." },
-      { dia: "Terça", cat: "musc", exercicio: "Remada Curvada", series: "3x12", obs: "Esmaga." },
-      { dia: "Terça", cat: "musc", exercicio: "Crucifixo Inverso", series: "3x15", obs: "Posterior de Ombro." },
-      { dia: "Terça", cat: "cf", exercicio: "CrossFit (Noite)", series: "WOD", obs: "Foco metabólico." },
+      // --- TERÇA: COSTAS COMPLETO & POSTERIOR OMBRO ---
+      { dia: "Terça", tipo: "musc", nome: "Rack Pull (Terra Parcial)", serie: "3x6-8", obs: "Espessura. Barra no joelho.", link: "como fazer rack pull costas" },
+      { dia: "Terça", tipo: "musc", nome: "Puxada Alta (Pegada Aberta)", serie: "4x10-12", obs: "Largura Dorsal.", link: "execucao puxada alta frente" },
+      { dia: "Terça", tipo: "musc", nome: "Remada Curvada (Barra)", serie: "4x8-10", obs: "Tronco firme.", link: "execucao remada curvada barra" },
+      { dia: "Terça", tipo: "musc", nome: "Remada Unilateral (Serrote)", serie: "3x12", obs: "Correção de assimetria.", link: "execucao remada serrote halter" },
+      { dia: "Terça", tipo: "musc", nome: "Pulldown (Polia)", serie: "3x15", obs: "Finalizador Dorsal.", link: "execucao pulldown polia corda" },
+      { dia: "Terça", tipo: "musc", nome: "Crucifixo Inverso / Face Pull", serie: "4x15", obs: "Saúde do ombro.", link: "execucao face pull polia" },
+      { dia: "Terça", tipo: "cf", nome: "CrossFit (Noite)", serie: "WOD", obs: "Cardio/Técnica (Carga Leve).", link: "crossfit technique practice" },
 
-      // --- QUARTA: PERNAS (Power) ---
-      // *Cuidado extremo se tiver CF a noite*
-      { dia: "Quarta", cat: "musc", exercicio: "Mobilidade Quadril", series: "5 min", obs: "Soltar." },
-      { dia: "Quarta", cat: "musc", exercicio: "Agachamento Livre", series: "4x6-8", obs: "Se tiver WOD de perna a noite, reduza carga 30%." },
-      { dia: "Quarta", cat: "musc", exercicio: "Leg Press 45", series: "3x12", obs: "Amplitude." },
-      { dia: "Quarta", cat: "musc", exercicio: "Cadeira Extensora", series: "3x15", obs: "Pump." },
-      { dia: "Quarta", cat: "cf", exercicio: "CrossFit (Noite)", series: "WOD", obs: "Se fez perna pesado de manhã, escale o WOD." },
+      // --- QUARTA: PERNAS (DESTRUIÇÃO TOTAL) ---
+      { dia: "Quarta", tipo: "musc", nome: "Mobilidade Quadril/Tornozelo", serie: "5 min", obs: "Essencial.", link: "mobilidade quadril agachamento" },
+      { dia: "Quarta", tipo: "musc", nome: "Agachamento Livre", serie: "4x6-10", obs: "Pesado. Amplitude máxima.", link: "execucao agachamento livre correta" },
+      { dia: "Quarta", tipo: "musc", nome: "Leg Press 45", serie: "4x10-12", obs: "Pés médios.", link: "execucao leg press 45" },
+      { dia: "Quarta", tipo: "musc", nome: "Afundo / Búlgaro", serie: "3x10 cada", obs: "Construção de Glúteo.", link: "execucao agachamento bulgaro" },
+      { dia: "Quarta", tipo: "musc", nome: "Cadeira Extensora", serie: "4x15", obs: "Rest-pause na última.", link: "execucao cadeira extensora" },
+      { dia: "Quarta", tipo: "musc", nome: "Cadeira Adutora", serie: "3x15", obs: "Estabilidade.", link: "execucao cadeira adutora" },
+      { dia: "Quarta", tipo: "cf", nome: "CrossFit (Noite)", serie: "WOD", obs: "Active Recovery.", link: "crossfit active recovery" },
 
-      // --- QUINTA: BRAÇOS (Recuperação Ativa do Tronco) ---
-      // Antigo "Descanso", agora Braços para aguentar "Todo dia"
-      { dia: "Quinta", cat: "musc", exercicio: "Rosca Direta", series: "4x10", obs: "Bíceps." },
-      { dia: "Quinta", cat: "musc", exercicio: "Tríceps Testa", series: "4x10", obs: "Tríceps." },
-      { dia: "Quinta", cat: "musc", exercicio: "Rosca Martelo", series: "3x12", obs: "Braquial." },
-      { dia: "Quinta", cat: "musc", exercicio: "Tríceps Corda", series: "3x12", obs: "Esmaga." },
-      { dia: "Quinta", cat: "cf", exercicio: "CrossFit (Noite)", series: "WOD", obs: "Dia bom para cardio longo (Endurance)." },
+      // --- QUINTA: BRAÇOS COMPLETOS ---
+      { dia: "Quinta", tipo: "musc", nome: "Rosca Direta (Barra W)", serie: "4x8-12", obs: "Carga.", link: "execucao rosca direta barra w" },
+      { dia: "Quinta", tipo: "musc", nome: "Tríceps Testa (Barra W)", serie: "4x10-12", obs: "Cabeça longa.", link: "execucao triceps testa barra w" },
+      { dia: "Quinta", tipo: "musc", nome: "Rosca Scott (Máquina/Halter)", serie: "3x12", obs: "Pico.", link: "execucao rosca scott" },
+      { dia: "Quinta", tipo: "musc", nome: "Tríceps Francês", serie: "3x12", obs: "Alongamento.", link: "execucao triceps frances halter" },
+      { dia: "Quinta", tipo: "musc", nome: "Rosca Martelo", serie: "3x10", obs: "Braquial.", link: "execucao rosca martelo" },
+      { dia: "Quinta", tipo: "musc", nome: "Tríceps Corda", serie: "3x15", obs: "Pump final.", link: "execucao triceps corda" },
+      { dia: "Quinta", tipo: "musc", nome: "Flexão de Punho", serie: "3xMax", obs: "Antebraço.", link: "execucao flexao de punho antebraco" },
+      { dia: "Quinta", tipo: "cf", nome: "CrossFit (Noite)", serie: "WOD", obs: "Cardio Longo.", link: "crossfit endurance wod" },
 
-      // --- SEXTA: UPPER COMPLETO (Pump) ---
-      { dia: "Sexta", cat: "musc", exercicio: "Supino Máquina", series: "3x12", obs: "Peito." },
-      { dia: "Sexta", cat: "musc", exercicio: "Puxada Triângulo", series: "3x12", obs: "Costas." },
-      { dia: "Sexta", cat: "musc", exercicio: "Elev. Lateral + Frontal", series: "3x12", obs: "Ombros." },
-      { dia: "Sexta", cat: "cf", exercicio: "CrossFit (Noite)", series: "WOD", obs: "Sexta geralmente é pesado. Coma bem." },
+      // --- SEXTA: OMBROS COMPLETO + PEITO SUPERIOR ---
+      { dia: "Sexta", tipo: "musc", nome: "Desenvolvimento Arnold", serie: "4x10", obs: "Rotação completa.", link: "execucao desenvolvimento arnold" },
+      { dia: "Sexta", tipo: "musc", nome: "Elevação Frontal", serie: "3x12", obs: "Detalhe.", link: "execucao elevacao frontal halter" },
+      { dia: "Sexta", tipo: "musc", nome: "Remada Alta (Polia/Barra)", serie: "3x12", obs: "Trapézio/Ombro.", link: "execucao remada alta pegada aberta" },
+      { dia: "Sexta", tipo: "musc", nome: "Encolhimento (Halter)", serie: "4x15", obs: "Trapézio.", link: "execucao encolhimento ombros halter" },
+      { dia: "Sexta", tipo: "musc", nome: "Supino Inclinado Máquina", serie: "3x12", obs: "Volume extra peito.", link: "execucao supino inclinado maquina" },
+      { dia: "Sexta", tipo: "cf", nome: "CrossFit (Noite)", serie: "WOD", obs: "Sexta-feira animada.", link: "crossfit wod motivation" },
 
-      // --- SÁBADO: POSTERIOR DE COXA (Stiff) ---
-      { dia: "Sábado", cat: "musc", exercicio: "Stiff", series: "4x10", obs: "Posterior e Glúteo." },
-      { dia: "Sábado", cat: "musc", exercicio: "Mesa Flexora", series: "4x12", obs: "Isolado." },
-      { dia: "Sábado", cat: "musc", exercicio: "Panturrilhas", series: "5x15", obs: "Semana toda esquecida." },
-      { dia: "Sábado", cat: "cf", exercicio: "Aulão de Sábado", series: "Team WOD", obs: "Diversão." },
+      // --- SÁBADO: POSTERIOR DE COXA & PANTURRILHA ---
+      { dia: "Sábado", tipo: "musc", nome: "Stiff", serie: "4x8-10", obs: "Alongamento máx.", link: "como fazer stiff corretamente renato cariani" },
+      { dia: "Sábado", tipo: "musc", nome: "Mesa Flexora", serie: "4x12-15", obs: "Falha total.", link: "execucao mesa flexora" },
+      { dia: "Sábado", tipo: "musc", nome: "Cadeira Flexora (se tiver)", serie: "3x15", obs: "Isolado.", link: "execucao cadeira flexora" },
+      { dia: "Sábado", tipo: "musc", nome: "Panturrilha em Pé", serie: "5x12", obs: "Pesado.", link: "execucao gemeos em pe" },
+      { dia: "Sábado", tipo: "musc", nome: "Panturrilha Sentado", serie: "4x15", obs: "Solear.", link: "execucao gemeos sentado" },
+      { dia: "Sábado", tipo: "cf", nome: "Aulão Sábado", serie: "Team WOD", obs: "Diversão.", link: "crossfit team wod" },
 
-      // --- DOMINGO: REST ---
-      { dia: "Domingo", cat: "musc", exercicio: "Descanso Total", series: "-", obs: "Obrigatório para SNC." }
+      // --- DOMINGO ---
+      { dia: "Domingo", tipo: "musc", nome: "Descanso Total", serie: "-", obs: "Recuperação.", link: "importancia descanso hipertrofia" }
     ];
 
-    const DEFAULT_DIETA = [
-      // REFEIÇÃO 1 (04:30) - PRÉ TREINO MUSCULAÇÃO
-      { dia: "Segunda", refeicao: "1. Pré-Musculação (04:30)", item: "Overnight Oats (60g Aveia + Whey)", qtd: 1, un: "pote", grupo: "Manhã" },
-      { dia: "Segunda", refeicao: "1. Pré-Musculação (04:30)", item: "Banana", qtd: 1, un: "un", grupo: "Manhã" },
-      // (Replique a lógica de dias da semana se quiser variar)
-      { dia: "Terça", refeicao: "1. Pré-Musculação (04:30)", item: "Ovos Mexidos (4) + Pão", qtd: 1, un: "kit", grupo: "Manhã" },
-      { dia: "Quarta", refeicao: "1. Pré-Musculação (04:30)", item: "Overnight Oats", qtd: 1, un: "pote", grupo: "Manhã" },
-      { dia: "Quinta", refeicao: "1. Pré-Musculação (04:30)", item: "Ovos Mexidos + Pão", qtd: 1, un: "kit", grupo: "Manhã" },
-      { dia: "Sexta", refeicao: "1. Pré-Musculação (04:30)", item: "Vitamina Whey + Aveia", qtd: 1, un: "copo", grupo: "Manhã" },
+    // =========================================================
+    // 2. DIETA COM ALMOÇO GARANTIDO
+    // =========================================================
+    const DB_DIETA = [];
+    const diasSemana = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"];
 
-      // REFEIÇÃO 2 (08:30) - PÓS TREINO
-      { dia: "Segunda", refeicao: "2. Pós-Musculação (08:30)", item: "Iogurte + Whey + Fruta", qtd: 1, un: "kit", grupo: "Manhã" },
-      { dia: "Terça", refeicao: "2. Pós-Musculação (08:30)", item: "Iogurte + Whey + Fruta", qtd: 1, un: "kit", grupo: "Manhã" },
-      { dia: "Quarta", refeicao: "2. Pós-Musculação (08:30)", item: "Iogurte + Whey + Fruta", qtd: 1, un: "kit", grupo: "Manhã" },
-      { dia: "Quinta", refeicao: "2. Pós-Musculação (08:30)", item: "Sanduíche Pasta Amendoim", qtd: 1, un: "un", grupo: "Manhã" },
-      { dia: "Sexta", refeicao: "2. Pós-Musculação (08:30)", item: "Iogurte + Whey + Fruta", qtd: 1, un: "kit", grupo: "Manhã" },
-
-      // REFEIÇÃO 3 (12:30) - ALMOÇO REFORÇADO
-      { dia: "Segunda", refeicao: "3. Almoço", item: "Carne/Frango (200g) + Arroz (300g)", qtd: 1, un: "marmita", grupo: "Almoço" },
-      { dia: "Segunda", refeicao: "3. Almoço", item: "Vegetais", qtd: 1, un: "porção", grupo: "Almoço" },
-      // ... (Pode simplificar visualização na lista) ...
-
-      // REFEIÇÃO 4 (17:30) - PRÉ CROSSFIT (NOVA E CRUCIAL)
-      { dia: "Segunda", refeicao: "4. Pré-CrossFit (17:30)", item: "Pão com Doce de Leite ou Banana", qtd: 2, un: "fatias", grupo: "Tarde" },
-      { dia: "Segunda", refeicao: "4. Pré-CrossFit (17:30)", item: "Whey Protein (se não for jantar logo)", qtd: 1, un: "dose", grupo: "Tarde" },
-      { dia: "Terça", refeicao: "4. Pré-CrossFit (17:30)", item: "Banana + Aveia + Mel", qtd: 1, un: "bowl", grupo: "Tarde" },
-      { dia: "Quarta", refeicao: "4. Pré-CrossFit (17:30)", item: "Pão + Atum/Frango", qtd: 1, un: "sanduiche", grupo: "Tarde" },
-      { dia: "Quinta", refeicao: "4. Pré-CrossFit (17:30)", item: "Barra de Proteína", qtd: 1, un: "un", grupo: "Tarde" },
-      { dia: "Sexta", refeicao: "4. Pré-CrossFit (17:30)", item: "Açaí (sem exagero)", qtd: 300, un: "ml", grupo: "Tarde" },
-
-      // REFEIÇÃO 5 (21:00) - JANTAR PÓS-WAR
-      { dia: "Segunda", refeicao: "5. Jantar", item: "Omelete Grande + Salada", qtd: 1, un: "prato", grupo: "Noite" },
-      { dia: "Terça", refeicao: "5. Jantar", item: "Frango + Batata", qtd: 1, un: "prato", grupo: "Noite" },
-      { dia: "Quarta", refeicao: "5. Jantar", item: "Carne Moída + Arroz", qtd: 1, un: "prato", grupo: "Noite" },
-      { dia: "Quinta", refeicao: "5. Jantar", item: "Ovos Cozidos + Salada", qtd: 1, un: "prato", grupo: "Noite" },
-      { dia: "Sexta", refeicao: "5. Jantar", item: "Livre (Coma bem!)", qtd: 1, un: "prato", grupo: "Noite" },
+    diasSemana.forEach(dia => {
+      // 1. Manhã
+      DB_DIETA.push({ dia: dia, ref: "1. Café/Pré-Treino (04:30)", item: "Overnight Oats (60g Aveia + Whey)", qtd: "1 pote" });
+      DB_DIETA.push({ dia: dia, ref: "1. Café/Pré-Treino (04:30)", item: "Banana Prata", qtd: "1 un" });
       
-      // SÁBADO E DOMINGO
-      { dia: "Sábado", refeicao: "Geral", item: "High Carb (Pão, Macarrão, Carne)", qtd: 1, un: "dia", grupo: "FDS" },
-      { dia: "Domingo", refeicao: "Geral", item: "Descanso / Churrasco / Família", qtd: 1, un: "dia", grupo: "FDS" }
-    ];
+      // 2. Pós-Treino
+      DB_DIETA.push({ dia: dia, ref: "2. Pós-Treino (08:30)", item: "Iogurte Natural + Whey + Fruta", qtd: "1 kit" });
 
-    // LÓGICA DO APP
-    const STORAGE_KEY = "guerra_fit_v5";
-    let logs = {};
+      // 3. Almoço
+      let almocoProt = "Carne Moída (200g)";
+      let almocoCarb = "Arroz (300g)";
+      if(dia === "Terça" || dia === "Quinta") { almocoProt = "Frango Cubos (200g)"; almocoCarb = "Purê Batata (300g)"; }
+      if(dia === "Sexta") { almocoProt = "Peixe/Carne (200g)"; almocoCarb = "Batata Assada (300g)"; }
+
+      DB_DIETA.push({ dia: dia, ref: "3. Almoço (12:30)", item: almocoProt, qtd: "1 un" });
+      DB_DIETA.push({ dia: dia, ref: "3. Almoço (12:30)", item: almocoCarb, qtd: "1 un" });
+      DB_DIETA.push({ dia: dia, ref: "3. Almoço (12:30)", item: "Legumes/Salada", qtd: "À vontade" });
+
+      // 4. Pré-CrossFit
+      DB_DIETA.push({ dia: dia, ref: "4. Pré-CrossFit (17:30)", item: "Pão com Doce de Leite/Fruta", qtd: "2 fat" });
+      
+      // 5. Jantar
+      DB_DIETA.push({ dia: dia, ref: "5. Jantar (21:00)", item: "Omelete (3 ovos) ou Frango", qtd: "1 prato" });
+      DB_DIETA.push({ dia: dia, ref: "5. Jantar (21:00)", item: "Salada + Azeite", qtd: "1 bowl" });
+    });
+
+    // FIM DE SEMANA
+    DB_DIETA.push({ dia: "Sábado", ref: "Refeições FDS", item: "Café Reforçado (Pão + Ovos)", qtd: "1x" });
+    DB_DIETA.push({ dia: "Sábado", ref: "Refeições FDS", item: "Almoço Livre (Feijoada/Churrasco)", qtd: "1x" });
+    DB_DIETA.push({ dia: "Sábado", ref: "Refeições FDS", item: "Jantar Hambúrguer", qtd: "1x" });
+    
+    DB_DIETA.push({ dia: "Domingo", ref: "Refeições FDS", item: "Manter Proteína Alta", qtd: "Dia todo" });
+    DB_DIETA.push({ dia: "Domingo", ref: "Refeições FDS", item: "Almoço em Família", qtd: "1x" });
+
+    // =========================================================
+    // 3. APP LOGIC
+    // =========================================================
+    const KEY = "guerra_fit_v7";
+    let dataStore = {};
 
     function init() {
-      try {
-        logs = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-      } catch { logs = {}; }
+      try { dataStore = JSON.parse(localStorage.getItem(KEY)) || {}; } catch { dataStore = {}; }
+      
+      const now = new Date();
+      const iso = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split("T")[0];
+      document.getElementById("dataInput").value = iso;
 
-      // Data Hoje
-      const hoje = new Date();
-      const localISO = new Date(hoje.getTime() - (hoje.getTimezoneOffset() * 60000)).toISOString().slice(0, 10);
-      document.getElementById("dataInput").value = localISO;
-
-      // Select Dias
-      const dias = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
+      const days = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
       const sel = document.getElementById("diaSelect");
-      dias.forEach(d => {
+      days.forEach(d => {
         const opt = document.createElement("option");
-        opt.value = d; opt.textContent = d; sel.appendChild(opt);
+        opt.value = d; opt.text = d; sel.add(opt);
       });
-      sel.value = dias[hoje.getDay() === 0 ? 6 : hoje.getDay() - 1]; // Ajuste Domingo=0
+      let currentDayIdx = now.getDay(); 
+      if(currentDayIdx === 0) currentDayIdx = 7; 
+      sel.value = days[currentDayIdx-1];
 
       renderApp();
     }
@@ -466,66 +398,66 @@
     function renderTreino() {
       const dia = document.getElementById("diaSelect").value;
       const data = document.getElementById("dataInput").value;
-      const container = document.getElementById("treinoList");
-      const filtro = document.querySelector("#view-treino .sub-tabs .active").id;
+      const list = document.getElementById("treinoList");
+      const filter = document.querySelector("#view-treino .filter-scroll .active").id;
 
-      container.innerHTML = "";
-
-      // Mostra aviso de conflito Musc/Crossfit
-      const aviso = document.getElementById("crossfitWarning");
-      aviso.classList.remove("hidden");
-      if(dia === "Domingo") aviso.classList.add("hidden");
-
-      const treinos = DEFAULT_TREINOS.filter(t => t.dia === dia);
+      list.innerHTML = "";
+      
+      const treinos = DB_TREINOS.filter(t => t.dia === dia);
       
       if(treinos.length === 0) {
-         container.innerHTML = `<div class="card text-center" style="color:#666">Descanso.</div>`;
-         return;
+        list.innerHTML = `<div class="card" style="text-align:center; color:#666">Descanso Regenerativo.</div>`;
+        document.getElementById("progressArea").classList.add("hidden");
+        return;
       }
 
-      let total = 0, done = 0;
+      document.getElementById("progressArea").classList.remove("hidden");
+      let total=0, done=0;
 
-      treinos.forEach((t, i) => {
-        // Filtros
-        if(filtro === "sub-musc" && t.cat !== "musc") return;
-        if(filtro === "sub-cf" && t.cat !== "cf") return;
+      treinos.forEach((t, idx) => {
+        if(filter === 'fil-musc' && t.tipo !== 'musc') return;
+        if(filter === 'fil-cf' && t.tipo !== 'cf') return;
 
-        const key = `${data}_${dia}_${i}`;
-        const state = logs[key] || {};
-        
         total++;
-        if(state.done) done++;
+        const id = `${data}_${dia}_${idx}`;
+        const st = dataStore[id] || {};
+        if(st.done) done++;
 
-        const typeClass = t.cat === 'musc' ? 'type-strength' : 'type-crossfit';
-        const badgeHtml = t.cat === 'cf' ? '<span class="badge cf">CROSSFIT</span>' : '<span class="badge">BODYBUILDING</span>';
+        const styleClass = t.tipo === 'musc' ? 'st-musc' : 'st-cf';
+        const badge = t.tipo === 'musc' ? 'BODYBUILDING' : 'METABÓLICO';
+        const badgeColor = t.tipo === 'musc' ? '#ef4444' : '#3b82f6';
+        
+        // Link Gerado Automaticamente para Busca no YouTube
+        const linkQuery = t.link ? `https://www.youtube.com/results?search_query=${encodeURIComponent(t.link)}` : '#';
 
-        container.innerHTML += `
-          <div class="exercise-card ${typeClass}">
-            <div class="ex-header">
+        list.innerHTML += `
+          <div class="ex-card ${styleClass}">
+            <div class="ex-head">
               <div>
-                <div class="ex-title">${t.exercicio}</div>
-                <div class="ex-meta">${t.series} • ${t.obs}</div>
+                <div class="ex-name">${t.nome}</div>
+                <div class="ex-info">${t.serie} • ${t.obs}</div>
+                ${t.link ? `<a href="${linkQuery}" target="_blank" class="video-btn">🎥 Ver Técnica</a>` : ''}
               </div>
-              ${badgeHtml}
+              <div><span class="badge" style="color:${badgeColor}; border-color:${badgeColor}">${badge}</span></div>
             </div>
             
-            <div class="ex-inputs">
-               <div class="input-group">
-                 <label>Carga/Tempo</label>
-                 <input type="text" value="${state.val1 || ''}" onchange="save('${key}', 'val1', this.value)">
+            <div class="ex-grid">
+               <div class="inp-group">
+                 <label>Carga (Kg)</label>
+                 <input type="number" value="${st.val1 || ''}" onchange="save('${id}', 'val1', this.value)">
                </div>
-               <div class="input-group">
-                 <label>Intensidade</label>
-                 <input type="text" value="${state.val2 || ''}" onchange="save('${key}', 'val2', this.value)">
+               <div class="inp-group">
+                 <label>RPE/Reps</label>
+                 <input type="text" value="${st.val2 || ''}" onchange="save('${id}', 'val2', this.value)">
                </div>
             </div>
 
-            <div class="ex-footer">
-               <label class="check-btn">
-                  <input type="checkbox" class="hidden" ${state.done ? 'checked' : ''} onchange="save('${key}', 'done', this.checked)">
+            <div class="chk-area">
+               <label class="chk-label">
+                  <input type="checkbox" class="hidden" ${st.done ? 'checked' : ''} onchange="save('${id}', 'done', this.checked)">
                   <div class="box"></div>
-                  <span style="font-weight:700; font-size:12px; color:${state.done ? 'var(--primary)' : '#666'}">
-                    ${state.done ? 'CONCLUÍDO' : 'MARCAR FEITO'}
+                  <span style="font-weight:700; color:${st.done ? 'var(--primary)' : '#666'}">
+                    ${st.done ? 'CONCLUÍDO' : 'MARCAR'}
                   </span>
                </label>
             </div>
@@ -533,110 +465,94 @@
         `;
       });
 
-      // Progress Bar
-      const pct = total === 0 ? 0 : Math.round((done/total)*100);
-      document.getElementById("progressArea").classList.remove("hidden");
+      const pct = total ? Math.round((done/total)*100) : 0;
       document.getElementById("progressBar").style.width = pct + "%";
-      document.getElementById("progressLabel").textContent = pct + "%";
+      document.getElementById("progressText").innerText = pct + "%";
     }
 
     function renderDieta(mode) {
-      const container = document.getElementById("dietaList");
-      container.innerHTML = "";
-      
-      // Update Tabs Styles
-      document.querySelectorAll("#view-dieta .sub-tabs button").forEach(b => b.classList.remove("active"));
-      if(mode === 'hoje') document.getElementById("sub-diet-hoje").classList.add("active");
-      if(mode === 'semana') document.getElementById("sub-diet-semana").classList.add("active");
-      if(mode === 'shop') document.getElementById("sub-diet-shop").classList.add("active");
+      document.querySelectorAll("#view-dieta .filter-btn").forEach(b => b.classList.remove("active"));
+      if(mode === 'hoje') document.getElementById("fil-diet-hoje").classList.add("active");
+      if(mode === 'semana') document.getElementById("fil-diet-semana").classList.add("active");
+      if(mode === 'shop') document.getElementById("fil-diet-shop").classList.add("active");
+
+      const list = document.getElementById("dietaList");
+      list.innerHTML = "";
 
       if(mode === 'hoje') {
          const dia = document.getElementById("diaSelect").value;
-         const itens = DEFAULT_DIETA.filter(d => d.dia === dia || d.dia === "Todos"); // Simplificação
+         const itens = DB_DIETA.filter(d => d.dia === dia);
          
-         // Agrupar se não achar especifico, mostra mensagem
          if(itens.length === 0) {
-            // Fallback para dia genérico se não tiver config
-            const fallback = DEFAULT_DIETA.filter(d => d.dia === (dia.includes("Sáb") ? "Sábado" : "Segunda"));
-            renderDietaList(container, fallback);
-         } else {
-            renderDietaList(container, itens);
+           list.innerHTML = `<div class="card">Sem dieta específica. Siga os macros.</div>`;
+           return;
          }
-      } 
+
+         const refs = [...new Set(itens.map(i => i.ref))];
+         refs.forEach(r => {
+            let html = `<div class="card"><div class="diet-grp">${r}</div>`;
+            itens.filter(i => i.ref === r).forEach(item => {
+               html += `<div class="diet-item">
+                 <span>${item.item}</span>
+                 <strong style="color:#fff">${item.qtd}</strong>
+               </div>`;
+            });
+            html += `</div>`;
+            list.innerHTML += html;
+         });
+      }
       else if (mode === 'semana') {
-          // Visão Macro
-          container.innerHTML = `<div class="card"><div style="font-size:12px; line-height:1.6">
-            <strong>Seg:</strong> Peito/Ombro + CF<br>
-            <strong>Ter:</strong> Costas + CF<br>
-            <strong>Qua:</strong> Perna + CF (Cuidado!)<br>
-            <strong>Qui:</strong> Braços + CF (Cardio)<br>
-            <strong>Sex:</strong> Upper + CF<br>
-            <strong>Sáb:</strong> Posterior + Team WOD<br>
-            <strong>Dom:</strong> OFF
-          </div></div>`;
+         const dias = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+         dias.forEach(d => {
+            const lunch = DB_DIETA.find(i => i.dia === d && i.ref.includes("Almoço"))?.item || "Variado";
+            list.innerHTML += `<div class="card" style="padding:10px">
+              <strong style="color:var(--primary)">${d}</strong><br>
+              <span style="font-size:12px; color:#aaa">Almoço: ${lunch}</span>
+            </div>`;
+         });
       }
       else if (mode === 'shop') {
-          // Lista de Compras Simples
-          const list = {};
-          DEFAULT_DIETA.forEach(d => {
-             const k = d.item;
-             if(!list[k]) list[k] = 0;
-             list[k]++;
-          });
-          
-          let html = `<div class="card">`;
-          Object.keys(list).sort().forEach(item => {
-             html += `<div class="shop-item" onclick="this.classList.toggle('done')">
-               <div style="flex:1">${item}</div>
-               <div style="color:var(--primary)">+</div>
-             </div>`;
-          });
-          html += `</div>`;
-          container.innerHTML = html;
+         const shopping = {};
+         DB_DIETA.forEach(i => {
+            const k = i.item;
+            shopping[k] = (shopping[k] || 0) + 1;
+         });
+         let html = `<div class="card">`;
+         Object.keys(shopping).sort().forEach(k => {
+            html += `<div class="diet-item" onclick="this.style.opacity = this.style.opacity === '0.3' ? '1' : '0.3'">
+               <span>${k}</span>
+               <span style="color:var(--primary)">+</span>
+            </div>`;
+         });
+         html += `</div>`;
+         list.innerHTML = html;
       }
     }
 
-    function renderDietaList(container, lista) {
-       const grupos = [...new Set(lista.map(i => i.refeicao))];
-       grupos.forEach(g => {
-          let html = `<div class="card" style="padding:12px">
-            <h4 style="margin:0 0 8px 0; font-size:13px; color:var(--primary)">${g}</h4>`;
-          lista.filter(i => i.refeicao === g).forEach(item => {
-             html += `<div class="diet-row">
-               <span>${item.item}</span>
-               <strong>${item.qtd} ${item.un}</strong>
-             </div>`;
-          });
-          html += `</div>`;
-          container.innerHTML += html;
-       });
-    }
-
-    function switchMain(tab) {
+    function setView(v) {
       document.getElementById("view-treino").classList.add("hidden");
       document.getElementById("view-dieta").classList.add("hidden");
-      document.getElementById("tab-treino").classList.remove("active");
-      document.getElementById("tab-dieta").classList.remove("active");
-      
-      document.getElementById("view-" + tab).classList.remove("hidden");
-      document.getElementById("tab-" + tab).classList.add("active");
+      document.getElementById("nav-treino").classList.remove("active");
+      document.getElementById("nav-dieta").classList.remove("active");
+
+      document.getElementById("view-"+v).classList.remove("hidden");
+      document.getElementById("nav-"+v).classList.add("active");
     }
 
-    function filterTreino(filter) {
-       document.querySelectorAll("#view-treino .sub-tabs button").forEach(b => b.classList.remove("active"));
-       document.getElementById("sub-" + filter).classList.add("active");
-       renderTreino();
+    function filterT(f) {
+      document.querySelectorAll("#view-treino .filter-btn").forEach(b => b.classList.remove("active"));
+      document.getElementById("fil-"+f).classList.add("active");
+      renderTreino();
     }
 
-    function save(key, field, val) {
-      if(!logs[key]) logs[key] = {};
-      logs[key][field] = val;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(logs));
-      if(field === 'done') renderTreino();
+    function save(id, key, val) {
+      if(!dataStore[id]) dataStore[id] = {};
+      dataStore[id][key] = val;
+      localStorage.setItem(KEY, JSON.stringify(dataStore));
+      if(key === 'done') renderTreino();
     }
 
-    // Init
-    init();
+    window.onload = init;
   </script>
 </body>
 </html>
