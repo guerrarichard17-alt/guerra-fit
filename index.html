@@ -12,7 +12,6 @@
 </head>
 <body>
 
-  <!-- ============ HEADER ============ -->
   <header class="app-header">
     <div class="brand">
       <span class="brand-mark">⚔</span>
@@ -21,7 +20,6 @@
     <div class="brand-tag" id="brandTag">PERFIL NÃO DEFINIDO</div>
   </header>
 
-  <!-- ============ MAIN ============ -->
   <main class="app-main">
 
     <!-- ===== ABA 1: DIETA ===== -->
@@ -29,7 +27,7 @@
       <div class="section-head">
         <span class="section-num">01</span>
         <h2>Perfil &amp; Dieta</h2>
-        <p class="section-sub">Defina suas métricas. O motor calcula TMB, GETD e divide os macros por refeição.</p>
+        <p class="section-sub">Defina suas métricas. O motor calcula TMB, GETD e monta cada refeição com alimentos reais.</p>
       </div>
 
       <form id="formPerfil" class="card form-card" novalidate>
@@ -48,7 +46,7 @@
           </label>
           <label class="field">
             <span>Refeições/dia</span>
-            <input type="number" id="numRefeicoes" min="2" max="8" step="1" value="4" required />
+            <input type="number" id="numRefeicoes" min="3" max="6" step="1" value="4" required />
           </label>
           <label class="field">
             <span>Nível de atividade</span>
@@ -73,10 +71,8 @@
         </button>
       </form>
 
-      <!-- Resultado -->
       <div id="planoResultado" class="plano-wrap hidden">
 
-        <!-- Métricas -->
         <div class="metric-row">
           <div class="metric">
             <span class="metric-label">TMB</span>
@@ -95,7 +91,6 @@
           </div>
         </div>
 
-        <!-- Macros diários -->
         <h3 class="block-title">Macros diários totais</h3>
         <div class="macros-grid">
           <div class="macro-card macro-prot">
@@ -120,9 +115,8 @@
           </div>
         </div>
 
-        <!-- Refeições -->
-        <h3 class="block-title">Por refeição <span class="block-sub" id="qtdRefLabel"></span></h3>
-        <div class="refeicoes-grid" id="refeicoesGrid"></div>
+        <h3 class="block-title">Refeições do dia <span class="block-sub" id="qtdRefLabel"></span></h3>
+        <div class="refeicoes-list" id="refeicoesGrid"></div>
       </div>
     </section>
 
@@ -131,7 +125,7 @@
       <div class="section-head">
         <span class="section-num">02</span>
         <h2>Lista de Compras</h2>
-        <p class="section-sub">Tradução automática dos macros para 7 dias. Gera plano após cálculo da dieta.</p>
+        <p class="section-sub">Tradução automática dos macros para 7 dias.</p>
       </div>
 
       <div id="comprasVazio" class="empty-state">
@@ -181,12 +175,12 @@
       <div class="section-head">
         <span class="section-num">03</span>
         <h2>Planejamento Semanal</h2>
-        <p class="section-sub">Ancorado no Hyrox de sábado. Informe o RPE (1 a 10) para ondular a intensidade.</p>
+        <p class="section-sub">Informe o RPE do Hyrox de sábado (1–10). O motor ondula a semana e monta cada treino.</p>
       </div>
 
       <form id="formRpe" class="card form-card">
         <label class="field">
-          <span>RPE do último Hyrox (sábado) <em>1 = leve · 10 = devastador</em></span>
+          <span>RPE do último Hyrox <em>1 = leve · 10 = devastador</em></span>
           <input type="range" id="rpeRange" min="1" max="10" step="1" value="7" />
           <div class="range-display"><span id="rpeValor">7</span>/10</div>
         </label>
@@ -196,7 +190,7 @@
         </button>
       </form>
 
-      <div id="semanaResultado" class="semana-grid hidden"></div>
+      <div id="semanaResultado" class="semana-list hidden"></div>
     </section>
 
     <!-- ===== ABA 4: EXERCÍCIOS ===== -->
@@ -246,15 +240,13 @@
 
       <h3 class="block-title">Últimos registros</h3>
       <div id="historicoLista" class="historico-lista">
-        <div class="empty-state small">
-          <p>Nenhum registro ainda.</p>
-        </div>
+        <div class="empty-state small"><p>Nenhum registro ainda.</p></div>
       </div>
     </section>
 
   </main>
 
-  <!-- ============ MODAL EXERCÍCIO ============ -->
+  <!-- MODAL EXERCÍCIO -->
   <div class="modal" id="exModal" aria-hidden="true">
     <div class="modal-backdrop" data-close></div>
     <div class="modal-card">
@@ -277,7 +269,7 @@
     </div>
   </div>
 
-  <!-- ============ TAB BAR ============ -->
+  <!-- TAB BAR -->
   <nav class="tabbar" role="tablist">
     <button class="tab-btn active" data-tab="tab-dieta">
       <span class="tab-ico">🍽</span><span class="tab-lbl">Dieta</span>
