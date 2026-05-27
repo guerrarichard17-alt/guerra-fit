@@ -2,557 +2,300 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Guerra Fit – Pro Coach V7</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
-
-  <style>
-    /* --- DESIGN SYSTEM (Dark & Gold - Elite) --- */
-    :root {
-      --bg-app: #050505;       
-      --bg-card: #121212;      
-      --bg-input: #1e1e1e;     
-      --border: #333;       
-      
-      --text-main: #e0e0e0;
-      --text-muted: #808080;
-      
-      --primary: #fbbf24;      /* Gold */
-      
-      --accent-strength: #ef4444; /* Red */
-      --accent-cf: #3b82f6;       /* Blue */
-      
-      --radius: 8px;
-      --font: 'Inter', system-ui, sans-serif;
-    }
-
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    
-    body {
-      margin: 0;
-      background: var(--bg-app);
-      color: var(--text-main);
-      font-family: var(--font);
-      font-size: 14px;
-      padding-bottom: 90px;
-    }
-
-    /* HEADER */
-    header {
-      background: rgba(5, 5, 5, 0.98);
-      border-bottom: 1px solid var(--border);
-      padding: 16px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      text-transform: uppercase;
-      color: var(--primary);
-    }
-    header small {
-      color: var(--text-muted);
-      font-size: 11px;
-      display: block;
-      margin-top: 4px;
-    }
-
-    /* PROGRESS */
-    .progress-track {
-      margin-top: 12px;
-      background: var(--bg-input);
-      height: 6px;
-      border-radius: 99px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      background: var(--primary);
-      width: 0%;
-      transition: width 0.4s ease;
-    }
-    .progress-text {
-      font-size: 10px; color: var(--text-muted); text-align: right; margin-top: 4px;
-    }
-
-    main { padding: 16px; max-width: 800px; margin: 0 auto; }
-
-    /* NAVIGATION */
-    .nav-tabs {
-      display: flex;
-      background: var(--bg-input);
-      padding: 4px;
-      border-radius: var(--radius);
-      margin-bottom: 20px;
-      position: sticky;
-      top: 85px;
-      z-index: 90;
-    }
-    .nav-tabs button {
-      flex: 1;
-      background: transparent;
-      border: none;
-      padding: 12px;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-muted);
-    }
-    .nav-tabs button.active {
-      background: var(--bg-card);
-      color: var(--primary);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-    }
-
-    /* FILTERS */
-    .filter-scroll {
-      display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 4px;
-    }
-    .filter-btn {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 11px;
-      white-space: nowrap;
-      font-weight: 600;
-    }
-    .filter-btn.active {
-      background: var(--primary); color: #000; border-color: var(--primary);
-    }
-
-    /* CARDS */
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 12px;
-    }
-
-    /* EXERCISE STYLE */
-    .ex-card {
-      background: var(--bg-card);
-      border-left: 3px solid var(--border);
-      padding: 14px;
-      margin-bottom: 12px;
-      border-radius: 4px;
-    }
-    .st-musc { border-left-color: var(--accent-strength); }
-    .st-cf { border-left-color: var(--accent-cf); }
-
-    .ex-head { display: flex; justify-content: space-between; margin-bottom: 8px; align-items: flex-start; }
-    .ex-name { font-size: 15px; font-weight: 700; color: #fff; line-height: 1.3; }
-    .ex-info { font-size: 11px; color: var(--text-muted); margin-top: 2px;}
-    
-    .badge {
-      padding: 2px 6px; border-radius: 3px; font-size: 9px; font-weight: bold; text-transform: uppercase;
-      border: 1px solid #333; display: inline-block;
-    }
-
-    /* VIDEO BUTTON */
-    .video-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      margin-top: 8px;
-      padding: 6px 10px;
-      background: #222;
-      border: 1px solid #444;
-      border-radius: 4px;
-      color: var(--primary);
-      text-decoration: none;
-      font-size: 10px;
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-    .video-btn:hover { background: #333; }
-
-    .ex-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 8px; margin-top: 10px; }
-    .inp-group label { display: block; font-size: 9px; color: #666; text-transform: uppercase; margin-bottom: 2px; }
-    input, select {
-      width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 4px;
-    }
-    input:focus { border-color: var(--primary); outline: none; }
-
-    /* CHECKBOX */
-    .chk-area { margin-top: 10px; padding-top: 10px; border-top: 1px solid #222; }
-    .chk-label { display: flex; align-items: center; gap: 10px; }
-    .box { width: 22px; height: 22px; border: 2px solid #444; display: flex; align-items: center; justify-content: center; border-radius: 4px; }
-    input[type="checkbox"]:checked + .box { background: var(--primary); border-color: var(--primary); }
-    input[type="checkbox"]:checked + .box::after { content: '✓'; color: #000; font-weight: 800; }
-
-    /* DIET LIST */
-    .diet-item {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 10px 0; border-bottom: 1px solid #222;
-    }
-    .diet-grp { font-size: 10px; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; }
-    
-    .hidden { display: none !important; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0A0A0A" />
+  <title>GUERRA FIT — Performance Híbrida</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
 
-  <header>
-    <h1>GUERRA <span style="color:#fff">PRO V7</span></h1>
-    <small>Treino + Vídeos de Técnica</small>
-
-    <div id="progressArea" class="hidden">
-      <div class="progress-track">
-        <div id="progressBar" class="progress-fill"></div>
-      </div>
-      <div id="progressText" class="progress-text">0%</div>
+  <!-- ============ HEADER ============ -->
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-mark">⚔</span>
+      <h1>GUERRA<span class="brand-accent">FIT</span></h1>
     </div>
+    <div class="brand-tag" id="brandTag">PERFIL NÃO DEFINIDO</div>
   </header>
 
-  <main>
-    <nav class="nav-tabs">
-      <button class="active" onclick="setView('treino')" id="nav-treino">TREINO</button>
-      <button onclick="setView('dieta')" id="nav-dieta">DIETA</button>
-    </nav>
+  <!-- ============ MAIN ============ -->
+  <main class="app-main">
 
-    <section id="view-treino">
-      <div class="card">
-        <div class="ex-grid" style="margin:0; grid-template-columns: 2fr 1fr;">
-          <div class="inp-group">
-            <label>Dia</label>
-            <select id="diaSelect" onchange="renderApp()"></select>
+    <!-- ===== ABA 1: DIETA ===== -->
+    <section class="tab-content active" id="tab-dieta">
+      <div class="section-head">
+        <span class="section-num">01</span>
+        <h2>Perfil &amp; Dieta</h2>
+        <p class="section-sub">Defina suas métricas. O motor calcula TMB, GETD e divide os macros por refeição.</p>
+      </div>
+
+      <form id="formPerfil" class="card form-card" novalidate>
+        <div class="grid-2">
+          <label class="field">
+            <span>Peso <em>(kg)</em></span>
+            <input type="number" id="peso" min="30" max="250" step="0.1" placeholder="ex: 92.5" required />
+          </label>
+          <label class="field">
+            <span>Altura <em>(cm)</em></span>
+            <input type="number" id="altura" min="120" max="230" step="1" placeholder="ex: 178" required />
+          </label>
+          <label class="field">
+            <span>Idade</span>
+            <input type="number" id="idade" min="14" max="90" step="1" value="42" required />
+          </label>
+          <label class="field">
+            <span>Refeições/dia</span>
+            <input type="number" id="numRefeicoes" min="2" max="8" step="1" value="4" required />
+          </label>
+          <label class="field">
+            <span>Nível de atividade</span>
+            <select id="nivelAtividade" required>
+              <option value="moderado">Moderado (1.55)</option>
+              <option value="intenso" selected>Intenso (1.725)</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Objetivo</span>
+            <select id="objetivo" required>
+              <option value="perda_gordura">Perda de Gordura</option>
+              <option value="manutencao" selected>Manutenção</option>
+              <option value="ganho_massa">Ganho de Massa</option>
+            </select>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-primary">
+          <span>GERAR PLANO ALIMENTAR</span>
+          <span class="btn-arrow">→</span>
+        </button>
+      </form>
+
+      <!-- Resultado -->
+      <div id="planoResultado" class="plano-wrap hidden">
+
+        <!-- Métricas -->
+        <div class="metric-row">
+          <div class="metric">
+            <span class="metric-label">TMB</span>
+            <span class="metric-value" id="mTmb">—</span>
+            <span class="metric-unit">kcal</span>
           </div>
-          <div class="inp-group">
-            <label>Data</label>
-            <input type="date" id="dataInput" onchange="renderApp()">
+          <div class="metric">
+            <span class="metric-label">GETD</span>
+            <span class="metric-value" id="mGetd">—</span>
+            <span class="metric-unit">kcal</span>
+          </div>
+          <div class="metric metric-hl">
+            <span class="metric-label">ALVO</span>
+            <span class="metric-value" id="mAlvo">—</span>
+            <span class="metric-unit">kcal/dia</span>
           </div>
         </div>
-      </div>
 
-      <div class="filter-scroll">
-        <button class="filter-btn active" onclick="filterT('all')" id="fil-all">TUDO</button>
-        <button class="filter-btn" onclick="filterT('musc')" id="fil-musc">MUSCULAÇÃO</button>
-        <button class="filter-btn" onclick="filterT('cf')" id="fil-cf">CROSSFIT</button>
-      </div>
+        <!-- Macros diários -->
+        <h3 class="block-title">Macros diários totais</h3>
+        <div class="macros-grid">
+          <div class="macro-card macro-prot">
+            <span class="macro-tag">PROT</span>
+            <span class="macro-num" id="dProt">—</span>
+            <span class="macro-unit">g</span>
+          </div>
+          <div class="macro-card macro-carb">
+            <span class="macro-tag">CARB</span>
+            <span class="macro-num" id="dCarb">—</span>
+            <span class="macro-unit">g</span>
+          </div>
+          <div class="macro-card macro-fat">
+            <span class="macro-tag">GORD</span>
+            <span class="macro-num" id="dGord">—</span>
+            <span class="macro-unit">g</span>
+          </div>
+          <div class="macro-card macro-fib">
+            <span class="macro-tag">FIBRA</span>
+            <span class="macro-num" id="dFib">—</span>
+            <span class="macro-unit">g</span>
+          </div>
+        </div>
 
-      <div id="treinoList"></div>
+        <!-- Refeições -->
+        <h3 class="block-title">Por refeição <span class="block-sub" id="qtdRefLabel"></span></h3>
+        <div class="refeicoes-grid" id="refeicoesGrid"></div>
+      </div>
     </section>
 
-    <section id="view-dieta" class="hidden">
-      <div class="card" style="border-left: 3px solid var(--primary);">
-        <h4 style="margin:0 0 5px 0; color:#fff">Almoço & Jantar Garantidos</h4>
-        <p style="font-size:11px; color:#888; margin:0;">
-          A lista agora exibe todas as refeições do dia selecionado.
-        </p>
+    <!-- ===== ABA 2: COMPRAS ===== -->
+    <section class="tab-content" id="tab-compras">
+      <div class="section-head">
+        <span class="section-num">02</span>
+        <h2>Lista de Compras</h2>
+        <p class="section-sub">Tradução automática dos macros para 7 dias. Gera plano após cálculo da dieta.</p>
       </div>
 
-      <div class="filter-scroll">
-        <button class="filter-btn active" onclick="renderDieta('hoje')" id="fil-diet-hoje">HOJE</button>
-        <button class="filter-btn" onclick="renderDieta('semana')" id="fil-diet-semana">SEMANA</button>
-        <button class="filter-btn" onclick="renderDieta('shop')" id="fil-diet-shop">COMPRAS</button>
+      <div id="comprasVazio" class="empty-state">
+        <span class="empty-icon">🛒</span>
+        <p>Gere primeiro o plano alimentar na aba <strong>Dieta</strong>.</p>
       </div>
 
-      <div id="dietaList"></div>
-    </section>
-  </main>
-
-  <script>
-    // =========================================================
-    // 1. TREINOS COMPLETOS + LINKS DE VÍDEO (YOUTUBE QUERY)
-    // =========================================================
-    // Eu uso buscas automáticas para garantir que o link nunca quebre
-    // e mostre as melhores opções (Twin, Cariani, etc)
-    
-    const DB_TREINOS = [
-      // --- SEGUNDA: PEITO & OMBRO LATERAL ---
-      { dia: "Segunda", tipo: "musc", nome: "Aquecimento: Manguito", serie: "2x15", obs: "Preparo.", link: "aquecimento manguito rotador externo" },
-      { dia: "Segunda", tipo: "musc", nome: "Supino Inclinado (Halter)", serie: "4x8-12", obs: "Foco Superior. Pesado.", link: "execucao supino inclinado halter" },
-      { dia: "Segunda", tipo: "musc", nome: "Supino Reto (Máquina)", serie: "3x10-12", obs: "Carga Constante.", link: "execucao supino reto maquina articulada" },
-      { dia: "Segunda", tipo: "musc", nome: "Crucifixo Máquina (Peck Deck)", serie: "3x12-15", obs: "Pico de contração (Isometria 1s).", link: "execucao peck deck voador" },
-      { dia: "Segunda", tipo: "musc", nome: "Crossover Polia Alta", serie: "3x15", obs: "Foco parte inferior.", link: "execucao crossover polia alta" },
-      { dia: "Segunda", tipo: "musc", nome: "Desenvolvimento Militar", serie: "4x8-10", obs: "Ombro Geral.", link: "execucao desenvolvimento militar halter" },
-      { dia: "Segunda", tipo: "musc", nome: "Elevação Lateral (Halter)", serie: "4x12-15", obs: "Drop-set na última.", link: "execucao elevacao lateral correta" },
-      { dia: "Segunda", tipo: "cf", nome: "CrossFit (Noite)", serie: "WOD", obs: "Cardio/Técnica (Carga Leve).", link: "crossfit treino metabolico" },
-
-      // --- TERÇA: COSTAS COMPLETO & POSTERIOR OMBRO ---
-      { dia: "Terça", tipo: "musc", nome: "Rack Pull (Terra Parcial)", serie: "3x6-8", obs: "Espessura. Barra no joelho.", link: "como fazer rack pull costas" },
-      { dia: "Terça", tipo: "musc", nome: "Puxada Alta (Pegada Aberta)", serie: "4x10-12", obs: "Largura Dorsal.", link: "execucao puxada alta frente" },
-      { dia: "Terça", tipo: "musc", nome: "Remada Curvada (Barra)", serie: "4x8-10", obs: "Tronco firme.", link: "execucao remada curvada barra" },
-      { dia: "Terça", tipo: "musc", nome: "Remada Unilateral (Serrote)", serie: "3x12", obs: "Correção de assimetria.", link: "execucao remada serrote halter" },
-      { dia: "Terça", tipo: "musc", nome: "Pulldown (Polia)", serie: "3x15", obs: "Finalizador Dorsal.", link: "execucao pulldown polia corda" },
-      { dia: "Terça", tipo: "musc", nome: "Crucifixo Inverso / Face Pull", serie: "4x15", obs: "Saúde do ombro.", link: "execucao face pull polia" },
-      { dia: "Terça", tipo: "cf", nome: "CrossFit (Noite)", serie: "WOD", obs: "Cardio/Técnica (Carga Leve).", link: "crossfit technique practice" },
-
-      // --- QUARTA: PERNAS (DESTRUIÇÃO TOTAL) ---
-      { dia: "Quarta", tipo: "musc", nome: "Mobilidade Quadril/Tornozelo", serie: "5 min", obs: "Essencial.", link: "mobilidade quadril agachamento" },
-      { dia: "Quarta", tipo: "musc", nome: "Agachamento Livre", serie: "4x6-10", obs: "Pesado. Amplitude máxima.", link: "execucao agachamento livre correta" },
-      { dia: "Quarta", tipo: "musc", nome: "Leg Press 45", serie: "4x10-12", obs: "Pés médios.", link: "execucao leg press 45" },
-      { dia: "Quarta", tipo: "musc", nome: "Afundo / Búlgaro", serie: "3x10 cada", obs: "Construção de Glúteo.", link: "execucao agachamento bulgaro" },
-      { dia: "Quarta", tipo: "musc", nome: "Cadeira Extensora", serie: "4x15", obs: "Rest-pause na última.", link: "execucao cadeira extensora" },
-      { dia: "Quarta", tipo: "musc", nome: "Cadeira Adutora", serie: "3x15", obs: "Estabilidade.", link: "execucao cadeira adutora" },
-      { dia: "Quarta", tipo: "cf", nome: "CrossFit (Noite)", serie: "WOD", obs: "Active Recovery.", link: "crossfit active recovery" },
-
-      // --- QUINTA: BRAÇOS COMPLETOS ---
-      { dia: "Quinta", tipo: "musc", nome: "Rosca Direta (Barra W)", serie: "4x8-12", obs: "Carga.", link: "execucao rosca direta barra w" },
-      { dia: "Quinta", tipo: "musc", nome: "Tríceps Testa (Barra W)", serie: "4x10-12", obs: "Cabeça longa.", link: "execucao triceps testa barra w" },
-      { dia: "Quinta", tipo: "musc", nome: "Rosca Scott (Máquina/Halter)", serie: "3x12", obs: "Pico.", link: "execucao rosca scott" },
-      { dia: "Quinta", tipo: "musc", nome: "Tríceps Francês", serie: "3x12", obs: "Alongamento.", link: "execucao triceps frances halter" },
-      { dia: "Quinta", tipo: "musc", nome: "Rosca Martelo", serie: "3x10", obs: "Braquial.", link: "execucao rosca martelo" },
-      { dia: "Quinta", tipo: "musc", nome: "Tríceps Corda", serie: "3x15", obs: "Pump final.", link: "execucao triceps corda" },
-      { dia: "Quinta", tipo: "musc", nome: "Flexão de Punho", serie: "3xMax", obs: "Antebraço.", link: "execucao flexao de punho antebraco" },
-      { dia: "Quinta", tipo: "cf", nome: "CrossFit (Noite)", serie: "WOD", obs: "Cardio Longo.", link: "crossfit endurance wod" },
-
-      // --- SEXTA: OMBROS COMPLETO + PEITO SUPERIOR ---
-      { dia: "Sexta", tipo: "musc", nome: "Desenvolvimento Arnold", serie: "4x10", obs: "Rotação completa.", link: "execucao desenvolvimento arnold" },
-      { dia: "Sexta", tipo: "musc", nome: "Elevação Frontal", serie: "3x12", obs: "Detalhe.", link: "execucao elevacao frontal halter" },
-      { dia: "Sexta", tipo: "musc", nome: "Remada Alta (Polia/Barra)", serie: "3x12", obs: "Trapézio/Ombro.", link: "execucao remada alta pegada aberta" },
-      { dia: "Sexta", tipo: "musc", nome: "Encolhimento (Halter)", serie: "4x15", obs: "Trapézio.", link: "execucao encolhimento ombros halter" },
-      { dia: "Sexta", tipo: "musc", nome: "Supino Inclinado Máquina", serie: "3x12", obs: "Volume extra peito.", link: "execucao supino inclinado maquina" },
-      { dia: "Sexta", tipo: "cf", nome: "CrossFit (Noite)", serie: "WOD", obs: "Sexta-feira animada.", link: "crossfit wod motivation" },
-
-      // --- SÁBADO: POSTERIOR DE COXA & PANTURRILHA ---
-      { dia: "Sábado", tipo: "musc", nome: "Stiff", serie: "4x8-10", obs: "Alongamento máx.", link: "como fazer stiff corretamente renato cariani" },
-      { dia: "Sábado", tipo: "musc", nome: "Mesa Flexora", serie: "4x12-15", obs: "Falha total.", link: "execucao mesa flexora" },
-      { dia: "Sábado", tipo: "musc", nome: "Cadeira Flexora (se tiver)", serie: "3x15", obs: "Isolado.", link: "execucao cadeira flexora" },
-      { dia: "Sábado", tipo: "musc", nome: "Panturrilha em Pé", serie: "5x12", obs: "Pesado.", link: "execucao gemeos em pe" },
-      { dia: "Sábado", tipo: "musc", nome: "Panturrilha Sentado", serie: "4x15", obs: "Solear.", link: "execucao gemeos sentado" },
-      { dia: "Sábado", tipo: "cf", nome: "Aulão Sábado", serie: "Team WOD", obs: "Diversão.", link: "crossfit team wod" },
-
-      // --- DOMINGO ---
-      { dia: "Domingo", tipo: "musc", nome: "Descanso Total", serie: "-", obs: "Recuperação.", link: "importancia descanso hipertrofia" }
-    ];
-
-    // =========================================================
-    // 2. DIETA COM ALMOÇO GARANTIDO
-    // =========================================================
-    const DB_DIETA = [];
-    const diasSemana = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"];
-
-    diasSemana.forEach(dia => {
-      // 1. Manhã
-      DB_DIETA.push({ dia: dia, ref: "1. Café/Pré-Treino (04:30)", item: "Overnight Oats (60g Aveia + Whey)", qtd: "1 pote" });
-      DB_DIETA.push({ dia: dia, ref: "1. Café/Pré-Treino (04:30)", item: "Banana Prata", qtd: "1 un" });
-      
-      // 2. Pós-Treino
-      DB_DIETA.push({ dia: dia, ref: "2. Pós-Treino (08:30)", item: "Iogurte Natural + Whey + Fruta", qtd: "1 kit" });
-
-      // 3. Almoço
-      let almocoProt = "Carne Moída (200g)";
-      let almocoCarb = "Arroz (300g)";
-      if(dia === "Terça" || dia === "Quinta") { almocoProt = "Frango Cubos (200g)"; almocoCarb = "Purê Batata (300g)"; }
-      if(dia === "Sexta") { almocoProt = "Peixe/Carne (200g)"; almocoCarb = "Batata Assada (300g)"; }
-
-      DB_DIETA.push({ dia: dia, ref: "3. Almoço (12:30)", item: almocoProt, qtd: "1 un" });
-      DB_DIETA.push({ dia: dia, ref: "3. Almoço (12:30)", item: almocoCarb, qtd: "1 un" });
-      DB_DIETA.push({ dia: dia, ref: "3. Almoço (12:30)", item: "Legumes/Salada", qtd: "À vontade" });
-
-      // 4. Pré-CrossFit
-      DB_DIETA.push({ dia: dia, ref: "4. Pré-CrossFit (17:30)", item: "Pão com Doce de Leite/Fruta", qtd: "2 fat" });
-      
-      // 5. Jantar
-      DB_DIETA.push({ dia: dia, ref: "5. Jantar (21:00)", item: "Omelete (3 ovos) ou Frango", qtd: "1 prato" });
-      DB_DIETA.push({ dia: dia, ref: "5. Jantar (21:00)", item: "Salada + Azeite", qtd: "1 bowl" });
-    });
-
-    // FIM DE SEMANA
-    DB_DIETA.push({ dia: "Sábado", ref: "Refeições FDS", item: "Café Reforçado (Pão + Ovos)", qtd: "1x" });
-    DB_DIETA.push({ dia: "Sábado", ref: "Refeições FDS", item: "Almoço Livre (Feijoada/Churrasco)", qtd: "1x" });
-    DB_DIETA.push({ dia: "Sábado", ref: "Refeições FDS", item: "Jantar Hambúrguer", qtd: "1x" });
-    
-    DB_DIETA.push({ dia: "Domingo", ref: "Refeições FDS", item: "Manter Proteína Alta", qtd: "Dia todo" });
-    DB_DIETA.push({ dia: "Domingo", ref: "Refeições FDS", item: "Almoço em Família", qtd: "1x" });
-
-    // =========================================================
-    // 3. APP LOGIC
-    // =========================================================
-    const KEY = "guerra_fit_v7";
-    let dataStore = {};
-
-    function init() {
-      try { dataStore = JSON.parse(localStorage.getItem(KEY)) || {}; } catch { dataStore = {}; }
-      
-      const now = new Date();
-      const iso = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split("T")[0];
-      document.getElementById("dataInput").value = iso;
-
-      const days = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
-      const sel = document.getElementById("diaSelect");
-      days.forEach(d => {
-        const opt = document.createElement("option");
-        opt.value = d; opt.text = d; sel.add(opt);
-      });
-      let currentDayIdx = now.getDay(); 
-      if(currentDayIdx === 0) currentDayIdx = 7; 
-      sel.value = days[currentDayIdx-1];
-
-      renderApp();
-    }
-
-    function renderApp() {
-      renderTreino();
-      renderDieta('hoje');
-    }
-
-    function renderTreino() {
-      const dia = document.getElementById("diaSelect").value;
-      const data = document.getElementById("dataInput").value;
-      const list = document.getElementById("treinoList");
-      const filter = document.querySelector("#view-treino .filter-scroll .active").id;
-
-      list.innerHTML = "";
-      
-      const treinos = DB_TREINOS.filter(t => t.dia === dia);
-      
-      if(treinos.length === 0) {
-        list.innerHTML = `<div class="card" style="text-align:center; color:#666">Descanso Regenerativo.</div>`;
-        document.getElementById("progressArea").classList.add("hidden");
-        return;
-      }
-
-      document.getElementById("progressArea").classList.remove("hidden");
-      let total=0, done=0;
-
-      treinos.forEach((t, idx) => {
-        if(filter === 'fil-musc' && t.tipo !== 'musc') return;
-        if(filter === 'fil-cf' && t.tipo !== 'cf') return;
-
-        total++;
-        const id = `${data}_${dia}_${idx}`;
-        const st = dataStore[id] || {};
-        if(st.done) done++;
-
-        const styleClass = t.tipo === 'musc' ? 'st-musc' : 'st-cf';
-        const badge = t.tipo === 'musc' ? 'BODYBUILDING' : 'METABÓLICO';
-        const badgeColor = t.tipo === 'musc' ? '#ef4444' : '#3b82f6';
-        
-        // Link Gerado Automaticamente para Busca no YouTube
-        const linkQuery = t.link ? `https://www.youtube.com/results?search_query=${encodeURIComponent(t.link)}` : '#';
-
-        list.innerHTML += `
-          <div class="ex-card ${styleClass}">
-            <div class="ex-head">
-              <div>
-                <div class="ex-name">${t.nome}</div>
-                <div class="ex-info">${t.serie} • ${t.obs}</div>
-                ${t.link ? `<a href="${linkQuery}" target="_blank" class="video-btn">🎥 Ver Técnica</a>` : ''}
-              </div>
-              <div><span class="badge" style="color:${badgeColor}; border-color:${badgeColor}">${badge}</span></div>
-            </div>
-            
-            <div class="ex-grid">
-               <div class="inp-group">
-                 <label>Carga (Kg)</label>
-                 <input type="number" value="${st.val1 || ''}" onchange="save('${id}', 'val1', this.value)">
-               </div>
-               <div class="inp-group">
-                 <label>RPE/Reps</label>
-                 <input type="text" value="${st.val2 || ''}" onchange="save('${id}', 'val2', this.value)">
-               </div>
-            </div>
-
-            <div class="chk-area">
-               <label class="chk-label">
-                  <input type="checkbox" class="hidden" ${st.done ? 'checked' : ''} onchange="save('${id}', 'done', this.checked)">
-                  <div class="box"></div>
-                  <span style="font-weight:700; color:${st.done ? 'var(--primary)' : '#666'}">
-                    ${st.done ? 'CONCLUÍDO' : 'MARCAR'}
-                  </span>
-               </label>
+      <div id="comprasResultado" class="hidden">
+        <div class="card list-card">
+          <div class="list-row">
+            <span class="list-icon">🥩</span>
+            <div>
+              <span class="list-label">Carnes / Aves</span>
+              <span class="list-value" id="cCarnes">—</span>
             </div>
           </div>
-        `;
-      });
+          <div class="list-row">
+            <span class="list-icon">🍚</span>
+            <div>
+              <span class="list-label">Carboidratos</span>
+              <span class="list-value" id="cCarbo">—</span>
+            </div>
+          </div>
+          <div class="list-row">
+            <span class="list-icon">🥦</span>
+            <div>
+              <span class="list-label">Vegetais / Aveia / Frutas</span>
+              <span class="list-value" id="cVeg">—</span>
+            </div>
+          </div>
+          <div class="list-row">
+            <span class="list-icon">🫒</span>
+            <div>
+              <span class="list-label">Extras</span>
+              <span class="list-value" id="cExtras">—</span>
+            </div>
+          </div>
+        </div>
 
-      const pct = total ? Math.round((done/total)*100) : 0;
-      document.getElementById("progressBar").style.width = pct + "%";
-      document.getElementById("progressText").innerText = pct + "%";
-    }
+        <h3 class="block-title">Suplementação</h3>
+        <div class="card list-card" id="cSupCard"></div>
+      </div>
+    </section>
 
-    function renderDieta(mode) {
-      document.querySelectorAll("#view-dieta .filter-btn").forEach(b => b.classList.remove("active"));
-      if(mode === 'hoje') document.getElementById("fil-diet-hoje").classList.add("active");
-      if(mode === 'semana') document.getElementById("fil-diet-semana").classList.add("active");
-      if(mode === 'shop') document.getElementById("fil-diet-shop").classList.add("active");
+    <!-- ===== ABA 3: TREINO ===== -->
+    <section class="tab-content" id="tab-treino">
+      <div class="section-head">
+        <span class="section-num">03</span>
+        <h2>Planejamento Semanal</h2>
+        <p class="section-sub">Ancorado no Hyrox de sábado. Informe o RPE (1 a 10) para ondular a intensidade.</p>
+      </div>
 
-      const list = document.getElementById("dietaList");
-      list.innerHTML = "";
+      <form id="formRpe" class="card form-card">
+        <label class="field">
+          <span>RPE do último Hyrox (sábado) <em>1 = leve · 10 = devastador</em></span>
+          <input type="range" id="rpeRange" min="1" max="10" step="1" value="7" />
+          <div class="range-display"><span id="rpeValor">7</span>/10</div>
+        </label>
+        <button type="submit" class="btn-primary">
+          <span>GERAR SEMANA</span>
+          <span class="btn-arrow">→</span>
+        </button>
+      </form>
 
-      if(mode === 'hoje') {
-         const dia = document.getElementById("diaSelect").value;
-         const itens = DB_DIETA.filter(d => d.dia === dia);
-         
-         if(itens.length === 0) {
-           list.innerHTML = `<div class="card">Sem dieta específica. Siga os macros.</div>`;
-           return;
-         }
+      <div id="semanaResultado" class="semana-grid hidden"></div>
+    </section>
 
-         const refs = [...new Set(itens.map(i => i.ref))];
-         refs.forEach(r => {
-            let html = `<div class="card"><div class="diet-grp">${r}</div>`;
-            itens.filter(i => i.ref === r).forEach(item => {
-               html += `<div class="diet-item">
-                 <span>${item.item}</span>
-                 <strong style="color:#fff">${item.qtd}</strong>
-               </div>`;
-            });
-            html += `</div>`;
-            list.innerHTML += html;
-         });
-      }
-      else if (mode === 'semana') {
-         const dias = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
-         dias.forEach(d => {
-            const lunch = DB_DIETA.find(i => i.dia === d && i.ref.includes("Almoço"))?.item || "Variado";
-            list.innerHTML += `<div class="card" style="padding:10px">
-              <strong style="color:var(--primary)">${d}</strong><br>
-              <span style="font-size:12px; color:#aaa">Almoço: ${lunch}</span>
-            </div>`;
-         });
-      }
-      else if (mode === 'shop') {
-         const shopping = {};
-         DB_DIETA.forEach(i => {
-            const k = i.item;
-            shopping[k] = (shopping[k] || 0) + 1;
-         });
-         let html = `<div class="card">`;
-         Object.keys(shopping).sort().forEach(k => {
-            html += `<div class="diet-item" onclick="this.style.opacity = this.style.opacity === '0.3' ? '1' : '0.3'">
-               <span>${k}</span>
-               <span style="color:var(--primary)">+</span>
-            </div>`;
-         });
-         html += `</div>`;
-         list.innerHTML = html;
-      }
-    }
+    <!-- ===== ABA 4: EXERCÍCIOS ===== -->
+    <section class="tab-content" id="tab-exercicios">
+      <div class="section-head">
+        <span class="section-num">04</span>
+        <h2>Biblioteca</h2>
+        <p class="section-sub">Movimentos curados. Toque no card para vídeo e dicas de execução.</p>
+      </div>
 
-    function setView(v) {
-      document.getElementById("view-treino").classList.add("hidden");
-      document.getElementById("view-dieta").classList.add("hidden");
-      document.getElementById("nav-treino").classList.remove("active");
-      document.getElementById("nav-dieta").classList.remove("active");
+      <div class="filter-bar">
+        <input type="search" id="exBusca" placeholder="Buscar movimento…" />
+        <div class="chips" id="exChips"></div>
+      </div>
 
-      document.getElementById("view-"+v).classList.remove("hidden");
-      document.getElementById("nav-"+v).classList.add("active");
-    }
+      <div class="ex-grid" id="exGrid"></div>
+    </section>
 
-    function filterT(f) {
-      document.querySelectorAll("#view-treino .filter-btn").forEach(b => b.classList.remove("active"));
-      document.getElementById("fil-"+f).classList.add("active");
-      renderTreino();
-    }
+    <!-- ===== ABA 5: HISTÓRICO ===== -->
+    <section class="tab-content" id="tab-historico">
+      <div class="section-head">
+        <span class="section-num">05</span>
+        <h2>Histórico de Cargas</h2>
+        <p class="section-sub">Registre cargas após cada treino. Persistido no dispositivo.</p>
+      </div>
 
-    function save(id, key, val) {
-      if(!dataStore[id]) dataStore[id] = {};
-      dataStore[id][key] = val;
-      localStorage.setItem(KEY, JSON.stringify(dataStore));
-      if(key === 'done') renderTreino();
-    }
+      <form id="formCarga" class="card form-card">
+        <label class="field">
+          <span>Exercício</span>
+          <select id="cargaEx" required></select>
+        </label>
+        <div class="grid-2">
+          <label class="field">
+            <span>Carga <em>(kg)</em></span>
+            <input type="number" id="cargaKg" min="0" step="0.5" placeholder="ex: 80" required />
+          </label>
+          <label class="field">
+            <span>Repetições</span>
+            <input type="number" id="cargaReps" min="1" step="1" placeholder="ex: 5" required />
+          </label>
+        </div>
+        <button type="submit" class="btn-primary">
+          <span>REGISTRAR</span>
+          <span class="btn-arrow">+</span>
+        </button>
+      </form>
 
-    window.onload = init;
-  </script>
+      <h3 class="block-title">Últimos registros</h3>
+      <div id="historicoLista" class="historico-lista">
+        <div class="empty-state small">
+          <p>Nenhum registro ainda.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ MODAL EXERCÍCIO ============ -->
+  <div class="modal" id="exModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-card">
+      <button class="modal-close" data-close aria-label="Fechar">✕</button>
+      <div class="video-wrap">
+        <iframe id="modalVideo" allowfullscreen frameborder="0"></iframe>
+      </div>
+      <div class="modal-body">
+        <span class="badge" id="modalMod">—</span>
+        <h3 id="modalNome">—</h3>
+        <div class="tip-block">
+          <span class="tip-label">DICAS</span>
+          <p id="modalDicas">—</p>
+        </div>
+        <div class="tip-block tip-alert">
+          <span class="tip-label">⚠ ALERTA CRÍTICO</span>
+          <p id="modalAlerta">—</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ TAB BAR ============ -->
+  <nav class="tabbar" role="tablist">
+    <button class="tab-btn active" data-tab="tab-dieta">
+      <span class="tab-ico">🍽</span><span class="tab-lbl">Dieta</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-compras">
+      <span class="tab-ico">🛒</span><span class="tab-lbl">Compras</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-treino">
+      <span class="tab-ico">📅</span><span class="tab-lbl">Treino</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-exercicios">
+      <span class="tab-ico">💪</span><span class="tab-lbl">Movs</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-historico">
+      <span class="tab-ico">📈</span><span class="tab-lbl">Hist</span>
+    </button>
+  </nav>
+
+  <script src="app.js"></script>
 </body>
 </html>
