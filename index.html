@@ -1,4 +1,681 @@
-const TemplatesRefeicaoVeg = {
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0A0A0A" />
+  <title>GUERRA FIT — Performance Híbrida</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* =================================================================
+       ESTILOS (CSS) - UI/UX DARK MODE & MOBILE FIRST
+       ================================================================= */
+    :root {
+      --bg-body: #0A0A0A;
+      --bg-card: #141414;
+      --bg-card-hover: #1A1A1A;
+      --primary: #FF4500;
+      --primary-dark: #CC3700;
+      --txt-1: #FFFFFF;
+      --txt-2: #A0A0A0;
+      --txt-3: #666666;
+      --border: #222222;
+      --font-head: 'Bebas Neue', cursive;
+      --font-body: 'Manrope', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      
+      --color-prot: #FF4500;
+      --color-carb: #FFB800;
+      --color-gord: #9D4EDD;
+      --color-fibra: #22C55E;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-body);
+      color: var(--txt-1);
+      padding-bottom: 90px;
+      line-height: 1.5;
+    }
+
+    /* HEADER */
+    .app-header {
+      background-color: var(--bg-body);
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand { display: flex; align-items: center; gap: 8px; }
+    .brand-mark { color: var(--primary); font-size: 1.5rem; }
+    .brand h1 { font-family: var(--font-head); font-size: 1.8rem; letter-spacing: 1px; margin: 0; }
+    .brand-accent { color: var(--primary); }
+    .brand-tag { font-family: var(--font-mono); font-size: 0.75rem; color: var(--txt-2); background: var(--bg-card); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); }
+
+    /* LAYOUT & TABS */
+    .app-main { padding: 20px; max-width: 600px; margin: 0 auto; }
+    .tab-content { display: none; animation: fadeIn 0.3s ease; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .section-head { margin-bottom: 24px; }
+    .section-num { font-family: var(--font-mono); color: var(--primary); font-size: 0.9rem; font-weight: 700; }
+    .section-head h2 { font-family: var(--font-head); font-size: 2rem; letter-spacing: 1px; margin: 4px 0; }
+    .section-sub { color: var(--txt-2); font-size: 0.9rem; }
+
+    /* FORMS & CARDS */
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .grid-2 .field { margin-bottom: 0; }
+    .field span { font-size: 0.85rem; font-weight: 600; color: var(--txt-2); text-transform: uppercase; letter-spacing: 0.5px; }
+    .field em { text-transform: none; color: var(--txt-3); font-style: normal; font-size: 0.75rem; }
+    .field input, .field select { background: var(--bg-body); color: var(--txt-1); border: 1px solid var(--border); padding: 12px; border-radius: 8px; font-family: var(--font-body); font-size: 1rem; font-weight: 600; outline: none; transition: border-color 0.2s; }
+    .field input:focus, .field select:focus { border-color: var(--primary); }
+
+    .btn-primary { width: 100%; background: var(--primary); color: #fff; border: none; padding: 16px; border-radius: 8px; font-family: var(--font-body); font-weight: 800; font-size: 1rem; text-transform: uppercase; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: transform 0.1s, background 0.2s; margin-top: 10px; }
+    .btn-primary:active { transform: scale(0.98); background: var(--primary-dark); }
+
+    /* MÉTRICAS (TMB/GETD/ALVO) */
+    .metric-row { display: flex; gap: 12px; margin-bottom: 24px; }
+    .metric { flex: 1; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 12px; text-align: center; display: flex; flex-direction: column; }
+    .metric-label { font-size: 0.75rem; color: var(--txt-2); font-weight: 700; margin-bottom: 4px; }
+    .metric-value { font-family: var(--font-mono); font-size: 1.2rem; font-weight: 700; color: var(--txt-1); }
+    .metric-unit { font-size: 0.7rem; color: var(--txt-3); }
+    .metric-hl { border-color: var(--primary); background: rgba(255, 69, 0, 0.05); }
+    .metric-hl .metric-value { color: var(--primary); }
+
+    .block-title { font-family: var(--font-head); font-size: 1.4rem; letter-spacing: 1px; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin: 24px 0 16px 0; display: flex; justify-content: space-between; align-items: flex-end; }
+    .block-sub { font-family: var(--font-mono); font-size: 0.8rem; color: var(--txt-3); }
+
+    /* MACROS DIÁRIOS */
+    .macros-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .macro-card { background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border); padding: 10px; text-align: center; display: flex; flex-direction: column; }
+    .macro-tag { font-size: 0.7rem; font-weight: 800; margin-bottom: 4px; }
+    .macro-num { font-family: var(--font-mono); font-size: 1.1rem; font-weight: 700; }
+    .macro-unit { font-size: 0.7rem; color: var(--txt-3); }
+    .macro-prot .macro-tag { color: var(--color-prot); }
+    .macro-carb .macro-tag { color: var(--color-carb); }
+    .macro-fat .macro-tag { color: var(--color-gord); }
+    .macro-fib .macro-tag { color: var(--color-fibra); }
+
+    /* LISTA DE REFEIÇÕES */
+    .ref-card { background: var(--bg-card); border: 1px solid var(--border); border-left: 4px solid var(--primary); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+    .ref-head { display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px dashed var(--border); padding-bottom: 12px; }
+    .ref-titulo { display: flex; align-items: center; gap: 8px; }
+    .ref-icon { font-size: 1.2rem; }
+    .ref-nome { font-family: var(--font-head); font-size: 1.3rem; letter-spacing: 1px; }
+    .ref-hora { font-family: var(--font-mono); font-size: 0.8rem; color: var(--txt-2); background: var(--bg-body); padding: 2px 6px; border-radius: 4px; }
+    .ref-kcal { font-family: var(--font-mono); font-size: 0.9rem; color: var(--primary); }
+    
+    .ref-alimentos { list-style: none; margin-bottom: 16px; }
+    .ref-alimento { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--bg-body); font-size: 0.9rem; }
+    .ref-alimento:last-child { border-bottom: none; }
+    .ref-alimento-nome { flex: 1; margin-left: 8px; color: var(--txt-1); }
+    .ref-alimento-qtd { font-family: var(--font-mono); font-weight: 700; color: var(--txt-2); }
+
+    .ref-macros { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; background: var(--bg-body); padding: 8px; border-radius: 6px; }
+    .ref-macro { display: flex; flex-direction: column; align-items: center; }
+    .ref-macro-lbl { font-size: 0.65rem; font-weight: 800; color: var(--txt-3); }
+    .ref-macro-val { font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; }
+    .m-p .ref-macro-val { color: var(--color-prot); }
+    .m-c .ref-macro-val { color: var(--color-carb); }
+    .m-g .ref-macro-val { color: var(--color-gord); }
+    .m-f .ref-macro-val { color: var(--color-fibra); }
+
+    /* LISTA DE COMPRAS */
+    .list-row { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .list-row:last-child { border-bottom: none; }
+    .list-icon { font-size: 1.5rem; background: var(--bg-body); padding: 8px; border-radius: 8px; }
+    .list-label { display: block; font-size: 0.8rem; color: var(--txt-2); text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
+    .list-value { display: block; font-size: 1rem; font-weight: 600; color: var(--txt-1); }
+
+    /* TREINOS (SEMANA) */
+    .dia-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px; overflow: hidden; }
+    .dia-hoje { border-color: var(--primary); }
+    .dia-header { background: rgba(255, 255, 255, 0.03); padding: 12px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
+    .dia-tag { font-family: var(--font-head); font-size: 1.2rem; width: 40px; text-align: center; color: var(--txt-2); }
+    .dia-tipo { flex: 1; font-weight: 700; font-size: 0.95rem; color: var(--txt-1); }
+    .dia-badge { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: 800; }
+    .hoje-tag { background: var(--primary); color: #fff; }
+    
+    .dia-exercicios { list-style: none; }
+    .dia-ex { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px; cursor: pointer; transition: background 0.2s; }
+    .dia-ex:active { background: var(--bg-body); }
+    .dia-ex:last-child { border-bottom: none; }
+    .dia-ex-nome { font-weight: 700; font-size: 0.95rem; color: var(--primary); }
+    .dia-ex-obs { font-size: 0.8rem; color: var(--txt-2); }
+    .dia-ex-prescricao { font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; display: flex; justify-content: space-between; background: var(--bg-body); padding: 6px 10px; border-radius: 4px; margin-top: 4px; }
+    .dia-ex-prescricao small { color: var(--txt-3); }
+    .dia-vazio { padding: 16px; text-align: center; color: var(--txt-3); font-size: 0.9rem; }
+
+    /* BIBLIOTECA & CHIPS */
+    .filter-bar { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+    .filter-bar input { background: var(--bg-card); border: 1px solid var(--border); color: #fff; padding: 12px; border-radius: 8px; font-family: var(--font-body); width: 100%; outline:none; }
+    .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+    .chip { background: var(--bg-card); border: 1px solid var(--border); color: var(--txt-2); padding: 6px 12px; border-radius: 100px; font-size: 0.8rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+    .chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    
+    .ex-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    .ex-card { background: var(--bg-card); border: 1px solid var(--border); padding: 16px; border-radius: 8px; cursor: pointer; }
+    .ex-card .badge { font-size: 0.65rem; background: var(--bg-body); color: var(--txt-2); padding: 2px 6px; border-radius: 4px; text-transform: uppercase; font-weight: 800; margin-bottom: 8px; display: inline-block; }
+    .ex-card h4 { font-size: 1rem; color: var(--txt-1); }
+
+    /* MODAL */
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; display: none; justify-content: center; align-items: flex-end; }
+    .modal.open { display: flex; }
+    .modal-backdrop { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); }
+    .modal-card { position: relative; background: var(--bg-body); width: 100%; max-height: 90vh; border-radius: 20px 20px 0 0; display: flex; flex-direction: column; animation: slideUp 0.3s ease-out; }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .modal-close { position: absolute; top: 12px; right: 16px; background: rgba(0,0,0,0.5); color: #fff; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; z-index: 10; }
+    .video-wrap { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 20px 20px 0 0; overflow: hidden; }
+    .video-wrap iframe { width: 100%; height: 100%; border: none; }
+    .modal-body { padding: 20px; overflow-y: auto; }
+    .modal-body h3 { font-family: var(--font-head); font-size: 1.8rem; margin: 8px 0 16px 0; }
+    .tip-block { background: var(--bg-card); padding: 12px; border-radius: 8px; margin-bottom: 12px; border-left: 3px solid var(--txt-3); }
+    .tip-alert { border-left-color: var(--primary); background: rgba(255, 69, 0, 0.05); }
+    .tip-label { font-size: 0.7rem; font-weight: 800; color: var(--txt-2); display: block; margin-bottom: 4px; }
+    .tip-alert .tip-label { color: var(--primary); }
+    .tip-block p { font-size: 0.9rem; color: var(--txt-1); }
+
+    /* TAB BAR */
+    .tabbar { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-card); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0; padding-bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 90; }
+    .tab-btn { flex: 1; background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--txt-3); cursor: pointer; transition: color 0.2s; }
+    .tab-btn.active { color: var(--primary); }
+    .tab-ico { font-size: 1.4rem; filter: grayscale(1); opacity: 0.5; transition: all 0.2s; }
+    .tab-btn.active .tab-ico { filter: grayscale(0); opacity: 1; }
+    .tab-lbl { font-size: 0.7rem; font-weight: 700; }
+    
+    .hidden { display: none !important; }
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--txt-3); }
+    .empty-icon { font-size: 3rem; margin-bottom: 16px; display: block; opacity: 0.5; }
+
+    /* HISTÓRICO */
+    .hist-item { background: var(--bg-card); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .hist-info { display: flex; flex-direction: column; }
+    .hist-nome { font-weight: 700; color: var(--txt-1); font-size: 0.95rem; }
+    .hist-data { font-size: 0.75rem; color: var(--txt-2); }
+    .hist-carga { font-family: var(--font-mono); font-size: 1.2rem; font-weight: 800; color: var(--primary); }
+    .hist-carga small { font-size: 0.7rem; color: var(--txt-2); margin-left: 2px; }
+
+    /* UTILS & DISCLAIMER */
+    .disclaimer { text-align: center; font-size: 0.7rem; color: var(--txt-3); padding: 30px 20px; border-top: 1px dashed var(--border); margin-top: 40px; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-mark">⚔</span>
+      <h1>GUERRA<span class="brand-accent">FIT</span></h1>
+    </div>
+    <div class="brand-tag" id="brandTag">PERFIL NÃO DEFINIDO</div>
+  </header>
+
+  <!-- MAIN AREA -->
+  <main class="app-main">
+
+    <!-- ===== ABA 1: DIETA ===== -->
+    <section class="tab-content active" id="tab-dieta">
+      <div class="section-head">
+        <span class="section-num">01</span>
+        <h2>Perfil &amp; Dieta</h2>
+        <p class="section-sub">Defina suas métricas. O motor calcula TMB, GETD e monta o protocolo de 6 refeições blindadas contra empilhamento.</p>
+      </div>
+
+      <form id="formPerfil" class="card form-card" novalidate>
+        <div class="grid-2">
+          <label class="field">
+            <span>Peso <em>(kg)</em></span>
+            <input type="number" id="peso" min="30" max="250" step="0.1" placeholder="ex: 93" required />
+          </label>
+          <label class="field">
+            <span>Altura <em>(cm)</em></span>
+            <input type="number" id="altura" min="120" max="230" step="1" placeholder="ex: 178" required />
+          </label>
+          <label class="field">
+            <span>Idade</span>
+            <input type="number" id="idade" min="14" max="90" step="1" value="42" required />
+          </label>
+          <label class="field">
+            <span>Refeições/dia</span>
+            <input type="number" id="numRefeicoes" value="6" readonly style="opacity: 0.7;" title="Fixado no Protocolo Guerra" />
+          </label>
+          <label class="field">
+            <span>Nível de atividade</span>
+            <select id="nivelAtividade" required>
+              <option value="moderado">Moderado (1.55)</option>
+              <option value="intenso" selected>Intenso (1.725)</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Objetivo</span>
+            <select id="objetivo" required>
+              <option value="perda_gordura">Perda de Gordura</option>
+              <option value="manutencao" selected>Manutenção / Hipertrofia</option>
+              <option value="ganho_massa">Bulking Pesado</option>
+            </select>
+          </label>
+          <label class="field" style="grid-column: 1 / -1;">
+            <span>Tipo de Dieta</span>
+            <select id="tipoDieta" required>
+              <option value="padrao" selected>Padrão (Onívora / Carnívora)</option>
+              <option value="vegetariana">Estrita Vegana (Plant-Based)</option>
+            </select>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-primary">
+          <span>GERAR PLANO NUTRICIONAL</span>
+          <span class="btn-arrow">→</span>
+        </button>
+      </form>
+
+      <div id="planoResultado" class="plano-wrap hidden">
+        <div class="metric-row">
+          <div class="metric">
+            <span class="metric-label">TMB</span>
+            <span class="metric-value" id="mTmb">—</span>
+            <span class="metric-unit">kcal</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">GETD</span>
+            <span class="metric-value" id="mGetd">—</span>
+            <span class="metric-unit">kcal</span>
+          </div>
+          <div class="metric metric-hl">
+            <span class="metric-label">ALVO DIÁRIO</span>
+            <span class="metric-value" id="mAlvo">—</span>
+            <span class="metric-unit">kcal/dia</span>
+          </div>
+        </div>
+
+        <h3 class="block-title">Distribuição de Macros</h3>
+        <div class="macros-grid">
+          <div class="macro-card macro-prot">
+            <span class="macro-tag">PROT</span>
+            <span class="macro-num" id="dProt">—</span>
+            <span class="macro-unit">g</span>
+          </div>
+          <div class="macro-card macro-carb">
+            <span class="macro-tag">CARB</span>
+            <span class="macro-num" id="dCarb">—</span>
+            <span class="macro-unit">g</span>
+          </div>
+          <div class="macro-card macro-fat">
+            <span class="macro-tag">GORD</span>
+            <span class="macro-num" id="dGord">—</span>
+            <span class="macro-unit">g</span>
+          </div>
+          <div class="macro-card macro-fib">
+            <span class="macro-tag">FIBRA</span>
+            <span class="macro-num" id="dFib">—</span>
+            <span class="macro-unit">g</span>
+          </div>
+        </div>
+
+        <h3 class="block-title">Rotina Alimentar <span class="block-sub" id="qtdRefLabel"></span></h3>
+        <div class="refeicoes-list" id="refeicoesGrid"></div>
+      </div>
+    </section>
+
+    <!-- ===== ABA 2: COMPRAS ===== -->
+    <section class="tab-content" id="tab-compras">
+      <div class="section-head">
+        <span class="section-num">02</span>
+        <h2>Lista de Supermercado</h2>
+        <p class="section-sub">Volume total para 7 dias adaptado ao seu tipo de dieta.</p>
+      </div>
+
+      <div id="comprasVazio" class="empty-state">
+        <span class="empty-icon">🛒</span>
+        <p>Gere primeiro o plano na aba <strong>Dieta</strong>.</p>
+      </div>
+
+      <div id="comprasResultado" class="hidden">
+        <div class="card">
+          <div class="list-row">
+            <span class="list-icon">🥩</span>
+            <div>
+              <span class="list-label">Fontes de Proteína</span>
+              <span class="list-value" id="cCarnes">—</span>
+            </div>
+          </div>
+          <div class="list-row">
+            <span class="list-icon">🍚</span>
+            <div>
+              <span class="list-label">Fontes de Carboidrato</span>
+              <span class="list-value" id="cCarbo">—</span>
+            </div>
+          </div>
+          <div class="list-row">
+            <span class="list-icon">🥦</span>
+            <div>
+              <span class="list-label">Vegetais e Fibras</span>
+              <span class="list-value" id="cVeg">—</span>
+            </div>
+          </div>
+          <div class="list-row">
+            <span class="list-icon">🫒</span>
+            <div>
+              <span class="list-label">Gorduras & Extras</span>
+              <span class="list-value" id="cExtras">—</span>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="block-title">Suplementação Base</h3>
+        <div class="card" id="cSupCard"></div>
+      </div>
+    </section>
+
+    <!-- ===== ABA 3: TREINO & AGENDA ===== -->
+    <section class="tab-content" id="tab-treino">
+      <div class="section-head">
+        <span class="section-num">03</span>
+        <h2>Master Schedule</h2>
+        <p class="section-sub">Periodização ancorada nos eventos externos (CrossFit e Hyrox). Madrugadas 100% Gaviões.</p>
+      </div>
+
+      <form id="formRpe" class="card grid-2" style="grid-template-columns: 1fr; gap: 10px;">
+        <label class="field">
+          <span>RPE Externo (Cross / Hyrox) <em>1 = leve · 10 = devastador</em></span>
+          <input type="range" id="rpeRange" min="1" max="10" step="1" value="8" />
+          <div style="text-align:center; font-family: var(--font-mono); font-size: 1.2rem; font-weight: bold; color: var(--primary);"><span id="rpeValor">8</span>/10</div>
+        </label>
+        <button type="submit" class="btn-primary" style="margin-top: 0;">
+          <span>ATUALIZAR PERÍODO</span>
+        </button>
+      </form>
+
+      <div id="semanaResultado" class="hidden"></div>
+      
+      <!-- Container do Botão de Calendário (Injetado via JS) -->
+      <div id="calendarContainer"></div>
+    </section>
+
+    <!-- ===== ABA 4: BIBLIOTECA ===== -->
+    <section class="tab-content" id="tab-exercicios">
+      <div class="section-head">
+        <span class="section-num">04</span>
+        <h2>Arsenal & Técnica</h2>
+        <p class="section-sub">Máquinas Articuladas (Gaviões) e Padrões de Movimento. Toque para vídeo.</p>
+      </div>
+
+      <div class="filter-bar">
+        <input type="search" id="exBusca" placeholder="Buscar máquina ou movimento…" />
+        <div class="chips" id="exChips"></div>
+      </div>
+
+      <div class="ex-grid" id="exGrid"></div>
+    </section>
+
+    <!-- ===== ABA 5: HISTÓRICO ===== -->
+    <section class="tab-content" id="tab-historico">
+      <div class="section-head">
+        <span class="section-num">05</span>
+        <h2>Log de Cargas (PR)</h2>
+        <p class="section-sub">Registre seu progresso nas máquinas da Gaviões. Dados salvos localmente.</p>
+      </div>
+
+      <form id="formCarga" class="card form-card">
+        <label class="field">
+          <span>Máquina / Exercício</span>
+          <select id="cargaEx" required></select>
+        </label>
+        <div class="grid-2">
+          <label class="field">
+            <span>Carga Total <em>(kg)</em></span>
+            <input type="number" id="cargaKg" min="0" step="0.5" placeholder="ex: 120" required />
+          </label>
+          <label class="field">
+            <span>Repetições</span>
+            <input type="number" id="cargaReps" min="1" step="1" placeholder="ex: 8" required />
+          </label>
+        </div>
+        <button type="submit" class="btn-primary">
+          <span>REGISTRAR CARGA</span>
+          <span class="btn-arrow">+</span>
+        </button>
+      </form>
+
+      <h3 class="block-title">Últimos Registros</h3>
+      <div id="historicoLista">
+        <div class="empty-state small"><p>Nenhum registro ainda.</p></div>
+      </div>
+    </section>
+    
+    <div class="disclaimer">
+      ⚠ DevFit Coach 2026. A prática de jejum intermitente, dietas extremas ou treinos de alta intensidade na madrugada sem acompanhamento presencial médico e nutricional pode gerar riscos à saúde.
+    </div>
+
+  </main>
+
+  <!-- MODAL DE VÍDEO -->
+  <div class="modal" id="exModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-card">
+      <button class="modal-close" data-close aria-label="Fechar">✕</button>
+      <div class="video-wrap">
+        <iframe id="modalVideo" allowfullscreen frameborder="0"></iframe>
+      </div>
+      <div class="modal-body">
+        <span class="badge" id="modalMod" style="font-size: 0.7rem; background: var(--border); padding: 4px 8px; border-radius: 4px; color: var(--txt-2);">—</span>
+        <h3 id="modalNome">—</h3>
+        <div class="tip-block">
+          <span class="tip-label">DICAS DE EXECUÇÃO</span>
+          <p id="modalDicas">—</p>
+        </div>
+        <div class="tip-block tip-alert">
+          <span class="tip-label">⚠ ALERTA CRÍTICO</span>
+          <p id="modalAlerta">—</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB BAR MENU -->
+  <nav class="tabbar" role="tablist">
+    <button class="tab-btn active" data-tab="tab-dieta">
+      <span class="tab-ico">🍽</span><span class="tab-lbl">Dieta</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-compras">
+      <span class="tab-ico">🛒</span><span class="tab-lbl">Compras</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-treino">
+      <span class="tab-ico">📅</span><span class="tab-lbl">Treino</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-exercicios">
+      <span class="tab-ico">💪</span><span class="tab-lbl">Máquinas</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-historico">
+      <span class="tab-ico">📈</span><span class="tab-lbl">Cargas</span>
+    </button>
+  </nav>
+
+  <!-- =================================================================
+       JAVASCRIPT (MOTOR V8 - EXPANDIDO E COMPLETO)
+       ================================================================= -->
+  <script>
+    /* ============================================================
+       ENGINE 1 — NUTRIÇÃO
+       ============================================================ */
+    const NutricaoEngine = {
+      FATOR_ATIVIDADE: { 
+        moderado: 1.55, 
+        intenso: 1.725 
+      },
+      CALORIAS_POR_GRAMA: { 
+        proteina: 4, 
+        carboidrato: 4, 
+        gordura: 9 
+      },
+
+      calcularPlanoDiario(peso, altura, nivelAtividade, objetivo, numRefeicoes = 6, idade = 42, tipoDieta = 'padrao') {
+        const tmb = (10 * peso) + (6.25 * altura) - (5 * idade) + 5;
+        const fator = this.FATOR_ATIVIDADE[nivelAtividade] || this.FATOR_ATIVIDADE.intenso;
+        const getd = tmb * fator;
+
+        let caloriasAlvo = getd;
+        if (objetivo === 'perda_gordura') {
+          caloriasAlvo = getd - 500;
+        } else if (objetivo === 'ganho_massa') {
+          caloriasAlvo = getd + 400;
+        }
+
+        const proteinaGrama = peso * 2.2;
+        const gorduraGrama  = peso * 1.0;
+        const proteinaKcal  = proteinaGrama * this.CALORIAS_POR_GRAMA.proteina;
+        const gorduraKcal   = gorduraGrama  * this.CALORIAS_POR_GRAMA.gordura;
+        const carboidratoKcal  = caloriasAlvo - (proteinaKcal + gorduraKcal);
+        const carboidratoGrama = carboidratoKcal / this.CALORIAS_POR_GRAMA.carboidrato;
+        const fibrasGrama = (caloriasAlvo / 1000) * 14;
+
+        const macrosPorRefeicao = {
+          calorias:    Math.round(caloriasAlvo    / numRefeicoes),
+          proteina:    Math.round(proteinaGrama   / numRefeicoes),
+          carboidrato: Math.round(carboidratoGrama/ numRefeicoes),
+          gordura:     Math.round(gorduraGrama    / numRefeicoes),
+          fibras:      Math.round(fibrasGrama     / numRefeicoes)
+        };
+
+        return {
+          tipoDieta: tipoDieta,
+          metricas: { 
+            tmb: Math.round(tmb), 
+            getd: Math.round(getd), 
+            caloriasAlvo: Math.round(caloriasAlvo) 
+          },
+          macrosDiarios: {
+            proteina:    Math.round(proteinaGrama),
+            carboidrato: Math.round(carboidratoGrama),
+            gordura:     Math.round(gorduraGrama),
+            fibras:      Math.round(fibrasGrama)
+          },
+          refeicoes: { 
+            quantidade: numRefeicoes, 
+            porRefeicao: macrosPorRefeicao 
+          }
+        };
+      }
+    };
+
+    /* ============================================================
+       BASE DE ALIMENTOS
+       ============================================================ */
+    const Alimentos = {
+      // --- Proteínas Animais ---
+      ovo_inteiro:   { nome: "Ovo inteiro",            emoji: "🥚", prot: 13, carb: 1,  gord: 11, fibra: 0,  un: "un", peso_un: 50 },
+      frango:        { nome: "Peito de frango (cru)",  emoji: "🍗", prot: 22, carb: 0,  gord: 2,  fibra: 0  },
+      patinho:       { nome: "Patinho moído (cru)",    emoji: "🥩", prot: 21, carb: 0,  gord: 6,  fibra: 0  },
+      tilapia:       { nome: "Filé de tilápia",        emoji: "🐟", prot: 20, carb: 0,  gord: 2,  fibra: 0  },
+      whey:          { nome: "Whey Protein",           emoji: "💪", prot: 80, carb: 8,  gord: 5,  fibra: 0  },
+      iogurte:       { nome: "Iogurte natural desn.",  emoji: "🥛", prot: 10, carb: 4,  gord: 0,  fibra: 0  },
+      
+      // --- Proteínas Estritas Veganas ---
+      tofu:          { nome: "Tofu (Firme)",           emoji: "🧊", prot: 16, carb: 3,  gord: 9,  fibra: 2  },
+      pts:           { nome: "Prot. Texturizada Soja", emoji: "🌱", prot: 50, carb: 30, gord: 1,  fibra: 15 },
+      prot_veg:      { nome: "Whey Vegano (Ervilha)",  emoji: "🌿", prot: 75, carb: 5,  gord: 6,  fibra: 3  },
+      leite_soja:    { nome: "Leite de Soja (Zero)",   emoji: "🥛", prot: 3,  carb: 2,  gord: 2,  fibra: 0  },
+
+      // --- Carboidratos Limpos ---
+      arroz:         { nome: "Arroz cozido",           emoji: "🍚", prot: 3,  carb: 28, gord: 0,  fibra: 0  },
+      batata_doce:   { nome: "Batata-doce cozida",     emoji: "🍠", prot: 2,  carb: 20, gord: 0,  fibra: 3  },
+      macarrao:      { nome: "Macarrão cozido",        emoji: "🍝", prot: 5,  carb: 25, gord: 1,  fibra: 1  },
+      aveia:         { nome: "Aveia em flocos",        emoji: "🌾", prot: 14, carb: 67, gord: 8,  fibra: 9  },
+      pao_integral:  { nome: "Pão integral",           emoji: "🍞", prot: 9,  carb: 43, gord: 4,  fibra: 6  },
+      banana:        { nome: "Banana",                 emoji: "🍌", prot: 1,  carb: 23, gord: 0,  fibra: 3  },
+      maca:          { nome: "Maçã (Inteira)",         emoji: "🍎", prot: 0,  carb: 14, gord: 0,  fibra: 2  },
+      doce_leite:    { nome: "Doce de Leite",          emoji: "🍯", prot: 6,  carb: 60, gord: 6,  fibra: 0  },
+      lentilha:      { nome: "Lentilha cozida",        emoji: "🍲", prot: 9,  carb: 20, gord: 0,  fibra: 8  },
+      grao_de_bico:  { nome: "Grão-de-bico cozido",    emoji: "🧆", prot: 9,  carb: 27, gord: 2,  fibra: 7  },
+
+      // --- Fibras e Vegetais ---
+      brocolis:      { nome: "Brócolis cozido",        emoji: "🥦", prot: 3,  carb: 7,  gord: 0,  fibra: 3  },
+      salada_verde:  { nome: "Salada verde (mix)",     emoji: "🥗", prot: 1,  carb: 3,  gord: 0,  fibra: 2  },
+      legumes_mix:   { nome: "Legumes variados",       emoji: "🥕", prot: 1,  carb: 8,  gord: 0,  fibra: 3  },
+
+      // --- Gorduras ---
+      azeite:        { nome: "Azeite extra-virgem",    emoji: "🫒", prot: 0,  carb: 0,  gord: 100, fibra: 0  },
+      pasta_amend:   { nome: "Pasta de amendoim",      emoji: "🥜", prot: 25, carb: 20, gord: 50, fibra: 6  },
+      castanhas:     { nome: "Mix de Castanhas",       emoji: "🌰", prot: 15, carb: 16, gord: 54, fibra: 8  }
+    };
+
+    /* ============================================================
+       TEMPLATES DE REFEIÇÃO (Zero Empilhamento)
+       ============================================================ */
+    const TemplatesRefeicao = {
+      6: [
+        { 
+          nome: "Pré-Treino Expresso", hora: "03:30", icon: "⚡", 
+          slots: [
+            { tipo: "prot", alimentos: [] }, 
+            { tipo: "carb", alimentos: ["doce_leite"] }, 
+            { tipo: "gord", alimentos: [] }, 
+            { tipo: "fibra", alimentos: [] }
+          ] 
+        },
+        { 
+          nome: "Desjejum (Pós-Fretado)", hora: "06:30", icon: "☀️", 
+          slots: [
+            { tipo: "prot", alimentos: ["ovo_inteiro"] }, 
+            { tipo: "carb", alimentos: ["pao_integral"] }, 
+            { tipo: "gord", alimentos: [] }, 
+            { tipo: "fibra", alimentos: [] }
+          ] 
+        },
+        { 
+          nome: "Lanche da Manhã (Estudos)", hora: "09:30", icon: "🥪", 
+          slots: [
+            { tipo: "prot", alimentos: ["iogurte"] }, 
+            { tipo: "carb", alimentos: ["maca"] }, 
+            { tipo: "gord", alimentos: ["castanhas"] }, 
+            { tipo: "fibra", alimentos: [] }
+          ] 
+        },
+        { 
+          nome: "Almoço", hora: "12:30", icon: "🍽", 
+          slots: [
+            { tipo: "prot", alimentos: ["frango"] }, 
+            { tipo: "carb", alimentos: ["arroz"] },  
+            { tipo: "gord", alimentos: ["azeite"] }, 
+            { tipo: "fibra", alimentos: ["salada_verde"] }
+          ] 
+        },
+        { 
+          nome: "Lanche da Tarde (Escritório)", hora: "16:30", icon: "☕", 
+          slots: [
+            { tipo: "prot", alimentos: ["whey"] }, 
+            { tipo: "carb", alimentos: ["aveia"] }, 
+            { tipo: "gord", alimentos: ["pasta_amend"] }, 
+            { tipo: "fibra", alimentos: [] }
+          ] 
+        },
+        { 
+          nome: "Jantar (Família)", hora: "20:00", icon: "🌙", 
+          slots: [
+            { tipo: "prot", alimentos: ["patinho"] }, 
+            { tipo: "carb", alimentos: ["batata_doce"] }, 
+            { tipo: "gord", alimentos: ["azeite"] }, 
+            { tipo: "fibra", alimentos: ["legumes_mix"] }
+          ] 
+        }
+      ]
+    };
+
+    const TemplatesRefeicaoVeg = {
       6: [
         { 
           nome: "Pré-Treino Expresso", hora: "03:30", icon: "⚡", 
