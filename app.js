@@ -1,5 +1,5 @@
 /* =================================================================
-   GUERRA FIT — app.js (v6 Expandido - Veg Strict + Gaviões Arsenal)
+   GUERRA FIT — app.js (v7 Corrigido - Zero Empilhamento)
    Master Schedule + Módulo Vegano + Exportação ICS + 6 Refeições
    ================================================================= */
 
@@ -108,7 +108,7 @@ const Alimentos = {
 };
 
 /* ============================================================
-   TEMPLATES DE REFEIÇÃO (6 Refeições - Padrão vs Vegano Estrito)
+   TEMPLATES DE REFEIÇÃO (Corrigido para 1 item por slot = Sem Empilhar)
    ============================================================ */
 const TemplatesRefeicao = {
   6: [
@@ -116,7 +116,7 @@ const TemplatesRefeicao = {
       nome: "Pré-Treino Expresso", hora: "03:30", icon: "⚡", 
       slots: [
         { tipo: "prot", alimentos: [] }, 
-        { tipo: "carb", alimentos: ["doce_leite", "banana"] }, 
+        { tipo: "carb", alimentos: ["doce_leite"] }, // Só 1 carbo principal
         { tipo: "gord", alimentos: [] }, 
         { tipo: "fibra", alimentos: [] }
       ] 
@@ -142,8 +142,8 @@ const TemplatesRefeicao = {
     { 
       nome: "Almoço", hora: "12:30", icon: "🍽", 
       slots: [
-        { tipo: "prot", alimentos: ["frango", "patinho"] }, 
-        { tipo: "carb", alimentos: ["arroz", "macarrao"] }, 
+        { tipo: "prot", alimentos: ["frango"] }, // SÓ Frango
+        { tipo: "carb", alimentos: ["arroz"] },  // SÓ Arroz
         { tipo: "gord", alimentos: ["azeite"] }, 
         { tipo: "fibra", alimentos: ["salada_verde"] }
       ] 
@@ -160,10 +160,10 @@ const TemplatesRefeicao = {
     { 
       nome: "Jantar (Família)", hora: "20:00", icon: "🌙", 
       slots: [
-        { tipo: "prot", alimentos: ["tilapia", "patinho"] }, 
-        { tipo: "carb", alimentos: ["batata_doce"] }, 
+        { tipo: "prot", alimentos: ["patinho"] }, // SÓ Patinho
+        { tipo: "carb", alimentos: ["batata_doce"] }, // SÓ Batata Doce
         { tipo: "gord", alimentos: ["azeite"] }, 
-        { tipo: "fibra", alimentos: ["legumes_mix", "brocolis"] }
+        { tipo: "fibra", alimentos: ["legumes_mix"] }
       ] 
     }
   ]
@@ -201,8 +201,8 @@ const TemplatesRefeicaoVeg = {
     { 
       nome: "Almoço", hora: "12:30", icon: "🍽", 
       slots: [
-        { tipo: "prot", alimentos: ["pts"] }, 
-        { tipo: "carb", alimentos: ["lentilha", "arroz"] }, 
+        { tipo: "prot", alimentos: ["pts"] }, // SÓ PTS
+        { tipo: "carb", alimentos: ["lentilha"] }, // SÓ Lentilha
         { tipo: "gord", alimentos: ["azeite"] }, 
         { tipo: "fibra", alimentos: ["salada_verde"] }
       ] 
@@ -219,16 +219,16 @@ const TemplatesRefeicaoVeg = {
     { 
       nome: "Jantar (Família)", hora: "20:00", icon: "🌙", 
       slots: [
-        { tipo: "prot", alimentos: ["tofu", "pts"] }, 
-        { tipo: "carb", alimentos: ["grao_de_bico", "batata_doce"] }, 
+        { tipo: "prot", alimentos: ["tofu"] }, // SÓ Tofu
+        { tipo: "carb", alimentos: ["grao_de_bico"] }, // SÓ Grão de Bico
         { tipo: "gord", alimentos: ["azeite"] }, 
-        { tipo: "fibra", alimentos: ["brocolis", "legumes_mix"] }
+        { tipo: "fibra", alimentos: ["brocolis"] }
       ] 
     }
   ]
 };
 
-// Como o seu app define "6" refeições por padrão agora, espelhamos se o usuário preencher algo diferente.
+// Fallbacks de Templates
 for(let i=3; i<=6; i++){
   if(!TemplatesRefeicao[i]) TemplatesRefeicao[i] = TemplatesRefeicao[6];
   if(!TemplatesRefeicaoVeg[i]) TemplatesRefeicaoVeg[i] = TemplatesRefeicaoVeg[6];
@@ -376,7 +376,7 @@ const ComprasEngine = {
     const isVeg = tipoDieta === 'vegetariana';
 
     const strCarnes = isVeg 
-      ? Math.round((protComida * this.CONVERSAO.proteina_animal) / 1000) + " kg (Tofu / PTS / Tempeh)"
+      ? Math.round((protComida * this.CONVERSAO.proteina_animal) / 1000) + " kg (Tofu / PTS)"
       : Math.round((protComida * this.CONVERSAO.proteina_animal) / 1000) + " kg (Frango/Patinho/Ovos)";
 
     const strCarbos = isVeg
@@ -669,7 +669,7 @@ const UI = {
   mapaExercicios: Object.fromEntries(BibliotecaExercicios.map(e => [e.id, e])),
 
   init() {
-    this.injetarHtmlDieta(); // <- NOVA FUNÇÃO (Zero toque no HTML)
+    this.injetarHtmlDieta(); 
     
     this.bindTabs(); 
     this.bindFormPerfil(); 
@@ -685,7 +685,6 @@ const UI = {
     CalendarEngine.init();
   },
 
-  // Injeção Automática do Dropdown Vegano
   injetarHtmlDieta() {
     const formGrid = this.$('#formPerfil .grid-2');
     if (formGrid && !this.$('#tipoDieta')) {
@@ -698,7 +697,6 @@ const UI = {
           </select>
         </label>
       `);
-      // Força o número de refeições para 6 no visual também
       if(this.$('#numRefeicoes')) {
         this.$('#numRefeicoes').value = 6;
       }
@@ -728,7 +726,7 @@ const UI = {
         peso: parseFloat(this.$('#peso').value), 
         altura: parseFloat(this.$('#altura').value),
         idade: parseInt(this.$('#idade').value, 10), 
-        numRefeicoes: 6, // Fixado para o protocolo de janelas do Guerra
+        numRefeicoes: 6, 
         nivelAtividade: this.$('#nivelAtividade').value, 
         objetivo: this.$('#objetivo').value,
         tipoDieta: objTipoDieta
