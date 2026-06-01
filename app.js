@@ -1,6 +1,6 @@
 /* =================================================================
-   GUERRA FIT — app.js (v5 Expandido)
-   Master Schedule + Módulo Vegetariano + Exportação ICS
+   GUERRA FIT — app.js (v6 Expandido - Veg Strict + Gaviões Arsenal)
+   Master Schedule + Módulo Vegano + Exportação ICS + 6 Refeições
    ================================================================= */
 
 /* ============================================================
@@ -17,7 +17,7 @@ const NutricaoEngine = {
     gordura: 9 
   },
 
-  calcularPlanoDiario(peso, altura, nivelAtividade, objetivo, numRefeicoes = 4, idade = 42, tipoDieta = 'padrao') {
+  calcularPlanoDiario(peso, altura, nivelAtividade, objetivo, numRefeicoes = 6, idade = 42, tipoDieta = 'padrao') {
     const tmb = (10 * peso) + (6.25 * altura) - (5 * idade) + 5;
     const fator = this.FATOR_ATIVIDADE[nivelAtividade] || this.FATOR_ATIVIDADE.intenso;
     const getd = tmb * fator;
@@ -70,7 +70,7 @@ const NutricaoEngine = {
    BASE DE ALIMENTOS
    ============================================================ */
 const Alimentos = {
-  // Proteínas Animais
+  // --- Proteínas Animais ---
   ovo_inteiro:   { nome: "Ovo inteiro",            emoji: "🥚", prot: 13, carb: 1,  gord: 11, fibra: 0,  un: "un", peso_un: 50 },
   frango:        { nome: "Peito de frango (cru)",  emoji: "🍗", prot: 22, carb: 0,  gord: 2,  fibra: 0  },
   patinho:       { nome: "Patinho moído (cru)",    emoji: "🥩", prot: 21, carb: 0,  gord: 6,  fibra: 0  },
@@ -78,74 +78,40 @@ const Alimentos = {
   whey:          { nome: "Whey Protein",           emoji: "💪", prot: 80, carb: 8,  gord: 5,  fibra: 0  },
   iogurte:       { nome: "Iogurte natural desn.",  emoji: "🥛", prot: 10, carb: 4,  gord: 0,  fibra: 0  },
   
-  // Proteínas Vegetais
-  tofu:          { nome: "Tofu (Queijo de Soja)",  emoji: "🧊", prot: 15, carb: 3,  gord: 8,  fibra: 2  },
+  // --- Proteínas Estritas Veganas ---
+  tofu:          { nome: "Tofu (Firme)",           emoji: "🧊", prot: 16, carb: 3,  gord: 9,  fibra: 2  },
   pts:           { nome: "Prot. Texturizada Soja", emoji: "🌱", prot: 50, carb: 30, gord: 1,  fibra: 15 },
+  prot_veg:      { nome: "Whey Vegano (Ervilha)",  emoji: "🌿", prot: 75, carb: 5,  gord: 6,  fibra: 3  },
+  leite_soja:    { nome: "Leite de Soja (Zero)",   emoji: "🥛", prot: 3,  carb: 2,  gord: 2,  fibra: 0  },
 
-  // Carboidratos Limpos
+  // --- Carboidratos Limpos ---
   arroz:         { nome: "Arroz cozido",           emoji: "🍚", prot: 3,  carb: 28, gord: 0,  fibra: 0  },
   batata_doce:   { nome: "Batata-doce cozida",     emoji: "🍠", prot: 2,  carb: 20, gord: 0,  fibra: 3  },
   macarrao:      { nome: "Macarrão cozido",        emoji: "🍝", prot: 5,  carb: 25, gord: 1,  fibra: 1  },
   aveia:         { nome: "Aveia em flocos",        emoji: "🌾", prot: 14, carb: 67, gord: 8,  fibra: 9  },
   pao_integral:  { nome: "Pão integral",           emoji: "🍞", prot: 9,  carb: 43, gord: 4,  fibra: 6  },
   banana:        { nome: "Banana",                 emoji: "🍌", prot: 1,  carb: 23, gord: 0,  fibra: 3  },
+  maca:          { nome: "Maçã (Inteira)",         emoji: "🍎", prot: 0,  carb: 14, gord: 0,  fibra: 2  },
   doce_leite:    { nome: "Doce de Leite",          emoji: "🍯", prot: 6,  carb: 60, gord: 6,  fibra: 0  },
   lentilha:      { nome: "Lentilha cozida",        emoji: "🍲", prot: 9,  carb: 20, gord: 0,  fibra: 8  },
   grao_de_bico:  { nome: "Grão-de-bico cozido",    emoji: "🧆", prot: 9,  carb: 27, gord: 2,  fibra: 7  },
 
-  // Fibras e Vegetais
+  // --- Fibras e Vegetais ---
   brocolis:      { nome: "Brócolis cozido",        emoji: "🥦", prot: 3,  carb: 7,  gord: 0,  fibra: 3  },
   salada_verde:  { nome: "Salada verde (mix)",     emoji: "🥗", prot: 1,  carb: 3,  gord: 0,  fibra: 2  },
   legumes_mix:   { nome: "Legumes variados",       emoji: "🥕", prot: 1,  carb: 8,  gord: 0,  fibra: 3  },
 
-  // Gorduras
+  // --- Gorduras ---
   azeite:        { nome: "Azeite extra-virgem",    emoji: "🫒", prot: 0,  carb: 0,  gord: 100, fibra: 0  },
-  pasta_amend:   { nome: "Pasta de amendoim",      emoji: "🥜", prot: 25, carb: 20, gord: 50, fibra: 6  }
+  pasta_amend:   { nome: "Pasta de amendoim",      emoji: "🥜", prot: 25, carb: 20, gord: 50, fibra: 6  },
+  castanhas:     { nome: "Mix de Castanhas",       emoji: "🌰", prot: 15, carb: 16, gord: 54, fibra: 8  }
 };
 
 /* ============================================================
-   TEMPLATES DE REFEIÇÃO (Sem Empilhamento)
+   TEMPLATES DE REFEIÇÃO (6 Refeições - Padrão vs Vegano Estrito)
    ============================================================ */
 const TemplatesRefeicao = {
-  4: [
-    { 
-      nome: "Pré-Treino (Madrugada)", hora: "03:30", icon: "⚡", 
-      slots: [
-        { tipo: "prot", alimentos: ["whey"] }, 
-        { tipo: "carb", alimentos: ["banana"] }, 
-        { tipo: "gord", alimentos: [] }, 
-        { tipo: "fibra", alimentos: [] }
-      ] 
-    },
-    { 
-      nome: "Desjejum", hora: "06:30", icon: "☀️", 
-      slots: [
-        { tipo: "prot", alimentos: ["ovo_inteiro"] }, 
-        { tipo: "carb", alimentos: ["pao_integral"] }, 
-        { tipo: "gord", alimentos: [] }, 
-        { tipo: "fibra", alimentos: ["banana"] }
-      ] 
-    },
-    { 
-      nome: "Almoço", hora: "12:30", icon: "🍽", 
-      slots: [
-        { tipo: "prot", alimentos: ["frango"] }, 
-        { tipo: "carb", alimentos: ["arroz"] }, 
-        { tipo: "gord", alimentos: ["azeite"] }, 
-        { tipo: "fibra", alimentos: ["salada_verde"] }
-      ] 
-    },
-    { 
-      nome: "Jantar", hora: "20:00", icon: "🌙", 
-      slots: [
-        { tipo: "prot", alimentos: ["patinho"] }, 
-        { tipo: "carb", alimentos: ["batata_doce"] }, 
-        { tipo: "gord", alimentos: ["azeite"] }, 
-        { tipo: "fibra", alimentos: ["brocolis"] }
-      ] 
-    }
-  ],
-  5: [
+  6: [
     { 
       nome: "Pré-Treino Expresso", hora: "03:30", icon: "⚡", 
       slots: [
@@ -165,16 +131,25 @@ const TemplatesRefeicao = {
       ] 
     },
     { 
+      nome: "Lanche da Manhã (Estudos)", hora: "09:30", icon: "🥪", 
+      slots: [
+        { tipo: "prot", alimentos: ["iogurte"] }, 
+        { tipo: "carb", alimentos: ["maca"] }, 
+        { tipo: "gord", alimentos: ["castanhas"] }, 
+        { tipo: "fibra", alimentos: [] }
+      ] 
+    },
+    { 
       nome: "Almoço", hora: "12:30", icon: "🍽", 
       slots: [
-        { tipo: "prot", alimentos: ["frango"] }, 
-        { tipo: "carb", alimentos: ["arroz"] }, 
+        { tipo: "prot", alimentos: ["frango", "patinho"] }, 
+        { tipo: "carb", alimentos: ["arroz", "macarrao"] }, 
         { tipo: "gord", alimentos: ["azeite"] }, 
         { tipo: "fibra", alimentos: ["salada_verde"] }
       ] 
     },
     { 
-      nome: "Lanche (Estudos/Escritório)", hora: "16:30", icon: "🥪", 
+      nome: "Lanche da Tarde (Escritório)", hora: "16:30", icon: "☕", 
       slots: [
         { tipo: "prot", alimentos: ["whey"] }, 
         { tipo: "carb", alimentos: ["aveia"] }, 
@@ -185,70 +160,41 @@ const TemplatesRefeicao = {
     { 
       nome: "Jantar (Família)", hora: "20:00", icon: "🌙", 
       slots: [
-        { tipo: "prot", alimentos: ["patinho"] }, 
+        { tipo: "prot", alimentos: ["tilapia", "patinho"] }, 
         { tipo: "carb", alimentos: ["batata_doce"] }, 
         { tipo: "gord", alimentos: ["azeite"] }, 
-        { tipo: "fibra", alimentos: ["legumes_mix"] }
+        { tipo: "fibra", alimentos: ["legumes_mix", "brocolis"] }
       ] 
     }
   ]
 };
 
 const TemplatesRefeicaoVeg = {
-  4: [
-    { 
-      nome: "Pré-Treino (Madrugada)", hora: "03:30", icon: "⚡", 
-      slots: [
-        { tipo: "prot", alimentos: ["whey"] }, 
-        { tipo: "carb", alimentos: ["banana"] }, 
-        { tipo: "gord", alimentos: [] }, 
-        { tipo: "fibra", alimentos: [] }
-      ] 
-    },
-    { 
-      nome: "Desjejum", hora: "06:30", icon: "☀️", 
-      slots: [
-        { tipo: "prot", alimentos: ["ovo_inteiro"] }, 
-        { tipo: "carb", alimentos: ["pao_integral"] }, 
-        { tipo: "gord", alimentos: [] }, 
-        { tipo: "fibra", alimentos: ["banana"] }
-      ] 
-    },
-    { 
-      nome: "Almoço", hora: "12:30", icon: "🍽", 
-      slots: [
-        { tipo: "prot", alimentos: ["pts"] }, 
-        { tipo: "carb", alimentos: ["lentilha"] }, 
-        { tipo: "gord", alimentos: ["azeite"] }, 
-        { tipo: "fibra", alimentos: ["salada_verde"] }
-      ] 
-    },
-    { 
-      nome: "Jantar", hora: "20:00", icon: "🌙", 
-      slots: [
-        { tipo: "prot", alimentos: ["tofu", "ovo_inteiro"] }, 
-        { tipo: "carb", alimentos: ["grao_de_bico"] }, 
-        { tipo: "gord", alimentos: ["azeite"] }, 
-        { tipo: "fibra", alimentos: ["brocolis"] }
-      ] 
-    }
-  ],
-  5: [
+  6: [
     { 
       nome: "Pré-Treino Expresso", hora: "03:30", icon: "⚡", 
       slots: [
         { tipo: "prot", alimentos: [] }, 
-        { tipo: "carb", alimentos: ["doce_leite", "banana"] }, 
-        { tipo: "gord", alimentos: [] }, 
+        { tipo: "carb", alimentos: ["banana"] }, 
+        { tipo: "gord", alimentos: ["pasta_amend"] }, 
         { tipo: "fibra", alimentos: [] }
       ] 
     },
     { 
       nome: "Desjejum (Pós-Fretado)", hora: "06:30", icon: "☀️", 
       slots: [
-        { tipo: "prot", alimentos: ["ovo_inteiro"] }, 
+        { tipo: "prot", alimentos: ["tofu"] }, 
         { tipo: "carb", alimentos: ["pao_integral"] }, 
         { tipo: "gord", alimentos: [] }, 
+        { tipo: "fibra", alimentos: [] }
+      ] 
+    },
+    { 
+      nome: "Lanche da Manhã (Estudos)", hora: "09:30", icon: "🥪", 
+      slots: [
+        { tipo: "prot", alimentos: ["leite_soja"] }, 
+        { tipo: "carb", alimentos: ["maca"] }, 
+        { tipo: "gord",  alimentos: ["castanhas"] }, 
         { tipo: "fibra", alimentos: [] }
       ] 
     },
@@ -256,15 +202,15 @@ const TemplatesRefeicaoVeg = {
       nome: "Almoço", hora: "12:30", icon: "🍽", 
       slots: [
         { tipo: "prot", alimentos: ["pts"] }, 
-        { tipo: "carb", alimentos: ["lentilha"] }, 
+        { tipo: "carb", alimentos: ["lentilha", "arroz"] }, 
         { tipo: "gord", alimentos: ["azeite"] }, 
         { tipo: "fibra", alimentos: ["salada_verde"] }
       ] 
     },
     { 
-      nome: "Lanche (Estudos/Escritório)", hora: "16:30", icon: "🥪", 
+      nome: "Lanche da Tarde (Escritório)", hora: "16:30", icon: "☕", 
       slots: [
-        { tipo: "prot", alimentos: ["whey"] }, 
+        { tipo: "prot", alimentos: ["prot_veg"] }, 
         { tipo: "carb", alimentos: ["aveia"] }, 
         { tipo: "gord", alimentos: ["pasta_amend"] }, 
         { tipo: "fibra", alimentos: [] }
@@ -273,36 +219,30 @@ const TemplatesRefeicaoVeg = {
     { 
       nome: "Jantar (Família)", hora: "20:00", icon: "🌙", 
       slots: [
-        { tipo: "prot", alimentos: ["tofu"] }, 
-        { tipo: "carb", alimentos: ["batata_doce"] }, 
+        { tipo: "prot", alimentos: ["tofu", "pts"] }, 
+        { tipo: "carb", alimentos: ["grao_de_bico", "batata_doce"] }, 
         { tipo: "gord", alimentos: ["azeite"] }, 
-        { tipo: "fibra", alimentos: ["legumes_mix"] }
+        { tipo: "fibra", alimentos: ["brocolis", "legumes_mix"] }
       ] 
     }
   ]
 };
 
-// Fallbacks de Templates
-TemplatesRefeicao[3] = TemplatesRefeicao[4]; 
-TemplatesRefeicao[6] = TemplatesRefeicao[5];
-TemplatesRefeicaoVeg[3] = TemplatesRefeicaoVeg[4]; 
-TemplatesRefeicaoVeg[6] = TemplatesRefeicaoVeg[5];
+// Como o seu app define "6" refeições por padrão agora, espelhamos se o usuário preencher algo diferente.
+for(let i=3; i<=6; i++){
+  if(!TemplatesRefeicao[i]) TemplatesRefeicao[i] = TemplatesRefeicao[6];
+  if(!TemplatesRefeicaoVeg[i]) TemplatesRefeicaoVeg[i] = TemplatesRefeicaoVeg[6];
+}
 
 /* ============================================================
    MONTADOR DE REFEIÇÃO
    ============================================================ */
 const MontadorRefeicao = {
   macroPrincipal: { 
-    prot: "proteina", 
-    carb: "carboidrato", 
-    gord: "gordura", 
-    fibra: "fibra" 
+    prot: "proteina", carb: "carboidrato", gord: "gordura", fibra: "fibra" 
   },
   macroKey: { 
-    proteina: "prot", 
-    carboidrato: "carb", 
-    gordura: "gord", 
-    fibra: "fibra" 
+    proteina: "prot", carboidrato: "carb", gordura: "gord", fibra: "fibra" 
   },
 
   distribuirSlot(alimentosIds, gramasMacroAlvo, macroAlvoNome) {
@@ -313,10 +253,12 @@ const MontadorRefeicao = {
     const chaveAlim = this.macroKey[macroAlvoNome];
 
     const PORCAO_MAX = {
-      ovo_inteiro:200, frango:300, patinho:250, tilapia:250, whey:60, iogurte:300, tofu:300, pts:80,
-      arroz:300, batata_doce:300, macarrao:200, aveia:80, pao_integral:100, banana:150, doce_leite: 40,
+      ovo_inteiro:200, frango:300, patinho:250, tilapia:250, whey:60, iogurte:250, 
+      tofu:300, pts:100, prot_veg: 60, leite_soja: 300,
+      arroz:300, batata_doce:300, macarrao:200, aveia:80, pao_integral:100, banana:150, doce_leite: 30, maca: 150,
       lentilha: 250, grao_de_bico: 250,
-      brocolis:200, salada_verde:150, legumes_mix:200, azeite:20, pasta_amend:40
+      brocolis:200, salada_verde:150, legumes_mix:200, 
+      azeite:20, pasta_amend:40, castanhas:40
     };
 
     alimentosIds.forEach(id => {
@@ -400,7 +342,7 @@ const MontadorRefeicao = {
     const n = plano.refeicoes.quantidade;
     const isVeg = plano.tipoDieta === 'vegetariana';
     const templatesList = isVeg ? TemplatesRefeicaoVeg : TemplatesRefeicao;
-    const templates = templatesList[n] || templatesList[4];
+    const templates = templatesList[n] || templatesList[6];
     
     const cota = { 
       proteina: plano.macrosDiarios.proteina / n, 
@@ -431,63 +373,95 @@ const ComprasEngine = {
     const protComida = protSemana * 0.7;
     const protSuplemento = protSemana * 0.3;
 
-    const strCarnes = tipoDieta === 'vegetariana' 
-      ? Math.round((protComida * this.CONVERSAO.proteina_animal) / 1000) + " kg (Tofu / PTS / Ovos)"
+    const isVeg = tipoDieta === 'vegetariana';
+
+    const strCarnes = isVeg 
+      ? Math.round((protComida * this.CONVERSAO.proteina_animal) / 1000) + " kg (Tofu / PTS / Tempeh)"
       : Math.round((protComida * this.CONVERSAO.proteina_animal) / 1000) + " kg (Frango/Patinho/Ovos)";
 
-    const strCarbos = tipoDieta === 'vegetariana'
-      ? Math.round((carboSemana * this.CONVERSAO.carboidrato_limpo) / 1000) + " kg (Lentilha/Grão-de-Bico/Batata)"
+    const strCarbos = isVeg
+      ? Math.round((carboSemana * this.CONVERSAO.carboidrato_limpo) / 1000) + " kg (Lentilha/Grão-de-Bico/Aveia)"
       : Math.round((carboSemana * this.CONVERSAO.carboidrato_limpo) / 1000) + " kg (Arroz/Batata/Pão)";
+
+    const strSuplemento = isVeg 
+      ? "Proteína Vegana (Ervilha/Arroz): " + Math.round(protSuplemento / 0.7) + " g"
+      : "Whey Protein: " + Math.round(protSuplemento / 0.8) + " g";
 
     return {
       carnes_aves: strCarnes,
       carboidratos: strCarbos,
       vegetais_aveia: Math.round((fibraSemana * this.CONVERSAO.fibra_fonte) / 1000) + " kg (Mix Vegetais/Frutas)",
-      suplementos: [
-        "Whey Protein: " + Math.round(protSuplemento / 0.8) + " g na semana", 
-        "Pré-Treino: Banana e Doce de Leite garantidos"
-      ],
-      outros: "Azeite extra-virgem"
+      suplementos: [strSuplemento, "Creatina: 40g na semana"],
+      outros: "Azeite, Pasta de Amendoim, Castanhas"
     };
   }
 };
 
 /* ============================================================
-   ENGINE 3 — BIBLIOTECA DE EXERCÍCIOS
+   ENGINE 3 — BIBLIOTECA DE EXERCÍCIOS (Arsenal Gaviões)
    ============================================================ */
 const BibliotecaExercicios = [
+  // MÁQUINAS GAVIÕES - PERNAS
   { 
-    id: "leg_press", 
-    nome: "Leg Press 45°", 
+    id: "leg_press_hammer", 
+    nome: "Leg Press 45° (Hammer)", 
     modalidade: "Musculação", 
     video_url: "https://www.youtube.com/embed/IZxyjW7MPJQ", 
     dicas: "Pés na largura do quadril. Descer sem tirar a lombar do banco.", 
-    alerta_critico: "Não trave os joelhos no topo." 
+    alerta_critico: "Não trave os joelhos no topo sob carga máxima." 
+  },
+  { 
+    id: "hack_squat_art", 
+    nome: "Hack Squat Articulado", 
+    modalidade: "Musculação", 
+    video_url: "https://www.youtube.com/embed/uYumuL_G_V0", 
+    dicas: "Costas coladas no encosto. Ótimo para poupar a lombar de manhã.", 
+    alerta_critico: "Mantenha o calcanhar fixo na plataforma." 
   },
   { 
     id: "extensora", 
     nome: "Cadeira Extensora", 
     modalidade: "Musculação", 
-    video_url: "https://www.youtube.com/embed/IZxyjW7MPJQ", 
+    video_url: "https://www.youtube.com/embed/m0FOpMEgero", 
     dicas: "Segure 2s no pico de contração.", 
-    alerta_critico: "Mantenha o quadril colado no banco." 
+    alerta_critico: "Mantenha o quadril colado no banco, não levante." 
   },
+  
+  // MÁQUINAS GAVIÕES - SUPERIORES
   { 
-    id: "hammer_chest", 
-    nome: "Supino Articulado (Hammer)", 
+    id: "hammer_chest_inc", 
+    nome: "Supino Inclinado Articulado", 
     modalidade: "Musculação", 
     video_url: "https://www.youtube.com/embed/rT7DgCr-3pg", 
-    dicas: "Ajuste o banco para a pegada ficar na linha média do peito.", 
-    alerta_critico: "Cotovelos levemente para dentro, nunca em 90 graus." 
+    dicas: "Ajuste o banco para a pegada ficar na linha superior do peito.", 
+    alerta_critico: "Cotovelos levemente para dentro, nunca alinhados ao ombro." 
   },
   { 
-    id: "high_row", 
-    nome: "Puxada Alta (Articulada)", 
+    id: "low_row_art", 
+    nome: "Remada Baixa Articulada (Low Row)", 
     modalidade: "Musculação", 
     video_url: "https://www.youtube.com/embed/9efgcAjQe7E", 
-    dicas: "Puxe com os cotovelos em direção à cintura.", 
-    alerta_critico: "Não jogue o tronco para trás para roubar." 
+    dicas: "Puxe com os cotovelos em direção à cintura. Foque na dorsal.", 
+    alerta_critico: "Peito sempre colado no apoio da máquina." 
   },
+  { 
+    id: "front_pulldown", 
+    nome: "Puxada Frontal Articulada", 
+    modalidade: "Musculação", 
+    video_url: "https://www.youtube.com/embed/eGo4IYlbE5g", 
+    dicas: "Puxe fechando as escápulas.", 
+    alerta_critico: "Não jogue o tronco para trás para usar o peso do corpo." 
+  },
+  { 
+    id: "shoulder_press_art", 
+    nome: "Desenvolvimento Articulado", 
+    modalidade: "Musculação", 
+    video_url: "https://www.youtube.com/embed/2yjwXTZQDDI", 
+    dicas: "Controle a descida até a linha da orelha.", 
+    alerta_critico: "Não curve a lombar excessivamente para empurrar." 
+  },
+
+  // CROSSFIT & HYROX
   { 
     id: "thruster", 
     nome: "Thruster", 
@@ -514,7 +488,7 @@ const BibliotecaExercicios = [
   },
   { 
     id: "row_erg", 
-    nome: "Remo", 
+    nome: "Remo Ergômetro", 
     modalidade: "Hyrox / CrossFit", 
     video_url: "https://www.youtube.com/embed/H0r_ZPXJLtg", 
     dicas: "Perna, quadril, braço.", 
@@ -529,10 +503,10 @@ const TreinoEngine = {
   gerarSemana(rpeSabado) {
     return {
       domingo: { tipo: "RECOVERY", foco: "Descanso Total" },
-      segunda: { tipo: "Gaviões 03:45", foco: "Peito e Costas (Máquinas)" },
+      segunda: { tipo: "Gaviões 03:45", foco: "Peito e Ombros (Máquinas)" },
       terca:   { tipo: "Gaviões 03:45", foco: "Pernas (Foco Quadríceps)" },
-      quarta:  { tipo: "HÍBRIDO (Two-a-days)", foco: "Ombros (Manhã) + Cross Metabólico (Noite)" },
-      quinta:  { tipo: "Gaviões 03:45", foco: "Braços (Bíceps/Tríceps)" },
+      quarta:  { tipo: "HÍBRIDO (Two-a-days)", foco: "Costas (Manhã) + Cross Metabólico (Noite)" },
+      quinta:  { tipo: "Gaviões 03:45", foco: "Braços e Core" },
       sexta:   { tipo: "CrossFit", foco: "WOD Geral" },
       sabado:  { tipo: "COMPETIÇÃO", foco: "Treino Hyrox Ancorado" }
     };
@@ -540,22 +514,25 @@ const TreinoEngine = {
 
   treinosDetalhados: {
     'Descanso Total': [],
-    'Peito e Costas (Máquinas)': [
-      { exId: "hammer_chest", prescricao: "4×10-12", descanso: "60s", obs: "Falha concêntrica" }, 
-      { exId: "high_row", prescricao: "4×10-12", descanso: "60s", obs: "Segure 1s contraído" }
+    'Peito e Ombros (Máquinas)': [
+      { exId: "hammer_chest_inc", prescricao: "4×10-12", descanso: "60s", obs: "Falha concêntrica na Inclinada" }, 
+      { exId: "shoulder_press_art", prescricao: "4×10-12", descanso: "60s", obs: "Cotovelos para frente" }
     ],
     'Pernas (Foco Quadríceps)': [
-      { exId: "leg_press", prescricao: "4×12", descanso: "90s", obs: "Carga Alta" }, 
-      { exId: "extensora", prescricao: "4×15", descanso: "60s", obs: "Queimação total" }
+      { exId: "leg_press_hammer", prescricao: "4×10-12", descanso: "90s", obs: "Carga Máxima de Trabalho" }, 
+      { exId: "hack_squat_art", prescricao: "3×12", descanso: "90s", obs: "Profundidade controlada" },
+      { exId: "extensora", prescricao: "4×15", descanso: "60s", obs: "Pump final" }
     ],
-    'Ombros (Manhã) + Cross Metabólico (Noite)': [
-      { exId: "row_erg", prescricao: "WOD Noturno", descanso: "—", obs: "Suor e cardio" }
+    'Costas (Manhã) + Cross Metabólico (Noite)': [
+      { exId: "front_pulldown", prescricao: "4×12", descanso: "60s", obs: "Gaviões Manhã" },
+      { exId: "low_row_art", prescricao: "4×10", descanso: "60s", obs: "Gaviões Manhã (Unilateral)" },
+      { exId: "row_erg", prescricao: "WOD Noturno", descanso: "—", obs: "Box CrossFit: Suor e cardio" }
     ],
-    'Braços (Bíceps/Tríceps)': [
-      { exId: "hammer_chest", prescricao: "3x15", descanso: "45s", obs: "Tríceps Máquina" }
+    'Braços e Core': [
+      { exId: "hammer_chest_inc", prescricao: "3x15", descanso: "45s", obs: "Tríceps Máquina / Corda" }
     ],
     'WOD Geral': [
-      { exId: "thruster", prescricao: "WOD do Box", descanso: "—", obs: "Sem cargas máximas hoje" }
+      { exId: "thruster", prescricao: "WOD do Box", descanso: "—", obs: "Sem cargas máximas pesadas hoje" }
     ],
     'Treino Hyrox Ancorado': [
       { exId: "sled_push", prescricao: "Pista Total", descanso: "—", obs: "Estação Hyrox" }, 
@@ -609,7 +586,7 @@ SUMMARY:Sono Anabólico (Fretado)
 DTSTART;TZID=America/Sao_Paulo:20260601T050500
 DTEND;TZID=America/Sao_Paulo:20260601T062500
 RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR
-DESCRIPTION:Máscara de dormir e protetor auricular. Recuperação do treino.
+DESCRIPTION:Máscara de dormir e protetor auricular. Recuperação.
 END:VEVENT
 
 BEGIN:VEVENT
@@ -625,7 +602,7 @@ SUMMARY:Sono Regenerativo (Fretado Volta)
 DTSTART;TZID=America/Sao_Paulo:20260601T173000
 DTEND;TZID=America/Sao_Paulo:20260601T190000
 RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR
-DESCRIPTION:Isolamento do estresse do escritório. Preparação para chegar bem em casa.
+DESCRIPTION:Isolamento do estresse do escritório.
 END:VEVENT
 
 BEGIN:VEVENT
@@ -692,6 +669,8 @@ const UI = {
   mapaExercicios: Object.fromEntries(BibliotecaExercicios.map(e => [e.id, e])),
 
   init() {
+    this.injetarHtmlDieta(); // <- NOVA FUNÇÃO (Zero toque no HTML)
+    
     this.bindTabs(); 
     this.bindFormPerfil(); 
     this.bindFormRpe(); 
@@ -703,8 +682,27 @@ const UI = {
     this.renderHistorico(); 
     this.restaurarSessao();
     
-    // Inicia a Engine de Calendário
     CalendarEngine.init();
+  },
+
+  // Injeção Automática do Dropdown Vegano
+  injetarHtmlDieta() {
+    const formGrid = this.$('#formPerfil .grid-2');
+    if (formGrid && !this.$('#tipoDieta')) {
+      formGrid.insertAdjacentHTML('beforeend', `
+        <label class="field" style="animation: fadeIn 0.5s ease-in-out;">
+          <span>Tipo de Dieta</span>
+          <select id="tipoDieta" required>
+            <option value="padrao" selected>Padrão (Onívora)</option>
+            <option value="vegetariana">Estrita Vegana</option>
+          </select>
+        </label>
+      `);
+      // Força o número de refeições para 6 no visual também
+      if(this.$('#numRefeicoes')) {
+        this.$('#numRefeicoes').value = 6;
+      }
+    }
   },
 
   bindTabs() {
@@ -730,7 +728,7 @@ const UI = {
         peso: parseFloat(this.$('#peso').value), 
         altura: parseFloat(this.$('#altura').value),
         idade: parseInt(this.$('#idade').value, 10), 
-        numRefeicoes: parseInt(this.$('#numRefeicoes').value, 10),
+        numRefeicoes: 6, // Fixado para o protocolo de janelas do Guerra
         nivelAtividade: this.$('#nivelAtividade').value, 
         objetivo: this.$('#objetivo').value,
         tipoDieta: objTipoDieta
@@ -827,7 +825,7 @@ const UI = {
       manutencao: 'MANUTENÇÃO' 
     }[perfil.objetivo] || '';
     
-    const tagVeg = perfil.tipoDieta === 'vegetariana' ? ' · VEG' : '';
+    const tagVeg = perfil.tipoDieta === 'vegetariana' ? ' · VEGAN' : '';
     this.$('#brandTag').textContent = `${perfil.peso}kg · ${objLabel}${tagVeg}`;
   },
 
@@ -1075,7 +1073,11 @@ const UI = {
       this.$('#peso').value = perfil.peso ?? ''; 
       this.$('#altura').value = perfil.altura ?? ''; 
       this.$('#idade').value = perfil.idade ?? 42;
-      this.$('#numRefeicoes').value = perfil.numRefeicoes ?? 4; 
+      
+      if(this.$('#numRefeicoes')){
+        this.$('#numRefeicoes').value = 6; 
+      }
+      
       this.$('#nivelAtividade').value = perfil.nivelAtividade ?? 'intenso';
       this.$('#objetivo').value = perfil.objetivo ?? 'manutencao'; 
       
