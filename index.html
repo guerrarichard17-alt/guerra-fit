@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0A0A0A" />
-  <title>GUERRA FIT — Performance Híbrida</title>
+  <title>GUERRA FIT — Performance Híbrida V9</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -19,6 +19,7 @@
       --bg-card-hover: #1A1A1A;
       --primary: #FF4500;
       --primary-dark: #CC3700;
+      --accent: #0ea5e9;
       --txt-1: #FFFFFF;
       --txt-2: #A0A0A0;
       --txt-3: #666666;
@@ -86,6 +87,15 @@
 
     .btn-primary { width: 100%; background: var(--primary); color: #fff; border: none; padding: 16px; border-radius: 8px; font-family: var(--font-body); font-weight: 800; font-size: 1rem; text-transform: uppercase; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: transform 0.1s, background 0.2s; margin-top: 10px; }
     .btn-primary:active { transform: scale(0.98); background: var(--primary-dark); }
+    
+    .btn-secondary { width: 100%; background: var(--bg-body); color: var(--txt-1); border: 1px solid var(--border); padding: 16px; border-radius: 8px; font-family: var(--font-body); font-weight: 800; font-size: 1rem; text-transform: uppercase; cursor: pointer; margin-top: 10px; }
+
+    /* SETUP DA SEMANA (WEEKLY MATRIX) */
+    .week-matrix { display: flex; flex-direction: column; gap: 12px; }
+    .day-setup-row { background: var(--bg-body); border: 1px solid var(--border); padding: 12px; border-radius: 8px; display: flex; flex-direction: column; gap: 8px; }
+    .day-setup-header { display: flex; justify-content: space-between; align-items: center; font-weight: 700; color: var(--primary); }
+    .day-setup-inputs { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; }
+    .rpe-badge { background: var(--bg-card); border: 1px solid var(--border); padding: 4px 8px; border-radius: 4px; font-family: var(--font-mono); font-size: 0.8rem; text-align: center; }
 
     /* MÉTRICAS (TMB/GETD/ALVO) */
     .metric-row { display: flex; gap: 12px; margin-bottom: 24px; }
@@ -159,6 +169,10 @@
     .dia-ex-prescricao { font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; display: flex; justify-content: space-between; background: var(--bg-body); padding: 6px 10px; border-radius: 4px; margin-top: 4px; }
     .dia-ex-prescricao small { color: var(--txt-3); }
     .dia-vazio { padding: 16px; text-align: center; color: var(--txt-3); font-size: 0.9rem; }
+    
+    .evento-externo-box { background: rgba(14, 165, 233, 0.1); border-top: 1px dashed var(--accent); padding: 12px 16px; }
+    .evento-externo-title { color: var(--accent); font-weight: 800; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 4px; display:flex; justify-content: space-between;}
+    .evento-externo-desc { font-size: 0.85rem; color: var(--txt-2); }
 
     /* BIBLIOTECA & CHIPS */
     .filter-bar { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
@@ -221,21 +235,23 @@
       <span class="brand-mark">⚔</span>
       <h1>GUERRA<span class="brand-accent">FIT</span></h1>
     </div>
-    <div class="brand-tag" id="brandTag">PERFIL NÃO DEFINIDO</div>
+    <div class="brand-tag" id="brandTag">SETUP PENDENTE</div>
   </header>
 
   <!-- MAIN AREA -->
   <main class="app-main">
 
-    <!-- ===== ABA 1: DIETA ===== -->
-    <section class="tab-content active" id="tab-dieta">
+    <!-- ===== ABA 0: SETUP (NOVO PAINEL DE CONTROLE) ===== -->
+    <section class="tab-content active" id="tab-setup">
       <div class="section-head">
-        <span class="section-num">01</span>
-        <h2>Perfil &amp; Dieta</h2>
-        <p class="section-sub">Defina suas métricas. O motor calcula TMB, GETD e monta o protocolo de 6 refeições blindadas contra empilhamento.</p>
+        <span class="section-num">00</span>
+        <h2>Onboarding & Setup</h2>
+        <p class="section-sub">Configure a sua matriz biológica e a sua agenda semanal. O Motor de Inteligência vai gerar dieta e treino adaptados à sua realidade.</p>
       </div>
 
-      <form id="formPerfil" class="card form-card" novalidate>
+      <form id="formSetup" class="card" novalidate>
+        
+        <h3 class="block-title" style="margin-top:0;">1. Biometria & Nutrição</h3>
         <div class="grid-2">
           <label class="field">
             <span>Peso <em>(kg)</em></span>
@@ -250,21 +266,17 @@
             <input type="number" id="idade" min="14" max="90" step="1" value="42" required />
           </label>
           <label class="field">
-            <span>Refeições/dia</span>
-            <input type="number" id="numRefeicoes" value="6" readonly style="opacity: 0.7;" title="Fixado no Protocolo Guerra" />
-          </label>
-          <label class="field">
-            <span>Nível de atividade</span>
+            <span>Nível de Atividade</span>
             <select id="nivelAtividade" required>
-              <option value="moderado">Moderado (1.55)</option>
-              <option value="intenso" selected>Intenso (1.725)</option>
+              <option value="moderado">Moderado</option>
+              <option value="intenso" selected>Intenso</option>
             </select>
           </label>
-          <label class="field">
-            <span>Objetivo</span>
+          <label class="field" style="grid-column: 1 / -1;">
+            <span>Objetivo Principal</span>
             <select id="objetivo" required>
               <option value="perda_gordura">Perda de Gordura</option>
-              <option value="manutencao" selected>Manutenção / Hipertrofia</option>
+              <option value="manutencao" selected>Recomposição / Hipertrofia</option>
               <option value="ganho_massa">Bulking Pesado</option>
             </select>
           </label>
@@ -277,11 +289,39 @@
           </label>
         </div>
 
-        <button type="submit" class="btn-primary">
-          <span>GERAR PLANO NUTRICIONAL</span>
+        <h3 class="block-title">2. Relógio Base (Chronos)</h3>
+        <label class="field">
+          <span>Horário do Treino Principal <em>(Ex: Gaviões)</em></span>
+          <input type="time" id="horaTreinoBase" value="03:45" required />
+          <em style="color:var(--txt-3); margin-top:4px;">As 6 refeições serão ancoradas em volta deste horário automaticamente.</em>
+        </label>
+
+        <h3 class="block-title">3. Matriz de Eventos Externos</h3>
+        <p style="font-size: 0.8rem; color: var(--txt-2); margin-bottom: 12px;">Selecione os dias que terão eventos de alta exigência (CrossFit, Hyrox, etc). O sistema vai aliviar o treino de musculação nestes dias para proteger o seu SNC (Two-a-days opcional).</p>
+        
+        <div class="week-matrix" id="weekMatrixContainer">
+          <!-- Gerado via JS para manter o HTML limpo -->
+        </div>
+
+        <button type="submit" class="btn-primary" style="margin-top: 24px;">
+          <span>SALVAR MATRIZ COMPLETA</span>
           <span class="btn-arrow">→</span>
         </button>
       </form>
+    </section>
+
+    <!-- ===== ABA 1: DIETA ===== -->
+    <section class="tab-content" id="tab-dieta">
+      <div class="section-head">
+        <span class="section-num">01</span>
+        <h2>Plano Nutricional</h2>
+        <p class="section-sub">Horários calculados dinamicamente com base no seu Treino Principal.</p>
+      </div>
+
+      <div id="dietaVazio" class="empty-state">
+        <span class="empty-icon">⚙️</span>
+        <p>Vá até a aba <strong>Setup</strong> e salve a sua matriz para gerar a dieta.</p>
+      </div>
 
       <div id="planoResultado" class="plano-wrap hidden">
         <div class="metric-row">
@@ -326,7 +366,7 @@
           </div>
         </div>
 
-        <h3 class="block-title">Rotina Alimentar <span class="block-sub" id="qtdRefLabel"></span></h3>
+        <h3 class="block-title">Cronograma Alimentar <span class="block-sub">· 6 REFEIÇÕES</span></h3>
         <div class="refeicoes-list" id="refeicoesGrid"></div>
       </div>
     </section>
@@ -341,7 +381,7 @@
 
       <div id="comprasVazio" class="empty-state">
         <span class="empty-icon">🛒</span>
-        <p>Gere primeiro o plano na aba <strong>Dieta</strong>.</p>
+        <p>Vá até a aba <strong>Setup</strong> para gerar a sua lista.</p>
       </div>
 
       <div id="comprasResultado" class="hidden">
@@ -385,24 +425,17 @@
     <section class="tab-content" id="tab-treino">
       <div class="section-head">
         <span class="section-num">03</span>
-        <h2>Master Schedule</h2>
-        <p class="section-sub">Periodização ancorada nos eventos externos (CrossFit e Hyrox). Madrugadas 100% Gaviões.</p>
+        <h2>Periodização Dinâmica</h2>
+        <p class="section-sub">Seu treino principal ajustado automaticamente para proteger o SNC nos dias de Eventos Externos.</p>
       </div>
 
-      <form id="formRpe" class="card grid-2" style="grid-template-columns: 1fr; gap: 10px;">
-        <label class="field">
-          <span>RPE Externo (Cross / Hyrox) <em>1 = leve · 10 = devastador</em></span>
-          <input type="range" id="rpeRange" min="1" max="10" step="1" value="8" />
-          <div style="text-align:center; font-family: var(--font-mono); font-size: 1.2rem; font-weight: bold; color: var(--primary);"><span id="rpeValor">8</span>/10</div>
-        </label>
-        <button type="submit" class="btn-primary" style="margin-top: 0;">
-          <span>ATUALIZAR PERÍODO</span>
-        </button>
-      </form>
+      <div id="treinoVazio" class="empty-state">
+        <span class="empty-icon">📅</span>
+        <p>Configure a sua matriz na aba <strong>Setup</strong>.</p>
+      </div>
 
       <div id="semanaResultado" class="hidden"></div>
       
-      <!-- Container do Botão de Calendário (Injetado via JS) -->
       <div id="calendarContainer"></div>
     </section>
 
@@ -488,14 +521,17 @@
 
   <!-- TAB BAR MENU -->
   <nav class="tabbar" role="tablist">
-    <button class="tab-btn active" data-tab="tab-dieta">
-      <span class="tab-ico">🍽</span><span class="tab-lbl">Dieta</span>
+    <button class="tab-btn active" data-tab="tab-setup">
+      <span class="tab-ico">⚙️</span><span class="tab-lbl">Setup</span>
     </button>
-    <button class="tab-btn" data-tab="tab-compras">
-      <span class="tab-ico">🛒</span><span class="tab-lbl">Compras</span>
+    <button class="tab-btn" data-tab="tab-dieta">
+      <span class="tab-ico">🍽</span><span class="tab-lbl">Dieta</span>
     </button>
     <button class="tab-btn" data-tab="tab-treino">
       <span class="tab-ico">📅</span><span class="tab-lbl">Treino</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-compras">
+      <span class="tab-ico">🛒</span><span class="tab-lbl">Compras</span>
     </button>
     <button class="tab-btn" data-tab="tab-exercicios">
       <span class="tab-ico">💪</span><span class="tab-lbl">Máquinas</span>
@@ -506,67 +542,105 @@
   </nav>
 
   <!-- =================================================================
-       JAVASCRIPT (MOTOR V8 - EXPANDIDO E COMPLETO)
+       JAVASCRIPT (MOTOR V9 - CHRONOS & SMART PERIODIZATION)
        ================================================================= -->
   <script>
+    
     /* ============================================================
-       ENGINE 1 — NUTRIÇÃO
+       UTILS & DATA
        ============================================================ */
-    const NutricaoEngine = {
-      FATOR_ATIVIDADE: { 
-        moderado: 1.55, 
-        intenso: 1.725 
-      },
-      CALORIAS_POR_GRAMA: { 
-        proteina: 4, 
-        carboidrato: 4, 
-        gordura: 9 
+    const DIAS_SEMANA = [
+      { id: 'segunda', label: 'Segunda-feira' },
+      { id: 'terca', label: 'Terça-feira' },
+      { id: 'quarta', label: 'Quarta-feira' },
+      { id: 'quinta', label: 'Quinta-feira' },
+      { id: 'sexta', label: 'Sexta-feira' },
+      { id: 'sabado', label: 'Sábado' },
+      { id: 'domingo', label: 'Domingo' }
+    ];
+
+    const EVENTOS_EXTERNOS = [
+      { id: 'none', label: 'Nenhum Evento Extra' },
+      { id: 'crossfit', label: 'CrossFit (Metabólico)' },
+      { id: 'hyrox', label: 'Hyrox (Força/Cardio)' },
+      { id: 'corrida', label: 'Corrida (Cardio)' }
+    ];
+
+    /* ============================================================
+       ENGINE 1 — TIME CALCULATOR (CHRONOS)
+       ============================================================ */
+    const ChronosEngine = {
+      // Recebe horário ex: "03:45" e minutos de offset ex: 165
+      // Retorna novo horário ex: "06:30"
+      calcularHorario(horarioBase, offsetMinutos) {
+        if(!horarioBase) return "00:00";
+        const [h, m] = horarioBase.split(':').map(Number);
+        let totalMinutos = (h * 60) + m + offsetMinutos;
+        
+        // Ajusta para manter dentro de 24h
+        if(totalMinutos < 0) totalMinutos += 24 * 60;
+        totalMinutos = totalMinutos % (24 * 60);
+
+        const newH = Math.floor(totalMinutos / 60);
+        const newM = totalMinutos % 60;
+        
+        return `${String(newH).padStart(2, '0')}:${String(newM).padStart(2, '0')}`;
       },
 
-      calcularPlanoDiario(peso, altura, nivelAtividade, objetivo, numRefeicoes = 6, idade = 42, tipoDieta = 'padrao') {
-        const tmb = (10 * peso) + (6.25 * altura) - (5 * idade) + 5;
-        const fator = this.FATOR_ATIVIDADE[nivelAtividade] || this.FATOR_ATIVIDADE.intenso;
+      // Offsets fixos em minutos baseados na rotina do Guerra (T-Zero é o treino principal)
+      // T-15 (Pré), T+165 (Pós/Café), T+345 (Lanche M), T+525 (Almoço), T+765 (Lanche T), T+975 (Jantar)
+      obterCronograma(horarioBaseTreino) {
+        return {
+          preTreino: this.calcularHorario(horarioBaseTreino, -15),
+          desjejum: this.calcularHorario(horarioBaseTreino, 165),
+          lancheManha: this.calcularHorario(horarioBaseTreino, 345),
+          almoco: this.calcularHorario(horarioBaseTreino, 525),
+          lancheTarde: this.calcularHorario(horarioBaseTreino, 765),
+          jantar: this.calcularHorario(horarioBaseTreino, 975)
+        };
+      }
+    };
+
+    /* ============================================================
+       ENGINE 2 — NUTRIÇÃO
+       ============================================================ */
+    const NutricaoEngine = {
+      FATOR_ATIVIDADE: { moderado: 1.55, intenso: 1.725 },
+      CALORIAS_POR_GRAMA: { proteina: 4, carboidrato: 4, gordura: 9 },
+
+      calcularPlanoDiario(setup) {
+        const tmb = (10 * setup.peso) + (6.25 * setup.altura) - (5 * setup.idade) + 5;
+        const fator = this.FATOR_ATIVIDADE[setup.nivelAtividade] || this.FATOR_ATIVIDADE.intenso;
         const getd = tmb * fator;
 
         let caloriasAlvo = getd;
-        if (objetivo === 'perda_gordura') {
-          caloriasAlvo = getd - 500;
-        } else if (objetivo === 'ganho_massa') {
-          caloriasAlvo = getd + 400;
-        }
+        if (setup.objetivo === 'perda_gordura') caloriasAlvo = getd - 500;
+        else if (setup.objetivo === 'ganho_massa') caloriasAlvo = getd + 400;
 
-        const proteinaGrama = peso * 2.2;
-        const gorduraGrama  = peso * 1.0;
+        const proteinaGrama = setup.peso * 2.2;
+        const gorduraGrama  = setup.peso * 1.0;
         const proteinaKcal  = proteinaGrama * this.CALORIAS_POR_GRAMA.proteina;
         const gorduraKcal   = gorduraGrama  * this.CALORIAS_POR_GRAMA.gordura;
         const carboidratoKcal  = caloriasAlvo - (proteinaKcal + gorduraKcal);
         const carboidratoGrama = carboidratoKcal / this.CALORIAS_POR_GRAMA.carboidrato;
         const fibrasGrama = (caloriasAlvo / 1000) * 14;
 
-        const macrosPorRefeicao = {
-          calorias:    Math.round(caloriasAlvo    / numRefeicoes),
-          proteina:    Math.round(proteinaGrama   / numRefeicoes),
-          carboidrato: Math.round(carboidratoGrama/ numRefeicoes),
-          gordura:     Math.round(gorduraGrama    / numRefeicoes),
-          fibras:      Math.round(fibrasGrama     / numRefeicoes)
-        };
-
         return {
-          tipoDieta: tipoDieta,
+          tipoDieta: setup.tipoDieta,
+          horaTreinoBase: setup.horaTreinoBase,
           metricas: { 
-            tmb: Math.round(tmb), 
-            getd: Math.round(getd), 
-            caloriasAlvo: Math.round(caloriasAlvo) 
+            tmb: Math.round(tmb), getd: Math.round(getd), caloriasAlvo: Math.round(caloriasAlvo) 
           },
           macrosDiarios: {
-            proteina:    Math.round(proteinaGrama),
-            carboidrato: Math.round(carboidratoGrama),
-            gordura:     Math.round(gorduraGrama),
-            fibras:      Math.round(fibrasGrama)
+            proteina: Math.round(proteinaGrama), carboidrato: Math.round(carboidratoGrama),
+            gordura: Math.round(gorduraGrama), fibras: Math.round(fibrasGrama)
           },
           refeicoes: { 
-            quantidade: numRefeicoes, 
-            porRefeicao: macrosPorRefeicao 
+            quantidade: 6, 
+            porRefeicao: {
+              proteina: Math.round(proteinaGrama / 6), carboidrato: Math.round(carboidratoGrama / 6),
+              gordura: Math.round(gorduraGrama / 6), fibras: Math.round(fibrasGrama / 6)
+            }
           }
         };
       }
@@ -576,174 +650,66 @@
        BASE DE ALIMENTOS
        ============================================================ */
     const Alimentos = {
-      // --- Proteínas Animais ---
-      ovo_inteiro:   { nome: "Ovo inteiro",            emoji: "🥚", prot: 13, carb: 1,  gord: 11, fibra: 0,  un: "un", peso_un: 50 },
-      frango:        { nome: "Peito de frango (cru)",  emoji: "🍗", prot: 22, carb: 0,  gord: 2,  fibra: 0  },
-      patinho:       { nome: "Patinho moído (cru)",    emoji: "🥩", prot: 21, carb: 0,  gord: 6,  fibra: 0  },
-      tilapia:       { nome: "Filé de tilápia",        emoji: "🐟", prot: 20, carb: 0,  gord: 2,  fibra: 0  },
-      whey:          { nome: "Whey Protein",           emoji: "💪", prot: 80, carb: 8,  gord: 5,  fibra: 0  },
-      iogurte:       { nome: "Iogurte natural desn.",  emoji: "🥛", prot: 10, carb: 4,  gord: 0,  fibra: 0  },
+      ovo_inteiro:   { nome: "Ovo inteiro", emoji: "🥚", prot: 13, carb: 1, gord: 11, fibra: 0, un: "un", peso_un: 50 },
+      frango:        { nome: "Peito de frango", emoji: "🍗", prot: 22, carb: 0, gord: 2, fibra: 0 },
+      patinho:       { nome: "Patinho moído", emoji: "🥩", prot: 21, carb: 0, gord: 6, fibra: 0 },
+      tilapia:       { nome: "Filé de tilápia", emoji: "🐟", prot: 20, carb: 0, gord: 2, fibra: 0 },
+      whey:          { nome: "Whey Protein", emoji: "💪", prot: 80, carb: 8, gord: 5, fibra: 0 },
+      iogurte:       { nome: "Iogurte natural", emoji: "🥛", prot: 10, carb: 4, gord: 0, fibra: 0 },
       
-      // --- Proteínas Estritas Veganas ---
-      tofu:          { nome: "Tofu (Firme)",           emoji: "🧊", prot: 16, carb: 3,  gord: 9,  fibra: 2  },
-      pts:           { nome: "Prot. Texturizada Soja", emoji: "🌱", prot: 50, carb: 30, gord: 1,  fibra: 15 },
-      prot_veg:      { nome: "Whey Vegano (Ervilha)",  emoji: "🌿", prot: 75, carb: 5,  gord: 6,  fibra: 3  },
-      leite_soja:    { nome: "Leite de Soja (Zero)",   emoji: "🥛", prot: 3,  carb: 2,  gord: 2,  fibra: 0  },
+      tofu:          { nome: "Tofu (Firme)", emoji: "🧊", prot: 16, carb: 3, gord: 9, fibra: 2 },
+      pts:           { nome: "Prot. Texturizada Soja", emoji: "🌱", prot: 50, carb: 30, gord: 1, fibra: 15 },
+      prot_veg:      { nome: "Proteína Vegana", emoji: "🌿", prot: 75, carb: 5, gord: 6, fibra: 3 },
+      leite_soja:    { nome: "Leite de Soja", emoji: "🥛", prot: 3, carb: 2, gord: 2, fibra: 0 },
 
-      // --- Carboidratos Limpos ---
-      arroz:         { nome: "Arroz cozido",           emoji: "🍚", prot: 3,  carb: 28, gord: 0,  fibra: 0  },
-      batata_doce:   { nome: "Batata-doce cozida",     emoji: "🍠", prot: 2,  carb: 20, gord: 0,  fibra: 3  },
-      macarrao:      { nome: "Macarrão cozido",        emoji: "🍝", prot: 5,  carb: 25, gord: 1,  fibra: 1  },
-      aveia:         { nome: "Aveia em flocos",        emoji: "🌾", prot: 14, carb: 67, gord: 8,  fibra: 9  },
-      pao_integral:  { nome: "Pão integral",           emoji: "🍞", prot: 9,  carb: 43, gord: 4,  fibra: 6  },
-      banana:        { nome: "Banana",                 emoji: "🍌", prot: 1,  carb: 23, gord: 0,  fibra: 3  },
-      maca:          { nome: "Maçã (Inteira)",         emoji: "🍎", prot: 0,  carb: 14, gord: 0,  fibra: 2  },
-      doce_leite:    { nome: "Doce de Leite",          emoji: "🍯", prot: 6,  carb: 60, gord: 6,  fibra: 0  },
-      lentilha:      { nome: "Lentilha cozida",        emoji: "🍲", prot: 9,  carb: 20, gord: 0,  fibra: 8  },
-      grao_de_bico:  { nome: "Grão-de-bico cozido",    emoji: "🧆", prot: 9,  carb: 27, gord: 2,  fibra: 7  },
+      arroz:         { nome: "Arroz cozido", emoji: "🍚", prot: 3, carb: 28, gord: 0, fibra: 0 },
+      batata_doce:   { nome: "Batata-doce cozida", emoji: "🍠", prot: 2, carb: 20, gord: 0, fibra: 3 },
+      macarrao:      { nome: "Macarrão cozido", emoji: "🍝", prot: 5, carb: 25, gord: 1, fibra: 1 },
+      aveia:         { nome: "Aveia em flocos", emoji: "🌾", prot: 14, carb: 67, gord: 8, fibra: 9 },
+      pao_integral:  { nome: "Pão integral", emoji: "🍞", prot: 9, carb: 43, gord: 4, fibra: 6 },
+      banana:        { nome: "Banana", emoji: "🍌", prot: 1, carb: 23, gord: 0, fibra: 3 },
+      maca:          { nome: "Maçã (Inteira)", emoji: "🍎", prot: 0, carb: 14, gord: 0, fibra: 2 },
+      doce_leite:    { nome: "Doce de Leite", emoji: "🍯", prot: 6, carb: 60, gord: 6, fibra: 0 },
+      lentilha:      { nome: "Lentilha cozida", emoji: "🍲", prot: 9, carb: 20, gord: 0, fibra: 8 },
+      grao_de_bico:  { nome: "Grão-de-bico", emoji: "🧆", prot: 9, carb: 27, gord: 2, fibra: 7 },
 
-      // --- Fibras e Vegetais ---
-      brocolis:      { nome: "Brócolis cozido",        emoji: "🥦", prot: 3,  carb: 7,  gord: 0,  fibra: 3  },
-      salada_verde:  { nome: "Salada verde (mix)",     emoji: "🥗", prot: 1,  carb: 3,  gord: 0,  fibra: 2  },
-      legumes_mix:   { nome: "Legumes variados",       emoji: "🥕", prot: 1,  carb: 8,  gord: 0,  fibra: 3  },
+      brocolis:      { nome: "Brócolis cozido", emoji: "🥦", prot: 3, carb: 7, gord: 0, fibra: 3 },
+      salada_verde:  { nome: "Salada verde", emoji: "🥗", prot: 1, carb: 3, gord: 0, fibra: 2 },
+      legumes_mix:   { nome: "Legumes variados", emoji: "🥕", prot: 1, carb: 8, gord: 0, fibra: 3 },
 
-      // --- Gorduras ---
-      azeite:        { nome: "Azeite extra-virgem",    emoji: "🫒", prot: 0,  carb: 0,  gord: 100, fibra: 0  },
-      pasta_amend:   { nome: "Pasta de amendoim",      emoji: "🥜", prot: 25, carb: 20, gord: 50, fibra: 6  },
-      castanhas:     { nome: "Mix de Castanhas",       emoji: "🌰", prot: 15, carb: 16, gord: 54, fibra: 8  }
+      azeite:        { nome: "Azeite extra-virgem", emoji: "🫒", prot: 0, carb: 0, gord: 100, fibra: 0 },
+      pasta_amend:   { nome: "Pasta de amendoim", emoji: "🥜", prot: 25, carb: 20, gord: 50, fibra: 6 },
+      castanhas:     { nome: "Mix de Castanhas", emoji: "🌰", prot: 15, carb: 16, gord: 54, fibra: 8 }
     };
 
     /* ============================================================
        TEMPLATES DE REFEIÇÃO (Zero Empilhamento)
        ============================================================ */
     const TemplatesRefeicao = {
-      6: [
-        { 
-          nome: "Pré-Treino Expresso", hora: "03:30", icon: "⚡", 
-          slots: [
-            { tipo: "prot", alimentos: [] }, 
-            { tipo: "carb", alimentos: ["doce_leite"] }, 
-            { tipo: "gord", alimentos: [] }, 
-            { tipo: "fibra", alimentos: [] }
-          ] 
-        },
-        { 
-          nome: "Desjejum (Pós-Fretado)", hora: "06:30", icon: "☀️", 
-          slots: [
-            { tipo: "prot", alimentos: ["ovo_inteiro"] }, 
-            { tipo: "carb", alimentos: ["pao_integral"] }, 
-            { tipo: "gord", alimentos: [] }, 
-            { tipo: "fibra", alimentos: [] }
-          ] 
-        },
-        { 
-          nome: "Lanche da Manhã (Estudos)", hora: "09:30", icon: "🥪", 
-          slots: [
-            { tipo: "prot", alimentos: ["iogurte"] }, 
-            { tipo: "carb", alimentos: ["maca"] }, 
-            { tipo: "gord", alimentos: ["castanhas"] }, 
-            { tipo: "fibra", alimentos: [] }
-          ] 
-        },
-        { 
-          nome: "Almoço", hora: "12:30", icon: "🍽", 
-          slots: [
-            { tipo: "prot", alimentos: ["frango"] }, 
-            { tipo: "carb", alimentos: ["arroz"] },  
-            { tipo: "gord", alimentos: ["azeite"] }, 
-            { tipo: "fibra", alimentos: ["salada_verde"] }
-          ] 
-        },
-        { 
-          nome: "Lanche da Tarde (Escritório)", hora: "16:30", icon: "☕", 
-          slots: [
-            { tipo: "prot", alimentos: ["whey"] }, 
-            { tipo: "carb", alimentos: ["aveia"] }, 
-            { tipo: "gord", alimentos: ["pasta_amend"] }, 
-            { tipo: "fibra", alimentos: [] }
-          ] 
-        },
-        { 
-          nome: "Jantar (Família)", hora: "20:00", icon: "🌙", 
-          slots: [
-            { tipo: "prot", alimentos: ["patinho"] }, 
-            { tipo: "carb", alimentos: ["batata_doce"] }, 
-            { tipo: "gord", alimentos: ["azeite"] }, 
-            { tipo: "fibra", alimentos: ["legumes_mix"] }
-          ] 
-        }
+      padrao: [
+        { id: 'preTreino', nome: "Pré-Treino Expresso", icon: "⚡", slots: [{ tipo: "prot", alimentos: [] }, { tipo: "carb", alimentos: ["doce_leite"] }, { tipo: "gord", alimentos: [] }, { tipo: "fibra", alimentos: [] }] },
+        { id: 'desjejum', nome: "Desjejum / Pós-treino", icon: "☀️", slots: [{ tipo: "prot", alimentos: ["ovo_inteiro"] }, { tipo: "carb", alimentos: ["pao_integral"] }, { tipo: "gord", alimentos: [] }, { tipo: "fibra", alimentos: [] }] },
+        { id: 'lancheManha', nome: "Lanche da Manhã", icon: "🥪", slots: [{ tipo: "prot", alimentos: ["iogurte"] }, { tipo: "carb", alimentos: ["maca"] }, { tipo: "gord", alimentos: ["castanhas"] }, { tipo: "fibra", alimentos: [] }] },
+        { id: 'almoco', nome: "Almoço", icon: "🍽", slots: [{ tipo: "prot", alimentos: ["frango"] }, { tipo: "carb", alimentos: ["arroz"] },  { tipo: "gord", alimentos: ["azeite"] }, { tipo: "fibra", alimentos: ["salada_verde"] }] },
+        { id: 'lancheTarde', nome: "Lanche da Tarde", icon: "☕", slots: [{ tipo: "prot", alimentos: ["whey"] }, { tipo: "carb", alimentos: ["aveia"] }, { tipo: "gord", alimentos: ["pasta_amend"] }, { tipo: "fibra", alimentos: [] }] },
+        { id: 'jantar', nome: "Jantar (Família)", icon: "🌙", slots: [{ tipo: "prot", alimentos: ["patinho"] }, { tipo: "carb", alimentos: ["batata_doce"] }, { tipo: "gord", alimentos: ["azeite"] }, { tipo: "fibra", alimentos: ["legumes_mix"] }] }
+      ],
+      vegetariana: [
+        { id: 'preTreino', nome: "Pré-Treino Expresso", icon: "⚡", slots: [{ tipo: "prot", alimentos: [] }, { tipo: "carb", alimentos: ["banana"] }, { tipo: "gord", alimentos: ["pasta_amend"] }, { tipo: "fibra", alimentos: [] }] },
+        { id: 'desjejum', nome: "Desjejum / Pós-treino", icon: "☀️", slots: [{ tipo: "prot", alimentos: ["tofu"] }, { tipo: "carb", alimentos: ["pao_integral"] }, { tipo: "gord", alimentos: [] }, { tipo: "fibra", alimentos: [] }] },
+        { id: 'lancheManha', nome: "Lanche da Manhã", icon: "🥪", slots: [{ tipo: "prot", alimentos: ["leite_soja"] }, { tipo: "carb", alimentos: ["maca"] }, { tipo: "gord",  alimentos: ["castanhas"] }, { tipo: "fibra", alimentos: [] }] },
+        { id: 'almoco', nome: "Almoço", icon: "🍽", slots: [{ tipo: "prot", alimentos: ["pts"] }, { tipo: "carb", alimentos: ["lentilha"] }, { tipo: "gord", alimentos: ["azeite"] }, { tipo: "fibra", alimentos: ["salada_verde"] }] },
+        { id: 'lancheTarde', nome: "Lanche da Tarde", icon: "☕", slots: [{ tipo: "prot", alimentos: ["prot_veg"] }, { tipo: "carb", alimentos: ["aveia"] }, { tipo: "gord", alimentos: ["pasta_amend"] }, { tipo: "fibra", alimentos: [] }] },
+        { id: 'jantar', nome: "Jantar (Família)", icon: "🌙", slots: [{ tipo: "prot", alimentos: ["tofu"] }, { tipo: "carb", alimentos: ["grao_de_bico"] }, { tipo: "gord", alimentos: ["azeite"] }, { tipo: "fibra", alimentos: ["brocolis"] }] }
       ]
     };
 
-    const TemplatesRefeicaoVeg = {
-      6: [
-        { 
-          nome: "Pré-Treino Expresso", hora: "03:30", icon: "⚡", 
-          slots: [
-            { tipo: "prot", alimentos: [] }, 
-            { tipo: "carb", alimentos: ["banana"] }, 
-            { tipo: "gord", alimentos: ["pasta_amend"] }, 
-            { tipo: "fibra", alimentos: [] }
-          ] 
-        },
-        { 
-          nome: "Desjejum (Pós-Fretado)", hora: "06:30", icon: "☀️", 
-          slots: [
-            { tipo: "prot", alimentos: ["tofu"] }, 
-            { tipo: "carb", alimentos: ["pao_integral"] }, 
-            { tipo: "gord", alimentos: [] }, 
-            { tipo: "fibra", alimentos: [] }
-          ] 
-        },
-        { 
-          nome: "Lanche da Manhã (Estudos)", hora: "09:30", icon: "🥪", 
-          slots: [
-            { tipo: "prot", alimentos: ["leite_soja"] }, 
-            { tipo: "carb", alimentos: ["maca"] }, 
-            { tipo: "gord",  alimentos: ["castanhas"] }, 
-            { tipo: "fibra", alimentos: [] }
-          ] 
-        },
-        { 
-          nome: "Almoço", hora: "12:30", icon: "🍽", 
-          slots: [
-            { tipo: "prot", alimentos: ["pts"] }, 
-            { tipo: "carb", alimentos: ["lentilha"] }, 
-            { tipo: "gord", alimentos: ["azeite"] }, 
-            { tipo: "fibra", alimentos: ["salada_verde"] }
-          ] 
-        },
-        { 
-          nome: "Lanche da Tarde (Escritório)", hora: "16:30", icon: "☕", 
-          slots: [
-            { tipo: "prot", alimentos: ["prot_veg"] }, 
-            { tipo: "carb", alimentos: ["aveia"] }, 
-            { tipo: "gord", alimentos: ["pasta_amend"] }, 
-            { tipo: "fibra", alimentos: [] }
-          ] 
-        },
-        { 
-          nome: "Jantar (Família)", hora: "20:00", icon: "🌙", 
-          slots: [
-            { tipo: "prot", alimentos: ["tofu"] }, 
-            { tipo: "carb", alimentos: ["grao_de_bico"] }, 
-            { tipo: "gord", alimentos: ["azeite"] }, 
-            { tipo: "fibra", alimentos: ["brocolis"] }
-          ] 
-        }
-      ]
-    };
-
-    /* ============================================================
-       MONTADOR DE REFEIÇÃO
-       ============================================================ */
     const MontadorRefeicao = {
       macroPrincipal: { prot: "proteina", carb: "carboidrato", gord: "gordura", fibra: "fibra" },
       macroKey: { proteina: "prot", carboidrato: "carb", gordura: "gord", fibra: "fibra" },
 
       distribuirSlot(alimentosIds, gramasMacroAlvo, macroAlvoNome) {
         if (!alimentosIds.length || gramasMacroAlvo <= 0) return [];
-        
         const result = [];
         const cota = gramasMacroAlvo / alimentosIds.length;
         const chaveAlim = this.macroKey[macroAlvoNome];
@@ -753,20 +719,15 @@
           tofu:300, pts:100, prot_veg: 60, leite_soja: 300,
           arroz:300, batata_doce:300, macarrao:200, aveia:80, pao_integral:100, banana:150, doce_leite: 30, maca: 150,
           lentilha: 250, grao_de_bico: 250,
-          brocolis:200, salada_verde:150, legumes_mix:200, 
-          azeite:20, pasta_amend:40, castanhas:40
+          brocolis:200, salada_verde:150, legumes_mix:200, azeite:20, pasta_amend:40, castanhas:40
         };
 
         alimentosIds.forEach(id => {
           const al = Alimentos[id];
           if (!al) return;
-          
           const macroPor100 = al[chaveAlim] || 0.01; 
           let gramasAlim = (cota / macroPor100) * 100;
-          
-          if (PORCAO_MAX[id]) {
-            gramasAlim = Math.min(gramasAlim, PORCAO_MAX[id]);
-          }
+          if (PORCAO_MAX[id]) gramasAlim = Math.min(gramasAlim, PORCAO_MAX[id]);
 
           let gramasFinal;
           let qtdLabel;
@@ -781,13 +742,8 @@
           }
 
           const fator = gramasFinal / 100;
-          
           result.push({
-            id, 
-            nome: al.nome, 
-            emoji: al.emoji, 
-            qtdLabel, 
-            gramas: gramasFinal,
+            id, nome: al.nome, emoji: al.emoji, qtdLabel, gramas: gramasFinal,
             contribuicao: {
               proteina:    +(al.prot  * fator).toFixed(1),
               carboidrato: +(al.carb  * fator).toFixed(1),
@@ -800,257 +756,149 @@
         return result;
       },
 
-      montar(template, cotaMacros) {
+      montar(template, cotaMacros, cronogramaHorarios) {
         const alimentosFinal = [];
-        
         template.slots.forEach(slot => {
           const macroNome = this.macroPrincipal[slot.tipo];
           const cotaMacro = cotaMacros[macroNome] || 0;
           const itens = this.distribuirSlot(slot.alimentos, cotaMacro, macroNome);
-          
           itens.forEach(it => alimentosFinal.push(it));
         });
 
         const totais = alimentosFinal.reduce((acc, it) => ({
-          proteina: acc.proteina + it.contribuicao.proteina, 
-          carboidrato: acc.carboidrato + it.contribuicao.carboidrato,
-          gordura: acc.gordura + it.contribuicao.gordura, 
-          fibra: acc.fibra + it.contribuicao.fibra, 
-          kcal: acc.kcal + it.contribuicao.kcal
+          proteina: acc.proteina + it.contribuicao.proteina, carboidrato: acc.carboidrato + it.contribuicao.carboidrato,
+          gordura: acc.gordura + it.contribuicao.gordura, fibra: acc.fibra + it.contribuicao.fibra, kcal: acc.kcal + it.contribuicao.kcal
         }), { proteina:0, carboidrato:0, gordura:0, fibra:0, kcal:0 });
 
         return {
           nome: template.nome, 
-          hora: template.hora, 
+          hora: cronogramaHorarios[template.id] || "00:00", 
           icon: template.icon, 
           alimentos: alimentosFinal,
           totais: {
-            proteina: Math.round(totais.proteina), 
-            carboidrato: Math.round(totais.carboidrato),
-            gordura: Math.round(totais.gordura), 
-            fibra: Math.round(totais.fibra), 
-            kcal: Math.round(totais.kcal)
+            proteina: Math.round(totais.proteina), carboidrato: Math.round(totais.carboidrato),
+            gordura: Math.round(totais.gordura), fibra: Math.round(totais.fibra), kcal: Math.round(totais.kcal)
           }
         };
       },
 
       montarDia(plano) {
-        const isVeg = plano.tipoDieta === 'vegetariana';
-        const templatesList = isVeg ? TemplatesRefeicaoVeg : TemplatesRefeicao;
-        const templates = templatesList[6]; 
+        const templates = TemplatesRefeicao[plano.tipoDieta] || TemplatesRefeicao['padrao'];
+        const cronograma = ChronosEngine.obterCronograma(plano.horaTreinoBase);
         
         const cota = { 
-          proteina: plano.macrosDiarios.proteina / 6, 
-          carboidrato: plano.macrosDiarios.carboidrato / 6, 
-          gordura: plano.macrosDiarios.gordura / 6, 
-          fibra: plano.macrosDiarios.fibras / 6 
+          proteina: plano.refeicoes.porRefeicao.proteina, 
+          carboidrato: plano.refeicoes.porRefeicao.carboidrato, 
+          gordura: plano.refeicoes.porRefeicao.gordura, 
+          fibra: plano.refeicoes.porRefeicao.fibras 
         };
         
-        return templates.map(t => this.montar(t, cota));
+        return templates.map(t => this.montar(t, cota, cronograma));
       }
     };
 
     /* ============================================================
-       ENGINE 2 — COMPRAS SEMANAIS
+       ENGINE 3 — COMPRAS SEMANAIS
        ============================================================ */
     const ComprasEngine = {
-      CONVERSAO: { 
-        proteina_animal: 4.5, 
-        carboidrato_limpo: 3.5, 
-        fibra_fonte: 10 
-      },
-      
+      CONVERSAO: { proteina_animal: 4.5, carboidrato_limpo: 3.5, fibra_fonte: 10 },
       gerarListaSemanal(macrosDiarios, tipoDieta) {
-        const protSemana = macrosDiarios.proteina * 7;
-        const carboSemana = macrosDiarios.carboidrato * 7;
-        const fibraSemana = macrosDiarios.fibras * 7;
-        
-        const protComida = protSemana * 0.7;
-        const protSuplemento = protSemana * 0.3;
-
+        const protSemana = macrosDiarios.proteina * 7, carboSemana = macrosDiarios.carboidrato * 7, fibraSemana = macrosDiarios.fibras * 7;
+        const protComida = protSemana * 0.7, protSuplemento = protSemana * 0.3;
         const isVeg = tipoDieta === 'vegetariana';
 
-        const strCarnes = isVeg 
-          ? Math.round((protComida * this.CONVERSAO.proteina_animal) / 1000) + " kg (Tofu / PTS)"
-          : Math.round((protComida * this.CONVERSAO.proteina_animal) / 1000) + " kg (Frango/Patinho/Ovos)";
-
-        const strCarbos = isVeg
-          ? Math.round((carboSemana * this.CONVERSAO.carboidrato_limpo) / 1000) + " kg (Lentilha/Grão-de-Bico/Aveia)"
-          : Math.round((carboSemana * this.CONVERSAO.carboidrato_limpo) / 1000) + " kg (Arroz/Batata/Pão)";
-
-        const strSuplemento = isVeg 
-          ? "Proteína Vegana (Ervilha/Arroz): " + Math.round(protSuplemento / 0.7) + " g"
-          : "Whey Protein: " + Math.round(protSuplemento / 0.8) + " g";
-
         return {
-          carnes_aves: strCarnes,
-          carboidratos: strCarbos,
+          carnes_aves: isVeg ? Math.round((protComida * this.CONVERSAO.proteina_animal) / 1000) + " kg (Tofu / PTS)" : Math.round((protComida * this.CONVERSAO.proteina_animal) / 1000) + " kg (Frango/Patinho/Ovos)",
+          carboidratos: isVeg ? Math.round((carboSemana * this.CONVERSAO.carboidrato_limpo) / 1000) + " kg (Lentilha/Grão-de-Bico/Aveia)" : Math.round((carboSemana * this.CONVERSAO.carboidrato_limpo) / 1000) + " kg (Arroz/Batata/Pão)",
           vegetais_aveia: Math.round((fibraSemana * this.CONVERSAO.fibra_fonte) / 1000) + " kg (Mix Vegetais/Frutas)",
-          suplementos: [strSuplemento, "Creatina: 40g na semana"],
+          suplementos: [isVeg ? "Proteína Vegana: " + Math.round(protSuplemento / 0.7) + " g" : "Whey Protein: " + Math.round(protSuplemento / 0.8) + " g", "Creatina: 40g na semana"],
           outros: "Azeite, Pasta de Amendoim, Castanhas"
         };
       }
     };
 
     /* ============================================================
-       ENGINE 3 — BIBLIOTECA DE EXERCÍCIOS (Técnico e Articulado)
+       ENGINE 4 — BIBLIOTECA DE EXERCÍCIOS
        ============================================================ */
     const BibliotecaExercicios = [
-      // MÁQUINAS GAVIÕES - PERNAS
-      { id: "leg_press_hammer", nome: "Leg Press 45°", modalidade: "Musculação", video_url: "https://www.youtube.com/embed/IZxyjW7MPJQ", dicas: "Controle a descida (3 segundos). Empurre focado no calcanhar.", alerta_critico: "Não trave os joelhos." },
-      { id: "hack_squat_art", nome: "Hack Squat Articulado", modalidade: "Musculação", video_url: "https://www.youtube.com/embed/uYumuL_G_V0", dicas: "Pés baixos na plataforma para recrutar mais o quadríceps. Movimento contínuo.", alerta_critico: "Lombar colada no banco." },
-      { id: "extensora", nome: "Cadeira Extensora", modalidade: "Musculação", video_url: "https://www.youtube.com/embed/m0FOpMEgero", dicas: "Técnica de Peak Contraction: 2s segurando em cima.", alerta_critico: "Não levante o glúteo do banco." },
-      { id: "panturrilha_leg", nome: "Panturrilha no Leg Press", modalidade: "Musculação", video_url: "", dicas: "Alongamento máximo (desça o calcanhar).", alerta_critico: "Mantenha o joelho semi-flexionado para evitar lesão." },
+      { id: "leg_press_hammer", nome: "Leg Press 45°", modalidade: "Musculação", video_url: "https://www.youtube.com/embed/IZxyjW7MPJQ", dicas: "Controle a descida (3s). Empurre pelo calcanhar.", alerta_critico: "Não trave os joelhos." },
+      { id: "hack_squat_art", nome: "Hack Squat Articulado", modalidade: "Musculação", video_url: "https://www.youtube.com/embed/uYumuL_G_V0", dicas: "Pés baixos na plataforma para recrutar mais o quadríceps.", alerta_critico: "Lombar colada no banco." },
+      { id: "extensora", nome: "Cadeira Extensora", modalidade: "Musculação", video_url: "https://www.youtube.com/embed/m0FOpMEgero", dicas: "Peak Contraction: 2s segurando em cima.", alerta_critico: "Não levante o glúteo do banco." },
+      { id: "panturrilha_leg", nome: "Panturrilha no Leg Press", modalidade: "Musculação", video_url: "", dicas: "Alongamento máximo.", alerta_critico: "Joelho semi-flexionado." },
       
-      // MÁQUINAS GAVIÕES - PEITO/OMBRO
-      { id: "hammer_chest_inc", nome: "Supino Inclinado Articulado", modalidade: "Musculação", video_url: "https://www.youtube.com/embed/rT7DgCr-3pg", dicas: "Ajuste o banco. Top sets pesados de 6-8 repetições.", alerta_critico: "Cotovelos a 45 graus, protegendo o manguito." },
-      { id: "peck_deck", nome: "Crucifixo Máquina (Peck Deck)", modalidade: "Musculação", video_url: "", dicas: "Aperte o peitoral no meio. Expanda o tórax na volta.", alerta_critico: "Não solte o peso de uma vez." },
-      { id: "shoulder_press_art", nome: "Desenvolvimento Articulado", modalidade: "Musculação", video_url: "https://www.youtube.com/embed/2yjwXTZQDDI", dicas: "Empurre da linha da orelha para cima.", alerta_critico: "Evite curvar muito a lombar." },
-      { id: "lateral_raise", nome: "Elevação Lateral (Halter/Cabo)", modalidade: "Musculação", video_url: "", dicas: "Movimento focado no cotovelo. Pense em 'jogar o peso para os lados'.", alerta_critico: "Não use trapézio." },
+      { id: "hammer_chest_inc", nome: "Supino Inclinado Articulado", modalidade: "Musculação", video_url: "https://www.youtube.com/embed/rT7DgCr-3pg", dicas: "Top sets pesados.", alerta_critico: "Cotovelos a 45 graus." },
+      { id: "peck_deck", nome: "Crucifixo Máquina", modalidade: "Musculação", video_url: "", dicas: "Aperte o peitoral no meio.", alerta_critico: "Não solte o peso de uma vez." },
+      { id: "shoulder_press_art", nome: "Desenvolvimento Articulado", modalidade: "Musculação", video_url: "https://www.youtube.com/embed/2yjwXTZQDDI", dicas: "Empurre da linha da orelha.", alerta_critico: "Evite curvar muito a lombar." },
+      { id: "lateral_raise", nome: "Elevação Lateral", modalidade: "Musculação", video_url: "", dicas: "Movimento focado no cotovelo.", alerta_critico: "Não use trapézio." },
 
-      // MÁQUINAS GAVIÕES - COSTAS/BRAÇO
-      { id: "front_pulldown", nome: "Puxada Frontal Alta", modalidade: "Musculação", video_url: "https://www.youtube.com/embed/eGo4IYlbE5g", dicas: "Foque em esticar as costas (dorsal) no topo do movimento.", alerta_critico: "Não jogue o tronco excessivamente para trás." },
-      { id: "low_row_art", nome: "Remada Baixa Articulada", modalidade: "Musculação", video_url: "https://www.youtube.com/embed/9efgcAjQe7E", dicas: "Técnica: Segure 2 segundos no pico da contração das escápulas.", alerta_critico: "Peito grudado no apoio." },
-      { id: "triceps_pulley", nome: "Tríceps Máquina / Corda", modalidade: "Musculação", video_url: "", dicas: "Estenda completamente o braço. Foco na cabeça lateral.", alerta_critico: "Ombros travados para baixo." },
-      { id: "biceps_curl", nome: "Rosca Máquina / Halter", modalidade: "Musculação", video_url: "", dicas: "Movimento isolado, sem balanço.", alerta_critico: "Mantenha o cotovelo fixo." }
+      { id: "front_pulldown", nome: "Puxada Frontal Alta", modalidade: "Musculação", video_url: "https://www.youtube.com/embed/eGo4IYlbE5g", dicas: "Foque em esticar as costas.", alerta_critico: "Não jogue o tronco excessivamente para trás." },
+      { id: "low_row_art", nome: "Remada Baixa Articulada", modalidade: "Musculação", video_url: "https://www.youtube.com/embed/9efgcAjQe7E", dicas: "Segure 2s no pico da contração.", alerta_critico: "Peito grudado no apoio." },
+      { id: "triceps_pulley", nome: "Tríceps Máquina / Corda", modalidade: "Musculação", video_url: "", dicas: "Estenda completamente o braço.", alerta_critico: "Ombros travados para baixo." },
+      { id: "biceps_curl", nome: "Rosca Máquina / Halter", modalidade: "Musculação", video_url: "", dicas: "Movimento isolado.", alerta_critico: "Mantenha o cotovelo fixo." }
     ];
 
     /* ============================================================
-       ENGINE 4 — PERIODIZAÇÃO (Otimizada 100% Gaviões c/ RPE Externo)
+       ENGINE 5 — PERIODIZAÇÃO SMART SPLIT
        ============================================================ */
     const TreinoEngine = {
-      gerarSemana(rpeSabado) {
-        return {
-          domingo: { tipo: "RECOVERY", foco: "Descanso Total" },
-          segunda: { tipo: "GAVIÕES 03:45", foco: "Peito e Ombros" },
-          terca:   { tipo: "GAVIÕES 03:45", foco: "Pernas Foco Anterior" },
-          quarta:  { tipo: "GAVIÕES 03:45", foco: "Costas e Posterior" },
-          quinta:  { tipo: "GAVIÕES 03:45", foco: "Braços e Core" },
-          sexta:   { tipo: "EVENTO EXTERNO", foco: "CrossFit (RPE 8)" },
-          sabado:  { tipo: "COMPETIÇÃO/TESTE", foco: "Hyrox (RPE 8)" }
-        };
-      },
-
-      treinosDetalhados: {
-        'Descanso Total': [],
-        'CrossFit (RPE 8)': [],
-        'Hyrox (RPE 8)': [],
-        
-        // Treinos Avançados (Gaviões)
-        'Peito e Ombros': [
-          { exId: "hammer_chest_inc", prescricao: "3 Séries", descanso: "90s", obs: "Técnica: 2 Top Sets (6-8 reps pesadas) + 1 Back-off Set (12 reps)." }, 
-          { exId: "peck_deck", prescricao: "3x 10-12", descanso: "60s", obs: "Última série: Drop-set (reduza 30% da carga e falhe novamente)." },
-          { exId: "shoulder_press_art", prescricao: "3x 8-10", descanso: "60s", obs: "Descida controlada de 3 segundos." },
-          { exId: "lateral_raise", prescricao: "4x 15", descanso: "45s", obs: "Pump e volume contínuo." }
-        ],
-        'Pernas Foco Anterior': [
+      bancoPesado: [
+        { foco: "Pernas Foco Anterior", exercicios: [
           { exId: "extensora", prescricao: "4 Séries", descanso: "60s", obs: "2x Aquecimento. 2x Trabalho Pesado (8-10 reps com pausa em cima)." },
           { exId: "leg_press_hammer", prescricao: "4x 10-12", descanso: "90s", obs: "Progressão de carga em cada série." }, 
           { exId: "hack_squat_art", prescricao: "3x 10-12", descanso: "90s", obs: "Tensão contínua. Sem esticar o joelho todo no topo." },
           { exId: "panturrilha_leg", prescricao: "4x 15", descanso: "45s", obs: "Pausa de 2s com a panturrilha alongada." }
-        ],
-        'Costas e Posterior': [
+        ]},
+        { foco: "Peito e Ombros", exercicios: [
+          { exId: "hammer_chest_inc", prescricao: "3 Séries", descanso: "90s", obs: "Técnica: 2 Top Sets (6-8 reps) + 1 Back-off Set (12 reps)." }, 
+          { exId: "peck_deck", prescricao: "3x 10-12", descanso: "60s", obs: "Última série: Drop-set." },
+          { exId: "shoulder_press_art", prescricao: "3x 8-10", descanso: "60s", obs: "Descida controlada de 3 segundos." },
+          { exId: "lateral_raise", prescricao: "4x 15", descanso: "45s", obs: "Pump e volume contínuo." }
+        ]},
+        { foco: "Costas e Posterior", exercicios: [
           { exId: "front_pulldown", prescricao: "3x 8-10", descanso: "90s", obs: "Top sets pesados. Foco em abrir a dorsal na volta." },
           { exId: "low_row_art", prescricao: "3x 10-12", descanso: "60s", obs: "Técnica de Contração de Pico: Segure 2s esmagando as costas." },
           { exId: "peck_deck", prescricao: "3x 12", descanso: "45s", obs: "Crucifixo Invertido (Posterior de ombro)." }
-        ],
-        'Braços e Core': [
+        ]}
+      ],
+      bancoLeve: [
+        { foco: "Braços e Core (Recovery Ativo)", exercicios: [
           { exId: "triceps_pulley", prescricao: "4x 10-12", descanso: "45s", obs: "Isolamento total." },
           { exId: "biceps_curl", prescricao: "4x 10-12", descanso: "45s", obs: "Trabalho simultâneo." },
-          { exId: "lateral_raise", prescricao: "3x 15", descanso: "45s", obs: "Trabalho acessório de ombro." }
-        ]
-      },
+          { exId: "lateral_raise", prescricao: "3x 15", descanso: "45s", obs: "Trabalho acessório leve de ombro." }
+        ]}
+      ],
 
-      obterTreinoDoDia(foco) { 
-        return this.treinosDetalhados[foco] || []; 
-      }
-    };
+      gerarSemana(setup) {
+        let semanaGerada = {};
+        let idxPesado = 0;
 
-    /* ============================================================
-       ENGINE 5 — CALENDÁRIO (Exportação ICS)
-       ============================================================ */
-    const CalendarEngine = {
-      init() {
-        const container = document.getElementById('calendarContainer');
-        if (!container) return;
+        DIAS_SEMANA.forEach(dia => {
+          const configDia = setup.matrizSemana[dia.id];
+          const hasEventoPesado = configDia.evento !== 'none' && configDia.rpe >= 7;
 
-        container.innerHTML = `
-          <div style="margin-top: 30px;">
-            <button id="btnExportarCal" class="btn-primary" style="background: linear-gradient(135deg, #1e3a8a 0%, #0ea5e9 100%); border:none;">
-              <span class="btn-arrow" style="transform:none; margin-right: 8px;">📅</span>
-              <span>EXPORTAR ROTINA PARA AGENDA</span>
-            </button>
-            <p style="text-align:center; font-size:11px; color:var(--txt-3); margin-top:8px;">Baixa o cronograma Master (Madrugadas, Fretado, Estudos).</p>
-          </div>
-        `;
-        
-        document.getElementById('btnExportarCal').addEventListener('click', this.gerarIcs.bind(this));
-      },
+          let treinoGavioes = null;
 
-      gerarIcs() {
-        const icsData = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//DevFit Coach//Guerra Express//PT
-CALSCALE:GREGORIAN
+          // Regra de Proteção do SNC: Se tem evento pesado no dia, o treino da Gaviões é LEVE.
+          // Se não tem evento pesado, puxa o próximo treino PESADO da lista.
+          if (hasEventoPesado) {
+            treinoGavioes = this.bancoLeve[0]; // Pega braços/core para não concorrer
+          } else {
+            // Se o dia não for domingo (Recovery day)
+            if(dia.id !== 'domingo') {
+               treinoGavioes = this.bancoPesado[idxPesado % this.bancoPesado.length];
+               idxPesado++;
+            }
+          }
 
-BEGIN:VEVENT
-SUMMARY:Treino Gaviões (Hipertrofia Avançada)
-DTSTART;TZID=America/Sao_Paulo:20260601T034500
-DTEND;TZID=America/Sao_Paulo:20260601T043000
-RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH
-DESCRIPTION:Sessão tática (Gaviões). Máquinas articuladas, Top Sets.
-END:VEVENT
+          semanaGerada[dia.id] = {
+            nomeDia: dia.label,
+            eventoExterno: configDia.evento,
+            rpe: configDia.rpe,
+            treinoPrincipal: treinoGavioes ? { tipo: "GAVIÕES " + setup.horaTreinoBase, foco: treinoGavioes.foco, exercicios: treinoGavioes.exercicios } : null
+          };
+        });
 
-BEGIN:VEVENT
-SUMMARY:Sono Anabólico (Fretado)
-DTSTART;TZID=America/Sao_Paulo:20260601T050500
-DTEND;TZID=America/Sao_Paulo:20260601T062500
-RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR
-DESCRIPTION:Máscara de dormir e protetor auricular. Recuperação.
-END:VEVENT
-
-BEGIN:VEVENT
-SUMMARY:Deep Work: Estudos (PUC)
-DTSTART;TZID=America/Sao_Paulo:20260601T070000
-DTEND;TZID=America/Sao_Paulo:20260601T083000
-RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR
-DESCRIPTION:Foco absoluto nos estudos.
-END:VEVENT
-
-BEGIN:VEVENT
-SUMMARY:Evento: CrossFit Metabólico
-DTSTART;TZID=America/Sao_Paulo:20260603T190000
-DTEND;TZID=America/Sao_Paulo:20260603T200000
-RRULE:FREQ=WEEKLY;BYDAY=WE,FR
-DESCRIPTION:Demanda alta (RPE 8). Controle a fadiga.
-END:VEVENT
-
-BEGIN:VEVENT
-SUMMARY:Sono Regenerativo (Fretado Volta)
-DTSTART;TZID=America/Sao_Paulo:20260601T173000
-DTEND;TZID=America/Sao_Paulo:20260601T190000
-RRULE:FREQ=WEEKLY;BYDAY=MO,TU,TH
-DESCRIPTION:Isolamento mental.
-END:VEVENT
-
-BEGIN:VEVENT
-SUMMARY:Evento: HYROX
-DTSTART;TZID=America/Sao_Paulo:20260606T080000
-DTEND;TZID=America/Sao_Paulo:20260606T100000
-RRULE:FREQ=WEEKLY;BYDAY=SA
-DESCRIPTION:Treino âncora da semana. Entrega total.
-END:VEVENT
-
-END:VCALENDAR`;
-
-        const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'Guerra_Master_Schedule.ics');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        return semanaGerada;
       }
     };
 
@@ -1058,20 +906,17 @@ END:VCALENDAR`;
        ENGINE 6 — STORAGE & UI
        ============================================================ */
     const StorageEngine = {
-      CHAVE_TREINOS: 'guerra_fit_treinos', 
-      CHAVE_PERFIL: 'guerra_fit_perfil', 
-      CHAVE_PLANO: 'guerra_fit_plano',
-
+      CHAVE_SETUP: 'guerra_fit_setup', CHAVE_TREINOS: 'guerra_fit_treinos',
+      
+      salvarSetup(s) { localStorage.setItem(this.CHAVE_SETUP, JSON.stringify(s)); },
+      obterSetup() { return JSON.parse(localStorage.getItem(this.CHAVE_SETUP)) || null; },
+      
       salvarTreinoConcluido(dataISO, exercicioId, cargaKg, reps) {
         let h = JSON.parse(localStorage.getItem(this.CHAVE_TREINOS)) || [];
         h.push({ data: dataISO, exercicioId, cargaMaxima: cargaKg, repeticoes: reps });
         localStorage.setItem(this.CHAVE_TREINOS, JSON.stringify(h));
       },
-      obterHistoricoCompleto() { return JSON.parse(localStorage.getItem(this.CHAVE_TREINOS)) || []; },
-      salvarPerfil(p) { localStorage.setItem(this.CHAVE_PERFIL, JSON.stringify(p)); },
-      obterPerfil() { return JSON.parse(localStorage.getItem(this.CHAVE_PERFIL)) || null; },
-      salvarPlano(p) { localStorage.setItem(this.CHAVE_PLANO, JSON.stringify(p)); },
-      obterPlano() { return JSON.parse(localStorage.getItem(this.CHAVE_PLANO)) || null; }
+      obterHistoricoCompleto() { return JSON.parse(localStorage.getItem(this.CHAVE_TREINOS)) || []; }
     };
 
     const UI = {
@@ -1080,9 +925,9 @@ END:VCALENDAR`;
       mapaExercicios: Object.fromEntries(BibliotecaExercicios.map(e => [e.id, e])),
 
       init() {
+        this.renderMatrixInputs();
         this.bindTabs(); 
-        this.bindFormPerfil(); 
-        this.bindFormRpe(); 
+        this.bindFormSetup();
         this.bindFormCarga();
         this.bindBuscaExercicios(); 
         this.bindModal(); 
@@ -1090,8 +935,24 @@ END:VCALENDAR`;
         this.renderSelectCargas(); 
         this.renderHistorico(); 
         this.restaurarSessao();
-        
-        CalendarEngine.init();
+      },
+
+      renderMatrixInputs() {
+        const container = this.$('#weekMatrixContainer');
+        container.innerHTML = DIAS_SEMANA.map(dia => `
+          <div class="day-setup-row">
+            <div class="day-setup-header">
+              <span>${dia.label}</span>
+              <span class="rpe-badge">RPE <span id="valRpe_${dia.id}">1</span>/10</span>
+            </div>
+            <div class="day-setup-inputs">
+              <select id="evt_${dia.id}">
+                ${EVENTOS_EXTERNOS.map(ev => `<option value="${ev.id}">${ev.label}</option>`).join('')}
+              </select>
+              <input type="range" id="rpe_${dia.id}" min="1" max="10" step="1" value="1" oninput="document.getElementById('valRpe_${dia.id}').textContent = this.value" />
+            </div>
+          </div>
+        `).join('');
       },
 
       bindTabs() {
@@ -1105,39 +966,50 @@ END:VCALENDAR`;
         });
       },
 
-      bindFormPerfil() {
-        this.$('#formPerfil').addEventListener('submit', e => {
+      bindFormSetup() {
+        this.$('#formSetup').addEventListener('submit', e => {
           e.preventDefault();
           
-          const objTipoDieta = this.$('#tipoDieta') ? this.$('#tipoDieta').value : 'padrao';
-          
-          const perfil = {
-            peso: parseFloat(this.$('#peso').value), 
-            altura: parseFloat(this.$('#altura').value),
-            idade: parseInt(this.$('#idade').value, 10), 
-            numRefeicoes: 6, 
-            nivelAtividade: this.$('#nivelAtividade').value, 
-            objetivo: this.$('#objetivo').value,
-            tipoDieta: objTipoDieta
+          const matrizSemana = {};
+          DIAS_SEMANA.forEach(dia => {
+            matrizSemana[dia.id] = {
+              evento: this.$(`#evt_${dia.id}`).value,
+              rpe: parseInt(this.$(`#rpe_${dia.id}`).value, 10)
+            };
+          });
+
+          const setupData = {
+            peso: parseFloat(this.$('#peso').value), altura: parseFloat(this.$('#altura').value),
+            idade: parseInt(this.$('#idade').value, 10), nivelAtividade: this.$('#nivelAtividade').value, 
+            objetivo: this.$('#objetivo').value, tipoDieta: this.$('#tipoDieta').value,
+            horaTreinoBase: this.$('#horaTreinoBase').value,
+            matrizSemana: matrizSemana
           };
           
-          if (!perfil.peso || !perfil.altura) return;
+          if (!setupData.peso || !setupData.altura) return;
           
-          const plano = NutricaoEngine.calcularPlanoDiario(
-            perfil.peso, perfil.altura, perfil.nivelAtividade, perfil.objetivo, 
-            perfil.numRefeicoes, perfil.idade, perfil.tipoDieta
-          );
+          StorageEngine.salvarSetup(setupData);
+          this.processarSetup(setupData);
           
-          StorageEngine.salvarPerfil(perfil); 
-          StorageEngine.salvarPlano(plano);
-          
-          this.renderPlano(plano); 
-          this.renderCompras(plano.macrosDiarios, plano.tipoDieta); 
-          this.atualizarBrandTag(perfil);
+          // Navega para a dieta após salvar
+          this.$$('.tab-btn')[1].click();
         });
       },
 
+      processarSetup(setupData) {
+        // 1. Processa Dieta
+        const planoNutri = NutricaoEngine.calcularPlanoDiario(setupData);
+        this.renderPlano(planoNutri); 
+        this.renderCompras(planoNutri.macrosDiarios, planoNutri.tipoDieta); 
+        this.atualizarBrandTag(setupData);
+
+        // 2. Processa Treino
+        const semanaTreino = TreinoEngine.gerarSemana(setupData);
+        this.renderSemana(semanaTreino);
+      },
+
       renderPlano(plano) {
+        this.$('#dietaVazio').classList.add('hidden');
         this.$('#planoResultado').classList.remove('hidden');
         this.$('#mTmb').textContent  = plano.metricas.tmb.toLocaleString('pt-BR');
         this.$('#mGetd').textContent = plano.metricas.getd.toLocaleString('pt-BR');
@@ -1146,7 +1018,6 @@ END:VCALENDAR`;
         this.$('#dCarb').textContent = plano.macrosDiarios.carboidrato;
         this.$('#dGord').textContent = plano.macrosDiarios.gordura;
         this.$('#dFib').textContent  = plano.macrosDiarios.fibras;
-        this.$('#qtdRefLabel').textContent = `· ${plano.refeicoes.quantidade} REFEIÇÕES`;
 
         const refeicoes = MontadorRefeicao.montarDia(plano);
         const grid = this.$('#refeicoesGrid');
@@ -1177,102 +1048,73 @@ END:VCALENDAR`;
             </div>
             <ul class="ref-alimentos">${alimentosHtml}</ul>
             <div class="ref-macros">
-              <div class="ref-macro m-p">
-                <span class="ref-macro-lbl">PROT</span>
-                <span class="ref-macro-val">${ref.totais.proteina}g</span>
-              </div>
-              <div class="ref-macro m-c">
-                <span class="ref-macro-lbl">CARB</span>
-                <span class="ref-macro-val">${ref.totais.carboidrato}g</span>
-              </div>
-              <div class="ref-macro m-g">
-                <span class="ref-macro-lbl">GORD</span>
-                <span class="ref-macro-val">${ref.totais.gordura}g</span>
-              </div>
-              <div class="ref-macro m-f">
-                <span class="ref-macro-lbl">FIBRA</span>
-                <span class="ref-macro-val">${ref.totais.fibra}g</span>
-              </div>
+              <div class="ref-macro m-p"><span class="ref-macro-lbl">PROT</span><span class="ref-macro-val">${ref.totais.proteina}g</span></div>
+              <div class="ref-macro m-c"><span class="ref-macro-lbl">CARB</span><span class="ref-macro-val">${ref.totais.carboidrato}g</span></div>
+              <div class="ref-macro m-g"><span class="ref-macro-lbl">GORD</span><span class="ref-macro-val">${ref.totais.gordura}g</span></div>
+              <div class="ref-macro m-f"><span class="ref-macro-lbl">FIBRA</span><span class="ref-macro-val">${ref.totais.fibra}g</span></div>
             </div>
           `;
           grid.appendChild(card);
         });
       },
 
-      atualizarBrandTag(perfil) {
-        const objLabel = { 
-          perda_gordura: 'CUTTING', 
-          ganho_massa: 'BULKING', 
-          manutencao: 'MANUTENÇÃO' 
-        }[perfil.objetivo] || '';
-        
-        const tagVeg = perfil.tipoDieta === 'vegetariana' ? ' · VEG' : '';
-        this.$('#brandTag').textContent = `${perfil.peso}kg · ${objLabel}${tagVeg}`;
+      atualizarBrandTag(setup) {
+        const objLabel = { perda_gordura: 'CUTTING', ganho_massa: 'BULKING', manutencao: 'MANUTENÇÃO' }[setup.objetivo] || '';
+        const tagVeg = setup.tipoDieta === 'vegetariana' ? ' · VEG' : '';
+        this.$('#brandTag').textContent = `${setup.peso}kg · ${objLabel}${tagVeg}`;
       },
 
       renderCompras(macrosDiarios, tipoDieta) {
         const lista = ComprasEngine.gerarListaSemanal(macrosDiarios, tipoDieta);
-        
         this.$('#comprasVazio').classList.add('hidden');
         this.$('#comprasResultado').classList.remove('hidden');
-        
         this.$('#cCarnes').textContent  = lista.carnes_aves;
         this.$('#cCarbo').textContent   = lista.carboidratos;
         this.$('#cVeg').textContent     = lista.vegetais_aveia;
         this.$('#cExtras').textContent  = lista.outros;
-        
         this.$('#cSupCard').innerHTML = lista.suplementos.map(s => {
           const [nome, valor] = s.split(':');
-          return `
-            <div class="list-row">
-              <span class="list-icon">💊</span>
-              <div>
-                <span class="list-label">${nome.trim()}</span>
-                <span class="list-value">${(valor || '').trim()}</span>
-              </div>
-            </div>
-          `;
+          return `<div class="list-row"><span class="list-icon">💊</span><div><span class="list-label">${nome.trim()}</span><span class="list-value">${(valor || '').trim()}</span></div></div>`;
         }).join('');
       },
 
-      bindFormRpe() {
-        const range = this.$('#rpeRange'); 
-        const valor = this.$('#rpeValor');
-        
-        range.addEventListener('input', () => { valor.textContent = range.value; });
-        
-        this.$('#formRpe').addEventListener('submit', e => {
-          e.preventDefault();
-          this.renderSemana(TreinoEngine.gerarSemana(parseInt(range.value, 10)));
-        });
-      },
-
       renderSemana(semana) {
+        this.$('#treinoVazio').classList.add('hidden');
         const wrap = this.$('#semanaResultado');
         wrap.classList.remove('hidden'); 
         wrap.innerHTML = '';
         
-        const ordem = ['domingo','segunda','terca','quarta','quinta','sexta','sabado'];
-        const labels = { domingo:'DOM', segunda:'SEG', terca:'TER', quarta:'QUA', quinta:'QUI', sexta:'SEX', sabado:'SÁB' };
-        const hojeIdx = new Date().getDay();
+        const hojeIdx = new Date().getDay(); // 0 = dom, 1 = seg
+        // O array DIAS_SEMANA começa com 0 = segunda. Vamos ajustar o map para o Date() do JS.
+        const dayMap = { 'domingo':0, 'segunda':1, 'terca':2, 'quarta':3, 'quinta':4, 'sexta':5, 'sabado':6 };
 
-        ordem.forEach((dia, i) => {
-          const planoDia = semana[dia]; 
-          const ehHoje = i === hojeIdx;
-          const exercicios = TreinoEngine.obterTreinoDoDia(planoDia.foco);
+        DIAS_SEMANA.forEach((diaInfo) => {
+          const diaID = diaInfo.id;
+          const planoDia = semana[diaID]; 
+          const ehHoje = dayMap[diaID] === hojeIdx;
           
           const card = document.createElement('div');
           card.className = 'dia-card' + (ehHoje ? ' dia-hoje' : '');
-          card.style.animationDelay = `${i * 60}ms`;
+          card.style.animationDelay = `60ms`;
+
+          let tagLabel = diaID.substring(0,3).toUpperCase();
+          if(tagLabel === 'QUA') tagLabel = 'QUA';
+          if(tagLabel === 'QUI') tagLabel = 'QUI';
+
+          let headerExtra = '';
+          if(planoDia.eventoExterno !== 'none') {
+             const lbl = EVENTOS_EXTERNOS.find(e => e.id === planoDia.eventoExterno).label;
+             headerExtra = `
+                <div class="evento-externo-box">
+                  <div class="evento-externo-title"><span>🔥 EVENTO EXTRA</span> <span class="rpe-badge">RPE ${planoDia.rpe}/10</span></div>
+                  <div class="evento-externo-desc">${lbl}</div>
+                </div>
+             `;
+          }
 
           let exercHtml = '';
-          if (planoDia.tipo === 'EVENTO EXTERNO' || planoDia.tipo === 'COMPETIÇÃO/TESTE') {
-            exercHtml = `
-              <div class="dia-vazio" style="color: var(--primary); font-weight: bold; padding: 15px;">
-                ⚠ Exigência Metabólica (RPE 8). Controle a ingestão de carboidratos e a hidratação.
-              </div>
-            `;
-          } else if (exercicios.length) {
+          if (planoDia.treinoPrincipal) {
+            const exercicios = planoDia.treinoPrincipal.exercicios;
             exercHtml = `
               <ul class="dia-exercicios">
                 ${exercicios.map(ex => {
@@ -1294,20 +1136,21 @@ END:VCALENDAR`;
               </ul>
             `;
           } else {
-             exercHtml = `<div class="dia-vazio">Recovery Total. Não treine.</div>`;
+             exercHtml = `<div class="dia-vazio">Recovery Total. Sem musculação hoje.</div>`;
           }
 
           card.innerHTML = `
             <div class="dia-header">
-              <span class="dia-tag">${labels[dia]}</span>
+              <span class="dia-tag">${tagLabel}</span>
               <span class="dia-tipo">
-                ${planoDia.tipo} 
+                ${planoDia.treinoPrincipal ? planoDia.treinoPrincipal.tipo : 'RECOVERY'}
                 <small style="display:block;font-size:11px;color:var(--txt-3);letter-spacing:0.5px;margin-top:2px;font-family:var(--font-body);">
-                  ${planoDia.foco}
+                  ${planoDia.treinoPrincipal ? planoDia.treinoPrincipal.foco : 'Descanso Passivo'}
                 </small>
               </span>
               <span class="dia-badge ${ehHoje ? 'hoje-tag' : ''}">${ehHoje ? 'HOJE' : ''}</span>
             </div>
+            ${headerExtra}
             ${exercHtml}
           `;
           
@@ -1339,25 +1182,17 @@ END:VCALENDAR`;
             const card = document.createElement('div'); 
             card.className = 'ex-card'; 
             card.style.animationDelay = `${i * 30}ms`; 
-            
-            card.innerHTML = `
-              <span class="badge" style="font-size:0.6rem; color:var(--primary);">${ex.modalidade}</span>
-              <h4 style="margin-top:4px;">${ex.nome}</h4>
-            `; 
-            
+            card.innerHTML = `<span class="badge" style="font-size:0.6rem; color:var(--primary);">${ex.modalidade}</span><h4 style="margin-top:4px;">${ex.nome}</h4>`; 
             card.addEventListener('click', () => this.abrirModal(ex)); 
             grid.appendChild(card); 
           }); 
         }
-        
         this.renderChips(filtroModalidade);
       },
 
       renderChips(ativa) {
         const modalidades = ['TODOS', ...new Set(BibliotecaExercicios.flatMap(e => e.modalidade.split('/').map(m => m.trim().toUpperCase())))];
-        const wrap = this.$('#exChips'); 
-        wrap.innerHTML = '';
-        
+        const wrap = this.$('#exChips'); wrap.innerHTML = '';
         modalidades.forEach(m => { 
           const c = document.createElement('button'); 
           c.className = 'chip' + (m === ativa ? ' active' : ''); 
@@ -1368,10 +1203,7 @@ END:VCALENDAR`;
       },
 
       bindBuscaExercicios() { 
-        this.$('#exBusca').addEventListener('input', e => { 
-          const chipAtivo = this.$('.chip.active')?.textContent || 'TODOS'; 
-          this.renderExercicios(chipAtivo, e.target.value); 
-        }); 
+        this.$('#exBusca').addEventListener('input', e => { const chipAtivo = this.$('.chip.active')?.textContent || 'TODOS'; this.renderExercicios(chipAtivo, e.target.value); }); 
       },
 
       bindModal() { 
@@ -1380,90 +1212,53 @@ END:VCALENDAR`;
       },
 
       abrirModal(ex) { 
-        this.$('#modalNome').textContent = ex.nome; 
-        this.$('#modalMod').textContent = ex.modalidade; 
-        this.$('#modalDicas').textContent = ex.dicas; 
-        this.$('#modalAlerta').textContent= ex.alerta_critico; 
-        this.$('#modalVideo').src = ex.video_url; 
-        this.$('#exModal').classList.add('open'); 
+        this.$('#modalNome').textContent = ex.nome; this.$('#modalMod').textContent = ex.modalidade; 
+        this.$('#modalDicas').textContent = ex.dicas; this.$('#modalAlerta').textContent= ex.alerta_critico; 
+        this.$('#modalVideo').src = ex.video_url; this.$('#exModal').classList.add('open'); 
         document.body.style.overflow = 'hidden'; 
       },
 
-      fecharModal() { 
-        this.$('#exModal').classList.remove('open'); 
-        this.$('#modalVideo').src = ''; 
-        document.body.style.overflow = ''; 
-      },
+      fecharModal() { this.$('#exModal').classList.remove('open'); this.$('#modalVideo').src = ''; document.body.style.overflow = ''; },
 
-      renderSelectCargas() { 
-        this.$('#cargaEx').innerHTML = BibliotecaExercicios.map(ex => `<option value="${ex.id}">${ex.nome}</option>`).join(''); 
-      },
+      renderSelectCargas() { this.$('#cargaEx').innerHTML = BibliotecaExercicios.map(ex => `<option value="${ex.id}">${ex.nome}</option>`).join(''); },
       
       bindFormCarga() {
         this.$('#formCarga').addEventListener('submit', e => {
           e.preventDefault(); 
-          const exId = this.$('#cargaEx').value; 
-          const kg = parseFloat(this.$('#cargaKg').value); 
-          const reps = parseInt(this.$('#cargaReps').value, 10);
-          
+          const exId = this.$('#cargaEx').value; const kg = parseFloat(this.$('#cargaKg').value); const reps = parseInt(this.$('#cargaReps').value, 10);
           if (!exId || isNaN(kg) || isNaN(reps)) return;
-          
           StorageEngine.salvarTreinoConcluido(new Date().toISOString(), exId, kg, reps);
-          this.$('#cargaKg').value = ''; 
-          this.$('#cargaReps').value = ''; 
-          this.renderHistorico();
+          this.$('#cargaKg').value = ''; this.$('#cargaReps').value = ''; this.renderHistorico();
         });
       },
 
       renderHistorico() {
         const lista = this.$('#historicoLista');
-        const historico = StorageEngine.obterHistoricoCompleto()
-          .sort((a, b) => new Date(b.data) - new Date(a.data))
-          .slice(0, 20);
-        
-        if (!historico.length) { 
-          lista.innerHTML = `<div class="empty-state small"><p>Nenhum registro ainda.</p></div>`; 
-          return; 
-        }
-        
+        const historico = StorageEngine.obterHistoricoCompleto().sort((a, b) => new Date(b.data) - new Date(a.data)).slice(0, 20);
+        if (!historico.length) { lista.innerHTML = `<div class="empty-state small"><p>Nenhum registro ainda.</p></div>`; return; }
         lista.innerHTML = historico.map(h => {
           const data = new Date(h.data);
           const dataFmt = data.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' }) + ' · ' + data.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
           const nome = this.mapaExercicios[h.exercicioId]?.nome || h.exercicioId;
-          
-          return `
-            <div class="hist-item">
-              <div class="hist-info">
-                <span class="hist-nome">${nome}</span>
-                <span class="hist-data">${dataFmt} · ${h.repeticoes} reps</span>
-              </div>
-              <span class="hist-carga">${h.cargaMaxima}<small>kg</small></span>
-            </div>
-          `;
+          return `<div class="hist-item"><div class="hist-info"><span class="hist-nome">${nome}</span><span class="hist-data">${dataFmt} · ${h.repeticoes} reps</span></div><span class="hist-carga">${h.cargaMaxima}<small>kg</small></span></div>`;
         }).join('');
       },
 
       restaurarSessao() {
-        const perfil = StorageEngine.obterPerfil(); 
-        const plano = StorageEngine.obterPlano();
-        
-        if (perfil) {
-          this.$('#peso').value = perfil.peso ?? ''; 
-          this.$('#altura').value = perfil.altura ?? ''; 
-          this.$('#idade').value = perfil.idade ?? 42;
-          this.$('#nivelAtividade').value = perfil.nivelAtividade ?? 'intenso';
-          this.$('#objetivo').value = perfil.objetivo ?? 'manutencao'; 
+        const setup = StorageEngine.obterSetup();
+        if (setup) {
+          // Preenche form
+          this.$('#peso').value = setup.peso; this.$('#altura').value = setup.altura; this.$('#idade').value = setup.idade;
+          this.$('#nivelAtividade').value = setup.nivelAtividade; this.$('#objetivo').value = setup.objetivo; this.$('#tipoDieta').value = setup.tipoDieta;
+          this.$('#horaTreinoBase').value = setup.horaTreinoBase;
           
-          if (this.$('#tipoDieta') && perfil.tipoDieta) {
-            this.$('#tipoDieta').value = perfil.tipoDieta;
-          }
-          
-          this.atualizarBrandTag(perfil);
-        }
-        
-        if (plano) { 
-          this.renderPlano(plano); 
-          this.renderCompras(plano.macrosDiarios, plano.tipoDieta); 
+          DIAS_SEMANA.forEach(dia => {
+             this.$(`#evt_${dia.id}`).value = setup.matrizSemana[dia.id].evento;
+             this.$(`#rpe_${dia.id}`).value = setup.matrizSemana[dia.id].rpe;
+             this.$(`#valRpe_${dia.id}`).textContent = setup.matrizSemana[dia.id].rpe;
+          });
+
+          this.processarSetup(setup);
         }
       }
     };
